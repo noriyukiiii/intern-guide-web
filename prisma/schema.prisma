@@ -8,8 +8,8 @@ generator client {
 }
 
 model User {
-   id         String @id @default(cuid())
-   email      String @unique
+   id         String   @id @default(cuid())
+   email      String   @unique
    password   String
    firstname  String
    lastname   String
@@ -17,9 +17,5 @@ model User {
    student_id String
    created_at DateTime @default(now())
    updated_at DateTime @updatedAt
-}
-
-model Test {
-   id         String @id @default(cuid())
-   test       String
+   role       String   @default("member") // เพิ่มฟิลด์ role และตั้งค่า default เป็น 'member'
 }

@@ -4,7 +4,7 @@ import { FaRegUserCircle } from "react-icons/fa";
 
 export default function Navbar() {  
   return (
-    <nav className="bg-[#ffffff] py-4 px-10 font-Prompt flex justify-between items-center shadow-sm shadow-gray-400 ">
+    <nav className="bg-[#ffffff] py-4 px-10 font-Prompt flex justify-between items-center shadow-md shadow-gray-400">
       <div className="flex items-center space-x-4">
         <Link href="/">
           <Image
@@ -44,7 +44,7 @@ export default function Navbar() {
           </Link>
         </li>
         <li>
-          <Link href="/" className="text-[#002379] hover:text-[#FFDE59]  ">
+          <Link href="/sign-in" className="text-[#002379] hover:text-[#FFDE59]  ">
             <FaRegUserCircle size={24} />
           </Link>
         </li>
