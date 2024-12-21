@@ -12,7 +12,6 @@ import {
 } from "@/validations/sign-up.validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
-import { signUpAction } from "@/actions/sign-up";
 import Link from "next/link";
 
 export default function page() {
@@ -41,18 +40,27 @@ export default function page() {
     setShowPassword((prev) => ({ ...prev, [field]: !prev[field] }));
   };
 
-  const onSubmit = (data: SignUpSchema) => {
+  const onSubmit = async (data: SignUpSchema) => {
     const result = signUpSchema.safeParse(data);
     console.log("Form data:", data);
 
     if (result.success) {
       startTransition(async () => {
-        const result = await signUpAction(data);
-        if (result.success) {
+        // เรียก API ผ่าน fetch
+        const response = await fetch("/api/users/sign-up", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data), // ส่งข้อมูลที่ได้จากฟอร์มไปยัง API
+        });
+
+        if (response.ok) {
           console.log("User created successfully");
           router.push("/sign-in"); // เปลี่ยนไปหน้า Sign In
         } else {
-          console.log(result?.error);
+          const errorData = await response.json();
+          console.log("Error creating user:", errorData);
         }
       });
     } else {

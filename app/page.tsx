@@ -5,6 +5,7 @@ import React, { useRef, useState } from "react";
 import Image from "next/image";
 import Banner from "../components/home/components/banner";
 import { IoIosArrowForward, IoIosArrowBack } from "react-icons/io";
+import Footer from "@/components/home/components/footer";
 
 export default function Homepage() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -119,6 +120,7 @@ export default function Homepage() {
           </div>
         </div>
         <Banner />
+        <Footer />
       </div>
     </>
   );

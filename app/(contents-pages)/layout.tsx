@@ -3,7 +3,6 @@ import Navbar from "@/components/home/navbar/navbar";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { decrypt } from "@/lib/session"; // ฟังก์ชัน decrypt
-import { getUserById } from "@/actions/getuser"; // ฟังก์ชัน getUserById
 
 type AuthLayoutProp = {
   children: React.ReactNode; // ตรวจสอบให้ children เป็น ReactElement ที่สามารถรับ props user

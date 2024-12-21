@@ -4,7 +4,6 @@ import React, { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signInSchema, SignInSchema } from "@/validations/sign-in.validation";
-import { signInAction } from "@/actions/sign-in";
 import Image from "next/image";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
@@ -22,19 +21,30 @@ const Page = () => {
   } = useForm<SignInSchema>({
     resolver: zodResolver(signInSchema), // เชื่อม Zod validation schema
   });
-
-  const onSubmit = (data: SignInSchema) => {
+   const onSubmit = (data: SignInSchema) => {
     startTransition(async () => {
-      const result = await signInAction(data.email, data.password);
-      if (result.success) {
-        console.log("Sign in successful");
-        router.push("/testpage"); // เปลี่ยนไปหน้า Sign In
-      } else {
-        console.error(result.error || "Sign in failed");
+      try {
+        // เรียก API เพื่อเข้าสู่ระบบ
+        const response = await fetch("/api/users/sign-in", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data), // ส่ง email และ password
+        });
+
+        if (response.ok) {
+          console.log("เข้าสู่ระบบสำเร็จ");
+          router.push("/testpage"); // เปลี่ยนไปหน้า testpage
+        } else {
+          const errorData = await response.json();
+          console.error("การเข้าสู่ระบบล้มเหลว", errorData);
+        }
+      } catch (error) {
+        console.error("เกิดข้อผิดพลาดระหว่างการเข้าสู่ระบบ:", error);
       }
     });
   };
-
   return (
     <div className="grid grid-cols-2 h-screen">
       <div className="relative w-full mx-auto bg-[#FFFAE6]">
