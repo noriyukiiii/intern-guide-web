@@ -28,7 +28,7 @@ export const signInAction = async (
 
     // หากทุกอย่างถูกต้อง
     // สร้างคุกกี้ session สำหรับผู้ใช้
-    await createSession(user.id); // เรียกใช้ createSession เพื่อสร้าง session และตั้งคุกกี้
+    await createSession(user.user_id); // เรียกใช้ createSession เพื่อสร้าง session และตั้งคุกกี้
     return { success: true };
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {

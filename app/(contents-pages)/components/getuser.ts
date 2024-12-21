@@ -10,7 +10,7 @@ interface Session {
 
 // ประเภทของ User
 interface User {
-    id: string;
+    user_id: string;
     email: string;
     firstname: string;
     lastname: string;

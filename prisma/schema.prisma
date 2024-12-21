@@ -8,7 +8,7 @@ generator client {
 }
 
 model User {
-   id         String   @id @default(cuid())
+   user_id    String   @id @default(cuid())
    email      String   @unique
    password   String
    firstname  String
@@ -18,4 +18,40 @@ model User {
    created_at DateTime @default(now())
    updated_at DateTime @updatedAt
    role       String   @default("member") // เพิ่มฟิลด์ role และตั้งค่า default เป็น 'member'
+
+   companies Company[]
+   feedbacks Feedback[]
+}
+
+model Company {
+   company_id      Int      @id @default(autoincrement())
+   user_id         String
+   companyName_th  String
+   companyName_en  String
+   description     String
+   location        String
+   contract_name   String
+   contract_tel    String
+   contract_email  String
+   contract_social String
+   website         String
+   position        String
+   benefit         String
+   occupation      String
+   img_link        String
+   created_at      DateTime @default(now())
+   updated_at      DateTime @updatedAt
+
+   user User @relation(fields: [user_id], references: [user_id])
+}
+
+model Feedback {
+   feedback_id  Int      @id @default(autoincrement())
+   user_id      String
+   company_data Json
+   status       String   @default("pending") // "pending", "approved", "rejected"
+   created_at   DateTime @default(now())
+   updated_at   DateTime @updatedAt
+
+   user User @relation(fields: [user_id], references: [user_id])
 }

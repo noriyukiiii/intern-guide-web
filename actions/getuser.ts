@@ -7,10 +7,10 @@ export const getUserById = async (userId: string) => {
     // ค้นหาผู้ใช้จาก userId โดยไม่ดึงฟิลด์ password
     const user = await prisma.user.findUnique({
       where: {
-        id: userId,
+        user_id: userId,
       },
       select: {
-        id: true,
+        user_id: true,
         email: true,
         firstname: true,
         lastname: true,

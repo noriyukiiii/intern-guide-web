@@ -8,7 +8,7 @@ export async function encrypt(payload : JWTPayload) {
     return new SignJWT(payload)
     .setProtectedHeader({alg : "HS256"})
     .setIssuedAt()
-    .setExpirationTime("5m")  // เปลี่ยนเวลาเป็น 5 นาที
+    .setExpirationTime("30m")  // เปลี่ยนเวลาเป็น 5 นาที
     .sign(encodedKey)
 }
 
@@ -26,7 +26,7 @@ export async function decrypt(session: any): Promise<JWTPayload | null> {
   }
   
 export async function createSession(userId:any) {
-    const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // ตั้งเวลาหมดอายุเป็น 5 นาที
+    const expiresAt = new Date(Date.now() + 30 * 60 * 1000); // ตั้งเวลาหมดอายุเป็น 5 นาที
     const session = await encrypt({userId, expiresAt})
     const cookieStore = await cookies()  
 
@@ -38,3 +38,4 @@ export async function createSession(userId:any) {
         path: "/",
     });
 }
+

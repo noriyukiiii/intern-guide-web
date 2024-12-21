@@ -59,7 +59,7 @@ export default function Homepage() {
   return (
     <>
       <Navbar />
-      <div className="flex flex-col h-screen">
+      <div className="flex flex-col h-screen mt-1">
         {/* ปุ่มเลื่อน */}
         <div className="relative w-full h-[800px]">
           {/* ปุ่มเลื่อนซ้าย */}
@@ -85,7 +85,7 @@ export default function Homepage() {
           {/* คอนเทนเนอร์เลื่อน */}
           <div
             ref={scrollContainerRef}
-            className="flex overflow-x-scroll scrollbar-hide w-full h-[800px]"
+            className="flex overflow-x-hidden  w-full h-[800px]"
           >
             <div className="flex-shrink-0 w-full h-full relative">
               <Image
