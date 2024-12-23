@@ -1,57 +1,88 @@
 datasource db {
-   provider = "postgresql" // or your database provider
-   url      = env("DATABASE_URL") // your database connection string
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
-
+ 
 generator client {
-   provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
+enum Role {
+   ADMIN
+   MEMBER
+}
+ 
 model User {
-   user_id    String   @id @default(cuid())
-   email      String   @unique
-   password   String
-   firstname  String
-   lastname   String
-   telephone  String
-   student_id String
-   created_at DateTime @default(now())
-   updated_at DateTime @updatedAt
-   role       String   @default("member") // เพิ่มฟิลด์ role และตั้งค่า default เป็น 'member'
-
-   companies Company[]
-   feedbacks Feedback[]
+  id            String          @id @default(cuid())
+  name          String?
+  email         String          @unique
+  firstName     String
+  lastName      String
+  phone         String
+  studentId     String
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  password      String?
+  role          Role           @default(MEMBER)
+  // Optional for WebAuthn support
+  Authenticator Authenticator[]
+ 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
-
-model Company {
-   company_id      Int      @id @default(autoincrement())
-   user_id         String
-   companyName_th  String
-   companyName_en  String
-   description     String
-   location        String
-   contract_name   String
-   contract_tel    String
-   contract_email  String
-   contract_social String
-   website         String
-   position        String
-   benefit         String
-   occupation      String
-   img_link        String
-   created_at      DateTime @default(now())
-   updated_at      DateTime @updatedAt
-
-   user User @relation(fields: [user_id], references: [user_id])
+ 
+model Account {
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+ 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+ 
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+ 
+  @@id([provider, providerAccountId])
 }
-
-model Feedback {
-   feedback_id  Int      @id @default(autoincrement())
-   user_id      String
-   company_data Json
-   status       String   @default("pending") // "pending", "approved", "rejected"
-   created_at   DateTime @default(now())
-   updated_at   DateTime @updatedAt
-
-   user User @relation(fields: [user_id], references: [user_id])
+ 
+model Session {
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+ 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+ 
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+ 
+  @@id([identifier, token])
+}
+ 
+model Authenticator {
+  credentialID         String  @unique
+  userId               String
+  providerAccountId    String
+  credentialPublicKey  String
+  counter              Int
+  credentialDeviceType String
+  credentialBackedUp   Boolean
+  transports           String?
+ 
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+ 
+  @@id([userId, credentialID])
 }

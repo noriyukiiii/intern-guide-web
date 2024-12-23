@@ -98,3 +98,43 @@ Please file feedback and issues over on the [Supabase GitHub org](https://github
 - [Next.js Subscription Payments Starter](https://github.com/vercel/nextjs-subscription-payments)
 - [Cookie-based Auth and the Next.js 13 App Router (free course)](https://youtube.com/playlist?list=PL5S4mPUpp4OtMhpnp93EFSo42iQ40XjbF)
 - [Supabase Auth and the Next.js App Router](https://github.com/supabase/supabase/tree/master/examples/auth/nextjs)
+
+
+// import authConfig from "@/auth.config";
+// import NextAuth from "next-auth";
+
+// import { publicRoutes, authRoutes, DEFAULT_LOGIN_REDIRECT } from "@/routes";
+
+// const { auth } = NextAuth(authConfig);
+
+// //@ts-expect-error
+// export default auth((req) => {
+//    const { nextUrl } = req;
+//    const isLoggedIn = !!req.auth;
+
+//    console.log({ req });
+
+//    const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
+//    const isAuthRoute = authRoutes.includes(nextUrl.pathname);
+
+//    //   if (isAuthRoute) {
+//    //     if (isLoggedIn) {
+//    //       return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
+//    //     }
+//    //     return null;
+//    //   }
+
+//    //   if (!isLoggedIn && !isPublicRoute) {
+//    //     return Response.redirect(new URL("/sign-in", nextUrl));
+//    //   }
+
+//    return null;
+// });
+
+// export const config = {
+//    matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
+// };
+
+export default {
+   
+}
