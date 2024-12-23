@@ -13,14 +13,19 @@ const Authlayout = async ({ children }: AuthLayoutProp) => {
   const sessionCookie = cookieStore.get("session");
 
   if (!sessionCookie || !sessionCookie.value) {
+    if (typeof window !== "undefined") {
+      alert("Session หมดอายุ กรุณาเข้าสู่ระบบใหม่");
+    }
     redirect("/");
   }
 
   const session = await decrypt(sessionCookie.value);
   if (!session) {
+    if (typeof window !== "undefined") {
+      alert("Session หมดอายุ กรุณาเข้าสู่ระบบใหม่");
+    }
     redirect("/");
   }
-
 
   // ส่ง props user ให้กับ children ผ่าน React.cloneElement
   return (

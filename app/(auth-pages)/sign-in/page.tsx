@@ -39,9 +39,11 @@ const Page = () => {
         } else {
           const errorData = await response.json();
           console.error("การเข้าสู่ระบบล้มเหลว", errorData);
+          alert(errorData.message || "การเข้าสู่ระบบล้มเหลว");
         }
       } catch (error) {
         console.error("เกิดข้อผิดพลาดระหว่างการเข้าสู่ระบบ:", error);
+        alert("เกิดข้อผิดพลาดในระบบ กรุณาลองอีกครั้ง");
       }
     });
   };
