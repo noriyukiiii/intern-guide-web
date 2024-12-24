@@ -1,45 +1,89 @@
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
+}
+
+enum InternshipStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }
 
 enum Role {
-    ADMIN
-    MEMBER
+  ADMIN
+  MEMBER
 }
 
 model User {
-    id            String    @id @default(cuid())
-    email         String    @unique
-    firstName     String
-    lastName      String
-    phone         String
-    studentId     String
-    emailVerified DateTime?
-    image         String?
-    password      String?
-    role          Role      @default(MEMBER)
-    sessions      Session[]
+  id            String    @id @default(cuid())
+  email         String    @unique
+  firstName     String
+  lastName      String
+  phone         String
+  studentId     String
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  role          Role      @default(MEMBER)
+  sessions      Session[]
 
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+  createdAt              DateTime                 @default(now())
+  updatedAt              DateTime                 @updatedAt
+  companyStudentInterned CompanyStudentInterned[]
 }
 
 model Session {
-    id        String   @id @default(cuid())
-    expiresAt DateTime
-    token     String
-    createdAt DateTime
-    updatedAt DateTime
-    ipAddress String?
-    userAgent String?
-    userId    String
-    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id        String   @id @default(cuid())
+  expiresAt DateTime
+  token     String
+  createdAt DateTime
+  updatedAt DateTime
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    @@unique([token])
-    @@map("session")
+  @@unique([token])
+  @@map("session")
+}
+
+model Company {
+  id             String   @id @default(cuid())
+  companyNameTh  String   
+  companyNameEn  String
+  description    String?
+  location       String?
+  contractName   String?
+  contractTel    String?
+  contractEmail  String?
+  contractSocial String?
+  establishment  String?
+  website        String?
+  position       String?
+  benefit        String?
+  occupation     String?
+  imgLink        String?
+  isMou          Boolean
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  companyStudentInterned CompanyStudentInterned[]
+}
+
+model CompanyStudentInterned {
+  id         String           @id @default(cuid())
+  companyId  String
+  userId     String?
+  studentId  String?
+  internDate DateTime
+  status     InternshipStatus @default(PENDING)
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  user    User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
 }

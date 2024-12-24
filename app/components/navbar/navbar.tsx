@@ -2,7 +2,7 @@
 "use client";
 
 import { useTransition } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { MdArrowDropDown } from "react-icons/md";
@@ -21,15 +21,15 @@ import { signOutActions } from "@/actions/auth";
 export default function Navbar() {
   const [isPending, startTransition] = useTransition();
   const { session } = useSession();
-  
+  const router = useRouter();
+
   const handleLogout = async () => {
     startTransition(async () => {
       await signOutActions().then(() => {
         window.location.reload();
       });
     });
-  }
-
+  };
 
   return (
     <nav className="bg-[#ffffff] py-4 px-10 font-Prompt flex justify-between items-center shadow-md shadow-gray-400">
@@ -75,21 +75,10 @@ export default function Navbar() {
           </Link>
         </li>
 
-        {/* แสดงเฉพาะเมื่อมีการล็อกอิน */}
+        {session?.isLoading && <div>loading</div>}
+
         {session?.user !== null ? (
           <>
-            {/* <details className="dropdown">
-              <summary className="btn m-1">open or close</summary>
-              <ul className="menu dropdown-content bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
-                <li>
-                  <Link href='/sign-in'>test</Link>
-                </li>
-                <li>
-                  <a>Item 2</a>
-                </li>
-              </ul>
-            </details> */}
-
             <Dropdown>
               <DropdownTrigger>
                 <Button variant="light">
@@ -112,12 +101,20 @@ export default function Navbar() {
                 </Button>
               </DropdownTrigger>
               <DropdownMenu aria-label="User Menu">
-                <DropdownItem key="profile">
-                  <Link href="/user-profile">User Profile</Link>
+                <DropdownItem
+                  key="profile"
+                  onPress={() => router.push("/user-profile")}
+                >
+                  User Profile
                 </DropdownItem>
-                <DropdownItem key="edit">
-                  <Link href="/edit-profile">Edit Profile</Link>
+
+                <DropdownItem
+                  key="edit"
+                  onPress={() => router.push("/edit-profile")}
+                >
+                  Edit Profile
                 </DropdownItem>
+
                 <DropdownItem
                   key="logout"
                   color="danger"
@@ -127,21 +124,6 @@ export default function Navbar() {
                 </DropdownItem>
               </DropdownMenu>
             </Dropdown>
-
-            {/* <li className="flex items-center">
-              <FaRegUserCircle size={24} className="mr-2" /> */}
-            {/* <span>
-              {data.user.firstName ?? ""} {data.user.lastName ?? ""}
-            </span> */}
-            {/* </li> */}
-            {/* <li>
-              <button
-                onClick={() => signOut()}
-                className="text-[#002379] hover:text-[#FFDE59] flex items-center"
-              >
-                Logout
-              </button>
-            </li> */}
           </>
         ) : (
           <li>
