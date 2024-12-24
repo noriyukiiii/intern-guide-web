@@ -1,6 +1,6 @@
 "use client";
 
-import Navbar from "../components/home/navbar/navbar";
+
 import React, { useRef, useState } from "react";
 import Image from "next/image";
 import Banner from "../components/home/components/banner";
@@ -59,7 +59,6 @@ export default function Homepage() {
 
   return (
     <>
-      <Navbar />
       <div className="flex flex-col h-screen mt-1">
         {/* ปุ่มเลื่อน */}
         <div className="relative w-full h-[800px]">

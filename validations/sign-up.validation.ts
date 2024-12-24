@@ -5,7 +5,11 @@ const emailPasswordConfirmSchema = z.object({
   email: z
     .string()
     .email({ message: "Please enter a valid email." })
-    .trim(),
+    .trim()
+    .refine(
+      (email) => email.endsWith("@mail.rmutt.ac.th") || email.endsWith("@example.edu"),
+      { message: "Email must be a university email (@mail.rmutt.ac.th)." }
+    ),
   password: z
     .string()
     .min(1, { message: "Not be empty" })

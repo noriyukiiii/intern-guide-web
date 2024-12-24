@@ -1,3 +1,4 @@
+import { nextui } from "@nextui-org/theme";
 import type { Config } from "tailwindcss";
 
 const config = {
@@ -7,6 +8,7 @@ const config = {
     "./components/**/*.{ts,tsx}",
     "./app/**/*.{ts,tsx}",
     "./src/**/*.{ts,tsx}",
+    "./node_modules/@nextui-org/theme/dist/components/(dropdown|menu|divider|popover|button|ripple|spinner).js",
   ],
   prefix: "",
   theme: {
@@ -19,8 +21,8 @@ const config = {
     },
     extend: {
       fontFamily: {
-        Prompt: ['Prompt', 'sans-serif'], // เพิ่ม Prompt ที่นี่
-        Sarabun: ['Sarabun', 'ital'], // เพิ่ม Prompt ที่นี่
+        Prompt: ["Prompt", "sans-serif"], // เพิ่ม Prompt ที่นี่
+        Sarabun: ["Sarabun", "ital"], // เพิ่ม Prompt ที่นี่
       },
       colors: {
         border: "hsl(var(--border))",
@@ -78,7 +80,7 @@ const config = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"), nextui(),require('daisyui'),],
 } satisfies Config;
 
 export default config;

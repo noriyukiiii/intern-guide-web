@@ -51,6 +51,7 @@ export default function page() {
          }
 
          const response = await signUp(result.data);
+         router.push("/sign-in")
 
          if (!response.success) {
             console.error(response.message);
