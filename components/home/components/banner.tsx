@@ -22,7 +22,7 @@ const Banner = () => {
                 {/* รูปภาพ */}
                 <div className="relative w-full h-[225px]">
                   <Image
-                    src="/new3-register.png"
+                    src="/landing/new3-register.png"
                     alt="register rmutt Image"
                     layout="fill"
                     objectFit="cover"
@@ -56,7 +56,7 @@ const Banner = () => {
                 {/* รูปภาพ */}
                 <div className="relative w-full h-[225px]">
                   <Image
-                    src="/new1-mou.png"
+                    src="/landing/new1-mou.png"
                     alt="MOU Image"
                     layout="fill"
                     objectFit="cover"
@@ -89,7 +89,7 @@ const Banner = () => {
                 {/* รูปภาพ */}
                 <div className="relative w-full h-[225px]">
                   <Image
-                    src="/new2-rmutt.png"
+                    src="/landing/new2-rmutt.png"
                     alt="sci rmutt Image"
                     layout="fill"
                     objectFit="cover"

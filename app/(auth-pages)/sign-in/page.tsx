@@ -5,14 +5,13 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
-import { signInActions } from "@/actions/auth/sign-in";
-
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signInSchema, SignInSchema } from "@/validations/sign-in.validation";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { signInActions } from "@/actions/auth";
 
 const Page = () => {
    const [isPending, startTransition] = useTransition();

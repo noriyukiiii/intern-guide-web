@@ -1,12 +1,12 @@
 //app/componet
 "use client";
 
+import { useTransition } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Image from "next/image";
 import { MdArrowDropDown } from "react-icons/md";
 import { FaRegUserCircle } from "react-icons/fa";
-import { signOut, useSession } from "next-auth/react";
 import {
   Dropdown,
   DropdownTrigger,
@@ -15,18 +15,21 @@ import {
   DropdownItem,
   Button,
 } from "@nextui-org/react";
+import { useSession } from "@/hooks/use-session";
+import { signOutActions } from "@/actions/auth";
 
 export default function Navbar() {
-  const { data, status } = useSession();
-  // const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+  const { session } = useSession();
+  
+  const handleLogout = async () => {
+    startTransition(async () => {
+      await signOutActions().then(() => {
+        window.location.reload();
+      });
+    });
+  }
 
-  const checkdata = () => {
-    try {
-      console.log(data);
-    } catch (error) {
-      console.error("Error during logout:", error);
-    }
-  };
 
   return (
     <nav className="bg-[#ffffff] py-4 px-10 font-Prompt flex justify-between items-center shadow-md shadow-gray-400">
@@ -47,9 +50,6 @@ export default function Navbar() {
           <Link href="/" className="text-[#002379] hover:text-[#FFDE59]">
             หน้าหลัก
           </Link>
-        </li>
-        <li>
-          <button onClick={checkdata}>checkdata</button>
         </li>
         <li>
           <Link
@@ -76,7 +76,7 @@ export default function Navbar() {
         </li>
 
         {/* แสดงเฉพาะเมื่อมีการล็อกอิน */}
-        {status === "authenticated" && data ? (
+        {session?.user !== null ? (
           <>
             {/* <details className="dropdown">
               <summary className="btn m-1">open or close</summary>
@@ -103,7 +103,7 @@ export default function Navbar() {
                       />
                     </div>
                     <div className="flex">
-                      <span>{data.user.firstName ?? ""}</span>
+                      <span>{session?.user?.firstName ?? ""}</span>
                       <span className="text-black flex items-center">
                         <MdArrowDropDown size={20} />
                       </span>
@@ -121,7 +121,7 @@ export default function Navbar() {
                 <DropdownItem
                   key="logout"
                   color="danger"
-                  onClick={() => signOut()}
+                  onPress={handleLogout}
                 >
                   Log out
                 </DropdownItem>
