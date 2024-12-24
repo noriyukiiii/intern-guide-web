@@ -1,15 +1,22 @@
 "use client";
 
-import { SessionProvider } from "next-auth/react";
+import { useSession } from "@/hooks/use-session";
+import { useEffect } from "react";
 
-export const AuthSessionProvider = ({
-   children,
+export const SessionProvider = ({
+    children,
 }: {
-   children: React.ReactNode;
+    children: React.ReactNode;
 }) => {
-   return (
-      <SessionProvider>
-         {children}
-      </SessionProvider>
-   );
-};
+    const { refreshSession } = useSession();
+
+    useEffect(() => {
+        refreshSession();
+    }, [refreshSession]);
+
+    return (
+        <>
+            {children}
+        </>
+    )
+}

@@ -13,7 +13,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import Link from "next/link";
-import { signUp } from "@/actions/auth/sign-up";
+import { signUpActions } from "@/actions/auth";
 
 export default function page() {
    const [isPending, startTransition] = useTransition();
@@ -50,7 +50,7 @@ export default function page() {
             return;
          }
 
-         const response = await signUp(result.data);
+         const response = await signUpActions(result.data);
          router.push("/sign-in")
 
          if (!response.success) {

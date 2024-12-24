@@ -89,7 +89,7 @@ export default function Homepage() {
           >
             <div className="flex-shrink-0 w-full h-full relative">
               <Image
-                src="/homepage_recommend.png"
+                src="/landing/homepage_recommend.png"
                 alt="Homepage Recommendation"
                 fill
                 className="object-cover"
@@ -97,7 +97,7 @@ export default function Homepage() {
             </div>
             <div className="flex-shrink-0 w-full h-full relative">
               <Image
-                src="/commingsoon.jpg"
+                src="/landing/commingsoon.jpg"
                 alt="Another Recommendation"
                 fill
                 className="object-cover"
