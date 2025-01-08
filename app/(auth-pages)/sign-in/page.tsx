@@ -9,7 +9,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signInSchema, SignInSchema } from "@/validations/sign-in.validation";
 
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/ui/inputtest";
 import { Label } from "@/components/ui/label";
 import { signInActions } from "@/actions/auth";
 

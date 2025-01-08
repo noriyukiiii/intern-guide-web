@@ -53,7 +53,7 @@ export default function Navbar() {
         </li>
         <li>
           <Link
-            href="/testpage"
+            href="/company-list"
             className="text-[#002379] hover:text-[#FFDE59] "
           >
             รายชื่อสถานประกอบการ
@@ -85,14 +85,14 @@ export default function Navbar() {
                   <div className="flex items-center justify-center gap-2">
                     <div className="h-8 w-8 rounded-full border-1 border-gray-400">
                       <Image
-                        src="/landing/witch.png"
-                        alt=""
+                        src={`${session?.user?.image || "s.png"}`}
+                        alt="user image"
                         height={50}
                         width={50}
                       />
                     </div>
                     <div className="flex">
-                      <span>{session?.user?.firstName ?? ""}</span>
+                      <span>{session?.user?.studentId ?? ""}</span>
                       <span className="text-black flex items-center">
                         <MdArrowDropDown size={20} />
                       </span>

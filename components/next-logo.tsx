@@ -1,3 +1,5 @@
+import { Company } from "@prisma/client";
+
 export default function NextLogo() {
   return (
     <svg

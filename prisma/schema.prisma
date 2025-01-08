@@ -1,16 +1,11 @@
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = "postgresql://postgres:1234@localhost:5432/test_company"
+  // url      = env("DATABASE_URL")
 }
 
 generator client {
   provider = "prisma-client-js"
-}
-
-enum InternshipStatus {
-  PENDING
-  APPROVED
-  REJECTED
 }
 
 enum Role {
@@ -26,14 +21,16 @@ model User {
   phone         String
   studentId     String
   emailVerified DateTime?
-  image         String?
+  image         String @default("/userimage/chef.png")
   password      String?
   role          Role      @default(MEMBER)
   sessions      Session[]
 
-  createdAt              DateTime                 @default(now())
-  updatedAt              DateTime                 @updatedAt
-  companyStudentInterned CompanyStudentInterned[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  companyStudentInterned Company_Student_Interned[]
 }
 
 model Session {
@@ -52,38 +49,89 @@ model Session {
 }
 
 model Company {
-  id             String   @id @default(cuid())
-  companyNameTh  String   
-  companyNameEn  String
-  description    String?
-  location       String?
-  contractName   String?
-  contractTel    String?
-  contractEmail  String?
-  contractSocial String?
-  establishment  String?
-  website        String?
-  position       String?
-  benefit        String?
-  occupation     String?
-  imgLink        String?
-  isMou          Boolean
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id                  String  @id @default(cuid())
+  companyNameTh       String
+  companyNameEn       String
+  description         String?
+  otherDescription    String?
+  location            String?
+  province            String?
+  contractName        String?
+  contractTel         String?
+  contractEmail       String?
+  contractSocial      String?
+  contractSocial_line String?
+  establishment       String?
+  website             String?
+  benefit             String?
+  occupation          String?
+  imgLink             String?
+  isMou               Boolean
 
-  companyStudentInterned CompanyStudentInterned[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  positions              positions[]
+  companyStudentInterned Company_Student_Interned[]
 }
 
-model CompanyStudentInterned {
-  id         String           @id @default(cuid())
-  companyId  String
-  userId     String?
-  studentId  String?
-  internDate DateTime
-  status     InternshipStatus @default(PENDING)
-  createdAt  DateTime         @default(now())
-  updatedAt  DateTime         @updatedAt
+model Company_Student_Interned {
+  id           String  @id @default(cuid())
+  companyId    String
+  userId       String?
+  student_name String?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
 
   company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
   user    User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+}
+
+model positions {
+  id        String    @id @unique @default(cuid())
+  name      String
+  companyId String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  company              Company                @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  position_description position_description[]
+}
+
+model position_description {
+  id          String    @id @default(cuid())
+  positionId  String
+  description String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+  positions   positions @relation(fields: [positionId], references: [id], onDelete: Cascade)
+  skills      skills[]
+}
+
+model skills {
+  id         String    @id @default(cuid())
+  name       String    @default("undefined")
+  pos_des_id String
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime?
+
+  position_description position_description @relation(fields: [pos_des_id], references: [id], onDelete: Cascade)
+  tools                tools[]
+}
+
+model tools {
+  id        String    @id @default(cuid())
+  name      String // เช่น "Framework", "Library", "Tool"
+  skillId   String // Foreign key to skills
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  skill skills @relation(fields: [skillId], references: [id], onDelete: Cascade)
 }
