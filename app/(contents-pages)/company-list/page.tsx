@@ -1,4 +1,4 @@
-// "use client";
+"use server"
 import { getCompany } from "@/actions/companyActions";
 import SearchFilter from "./components/searchFilter";
 
@@ -14,8 +14,7 @@ export default async function Page() {
     );
   }
   return (
-    <div>
-      <h1>Company List</h1>
+    <div className="mt-1">
       <SearchFilter companies={companies} />
     </div>
   );

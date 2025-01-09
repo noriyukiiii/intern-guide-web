@@ -70,6 +70,9 @@ export async function getCompany() {
         company_province: company.province,
         company_website: company.website,
         company_benefit: company.benefit,
+        company_occuption: company.occupation, // เพิ่ม occuption
+        company_established: company.establishment, // เพิ่ม established
+        company_is_mou: company.isMou, // เพิ่ม isMou
         company_logo: company.imgLink,
         position_names: positionNames,
         position_descriptions: positionDescriptions, // รวมข้อมูล position_description

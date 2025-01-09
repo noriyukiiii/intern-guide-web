@@ -24,23 +24,45 @@ const Page = () => {
    } = useForm<SignInSchema>({
       resolver: zodResolver(signInSchema), // เชื่อม Zod validation schema
    });
+
    const onSubmit = (data: SignInSchema) => {
       startTransition(async () => {
          try {
             // เรียก API เพื่อเข้าสู่ระบบ
-            signInActions(data).then((data) => {
-               if (!data?.success) {
-                  alert(data.message);
-               }
-
-               window.location.href = "/";
-            });
+            const response = await signInActions(data);
+   
+            if (!response?.success) {
+               alert(response.message);
+               return;
+            }
+   
+            // ใช้ redirectTo ที่ส่งมาจาก signInActions
+            const redirectTo = response.redirectTo || "/";
+            window.location.href = redirectTo;
          } catch (error) {
             console.error("เกิดข้อผิดพลาดระหว่างการเข้าสู่ระบบ:", error);
             alert("เกิดข้อผิดพลาดในระบบ กรุณาลองอีกครั้ง");
          }
       });
    };
+
+   // const onSubmit = (data: SignInSchema) => {
+   //    startTransition(async () => {
+   //       try {
+   //          // เรียก API เพื่อเข้าสู่ระบบ
+   //          signInActions(data).then((data) => {
+   //             if (!data?.success) {
+   //                alert(data.message);
+   //             }
+               
+   //             window.location.href = "/";
+   //          });
+   //       } catch (error) {
+   //          console.error("เกิดข้อผิดพลาดระหว่างการเข้าสู่ระบบ:", error);
+   //          alert("เกิดข้อผิดพลาดในระบบ กรุณาลองอีกครั้ง");
+   //       }
+   //    });
+   // };
    return (
       <div className="grid grid-cols-2 h-screen">
          <div className="relative w-full mx-auto bg-[#FFFAE6]">
