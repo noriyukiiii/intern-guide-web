@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 
-interface CompanyCardProps {
+interface CompanyTableProps {
   companies: {
     company_id: string;
     company_name_th: string;
@@ -22,7 +22,7 @@ interface CompanyCardProps {
   }[];
 }
 
-export default function Page({ companies }: CompanyCardProps) {
+export default function Page({ companies }: CompanyTableProps) {
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -54,9 +54,9 @@ export default function Page({ companies }: CompanyCardProps) {
       </div>
 
       {/* ตาราง */}
-      <div className="overflow-x-auto max-w-full border border-gray-300 rounded-lg">
-        <table className="table-auto border-collapse min-w-[1200px] w-full">
-          <thead>
+      <div className="overflow-x-auto w-full border border-gray-300 rounded-lg">
+        <table className="table-auto border-collapse min-w-[3000px] w-full">
+          <thead className="sticky top-0 bg-gray-100 shadow z-10">
             <tr className="bg-gray-100">
               <th className="border border-gray-300 px-4 py-2">ลำดับ</th>
               <th className="border border-gray-300 px-4 py-2">
@@ -65,7 +65,9 @@ export default function Page({ companies }: CompanyCardProps) {
               <th className="border border-gray-300 px-4 py-2">
                 ชื่อบริษัท (EN)
               </th>
-              <th className="border border-gray-300 px-4 py-2">รายละเอียด</th>
+              <th className="border border-gray-300 px-4 py-2 w-[500px]">
+                รายละเอียด
+              </th>
               <th className="border border-gray-300 px-4 py-2">ที่อยู่</th>
               <th className="border border-gray-300 px-4 py-2">จังหวัด</th>
               <th className="border border-gray-300 px-4 py-2">เว็บไซต์</th>

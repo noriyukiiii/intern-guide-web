@@ -22,8 +22,7 @@ export default function RootLayout({
     <html lang="en" className={GeistSans.className} suppressHydrationWarning>
       <SessionProvider>
         <body className="bg-background text-foreground flex flex-col">
-          <Navbar />
-          <div className="mt-24">{children}</div>
+          <div className="">{children}</div>
         </body>
       </SessionProvider>
     </html>

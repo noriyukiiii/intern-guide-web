@@ -1,5 +1,6 @@
-"use client"
+"use client";
 import React, { useEffect } from "react"; // นำเข้า React
+import Navbar from "./components/navbar/navbar";
 
 type AuthLayoutProp = {
   children: React.ReactNode; // ตรวจสอบให้ children เป็น ReactElement ที่สามารถรับ props user
@@ -8,7 +9,8 @@ type AuthLayoutProp = {
 const Authlayout = ({ children }: AuthLayoutProp) => {
   return (
     <div className="min-h-screen flex flex-col gap-1">
-      {children}
+      <Navbar />
+      <div className="pt-20">{children}</div>
     </div>
   );
 };

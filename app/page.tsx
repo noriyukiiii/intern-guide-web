@@ -12,6 +12,9 @@ export default function Homepage() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const totalImages = 2; // จำนวนภาพทั้งหมด
 
+  // (admin-pages)/admin/something
+
+  // /admin/something
   const scrollLeft = () => {
     if (scrollContainerRef.current) {
       const container = scrollContainerRef.current;

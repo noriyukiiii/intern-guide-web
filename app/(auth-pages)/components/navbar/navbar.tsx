@@ -10,6 +10,14 @@ export default function Navbar() {
   return (
     <>
       <UserNav />
+
+
+      {/* 
+      {session?.user?.role === "ADMIN" ? (
+        <UserNav /> // แสดง navbar สำหรับ admin
+      ) : (
+        <UserNav /> // แสดง navbar สำหรับ admin
+      )} */}
     </>
   );
 }

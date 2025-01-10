@@ -85,12 +85,12 @@ export async function signInActions(values: SignInSchema): Promise<{
       };
     }
 
-    await AuthService.createSessionCookies(user.id);
+    await AuthService.createSessionCookies(user.id, user.role);
 
     // ตรวจสอบบทบาทของผู้ใช้
     let redirectTo = "/";
     if (user.role === "ADMIN") {
-      redirectTo = "/admin/test"; // หากเป็น admin
+      redirectTo = "/admin/company-list"; // หากเป็น admin
     } else if (user.role === "MEMBER") {
       redirectTo = "/"; // หากเป็นสมาชิกทั่วไป
     }

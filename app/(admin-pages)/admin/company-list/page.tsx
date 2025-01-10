@@ -5,7 +5,7 @@ export default async function Page() {
   const companies = await getCompany();
 
   return (
-    <div className="overflow-x-auto">
+    <div className="h-full w-full overflow-y-auto overflow-x-auto">
       <Table companies={companies} />
     </div>
   );

@@ -7,8 +7,8 @@ const SESSION_COOKIE = "auth_session";
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 30; // 30 days
 
 export class AuthService {
-    static async createSessionCookies(userId: string) {
-        const token = await new SignJWT({ userId })
+    static async createSessionCookies(userId: string, userrole: string) {
+        const token = await new SignJWT({ userId, userrole})
             .setProtectedHeader({ alg: "HS256" })
             .setExpirationTime("30d")
             .sign(SECRET_KEY);
@@ -70,15 +70,31 @@ export class AuthService {
         }
     }
 
-    static async verifySession() {
+    static async verifySession() :Promise<
+    {
+        auth: boolean,
+        isAdmin: boolean
+    }
+    > {
         const token = (await cookies()).get(SESSION_COOKIE)?.value;
-        if (!token) return false;
+        if (!token) {
+            return {
+                auth : false,
+                isAdmin: false
+            }
+        }
 
         try {
-            await jwtVerify(token, SECRET_KEY);
-            return true;
+            const Session = await jwtVerify(token, SECRET_KEY);
+            return {
+                auth : true,
+                isAdmin: Session.payload.userrole === "ADMIN"
+            };
         } catch (error) {
-            return false;
+            return {
+                auth : false,
+                isAdmin: false
+            };
         }
     }
 }
