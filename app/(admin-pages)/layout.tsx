@@ -2,7 +2,7 @@
 import React from "react"; // นำเข้า React
 import { useSession } from "@/hooks/use-session";
 import Navbar from "./components/navbar";
-import Sidebar from "./components/sidebar";
+import { Sidebar } from "./components/sidebar";
 
 type AdminLayoutProp = {
   children: React.ReactNode; // ตรวจสอบให้ children เป็น ReactElement ที่สามารถรับ props user
@@ -11,16 +11,11 @@ type AdminLayoutProp = {
 const Authlayout = ({ children }: AdminLayoutProp) => {
   const { session } = useSession();
 
-
-
   return (
-    <>
-      <Navbar />
+    <div className="">
       <Sidebar />
-      <main className="pt-[80px] pl-[80px] h-screen w-screen overflow-y-hidden">
-        {children}
-      </main>
-    </>
+      <main className="mx-5 mt-0 sm:ml-[300px] sm:mt-3">{children}</main>
+    </div>
   );
 };
 

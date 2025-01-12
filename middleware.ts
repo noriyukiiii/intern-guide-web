@@ -7,16 +7,22 @@ export async function middleware(request: NextRequest) {
   const { auth, isAdmin } = await AuthService.verifySession();
   const authPaths: string[] = ["/sign-in", "/sign-up"];
   const publicPaths: string[] = ["/"];
+  const homePaths: string[] = ["/"];
   const adminPaths: string[] = ["/admin", "/admin/company-list"];
   const pathname: string = request.nextUrl.pathname;
 
+  const isHomeRoute = homePaths.includes(pathname);
   const isAdminRoute = adminPaths.includes(pathname);
   const isPublicRoute = publicPaths.includes(pathname);
   const isAuthRoute = authPaths.includes(pathname);
 
+  if (isHomeRoute) {
+    return NextResponse.redirect(new URL("/home", request.url));
+  }
+
   if (isAuthRoute) {
     if (auth) {
-      return NextResponse.redirect(new URL("/", request.url));
+      return NextResponse.redirect(new URL("/home", request.url));
     }
     return NextResponse.next();
   }
@@ -25,12 +31,16 @@ export async function middleware(request: NextRequest) {
     console.log("before is admin route : ", isAdmin)
     if (auth && !isAdmin) {
       console.log("IsAdmin : ",isAdmin)
-      return NextResponse.redirect(new URL("/", request.url));
+      return NextResponse.redirect(new URL("/home", request.url));
     }
     return NextResponse.next();
   }
 
   if (!auth && !isPublicRoute) {
+    return NextResponse.redirect(new URL("/sign-in", request.url));
+  }
+
+  if (!auth && !isAdmin) {
     return NextResponse.redirect(new URL("/sign-in", request.url));
   }
 

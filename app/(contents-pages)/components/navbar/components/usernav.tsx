@@ -67,12 +67,23 @@ const UserNav = () => {
           </Link>
         </li>
         <li>
-          <Link href="/" className="text-[#002379] hover:text-[#FFDE59] ">
+          <Link href="/" className="text-[#002379~] hover:text-[#FFDE59] ">
             Dashboard
           </Link>
         </li> */}
-        {session?.user?.role === "ADMIN"}
-        {session?.user?.role === "ADMIN" ? <div className="text-red-300">ADMIN</div> : <div>no ADMIN</div>}
+
+        {session?.user?.role === "ADMIN" ? (
+          <li>
+            <Link
+              href="/admin/company-list"
+              className="text-[#002379] hover:text-[#FFDE59] "
+            >
+              ADMIN DASHBOARD
+            </Link>
+          </li>
+        ) : (
+          <div>no ADMIN</div>
+        )}
         {session?.isLoading ? (
           <>
             <div>IS LOADING</div>

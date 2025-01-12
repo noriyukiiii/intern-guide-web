@@ -1,12 +1,12 @@
 import { getCompany } from "@/actions/companyActions";
-import Table from "./components/table";
+import SearchFilter from "./components/searchfilter";
 
 export default async function Page() {
   const companies = await getCompany();
-
+  console.log(companies);
   return (
-    <div className="h-full w-full overflow-y-auto overflow-x-auto">
-      <Table companies={companies} />
+    <div className="w-full overflow-y-hidden overflow-x-auto">
+      <SearchFilter companies={companies} />
     </div>
   );
 }

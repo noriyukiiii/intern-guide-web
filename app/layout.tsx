@@ -1,7 +1,7 @@
 import { GeistSans } from "geist/font/sans";
-import Navbar from "./components/navbar/navbar";
 import "./globals.css";
 import { SessionProvider } from "@/components/providers/session-provider";
+import { cn } from "@/lib/utils";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -19,7 +19,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={GeistSans.className} suppressHydrationWarning>
+    <html
+      lang="en"
+      className={cn(GeistSans.className, "bg-background")}
+      suppressHydrationWarning
+    >
       <SessionProvider>
         <body className="bg-background text-foreground flex flex-col">
           <div className="">{children}</div>

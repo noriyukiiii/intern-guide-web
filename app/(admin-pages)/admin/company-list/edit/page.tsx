@@ -1,8 +1,7 @@
-"use client"
 const Page = () => {
-  return ( <>
-  hello
-  </> );
+    return ( <>
+    test
+    </> );
 }
  
 export default Page;

@@ -1,6 +1,18 @@
 "use client";
-import { useState } from "react";
 
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+
+import { useState } from "react";
+import Modal from "./modal";
+import Link from "next/link";
 interface CompanyTableProps {
   companies: {
     company_id: string;
@@ -25,153 +37,199 @@ interface CompanyTableProps {
 export default function Page({ companies }: CompanyTableProps) {
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null); // state สำหรับเก็บ URL ของรูปที่คลิก
 
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentCompanies = companies.slice(startIndex, endIndex);
   const totalPages = Math.ceil(companies.length / itemsPerPage);
 
-  return (
-    <div className="p-4">
-      {/* ตัวเลือกจำนวนรายการ */}
-      <div className="mb-4">
-        <label htmlFor="itemsPerPage" className="mr-2">
-          แสดงรายการต่อหน้า:
-        </label>
-        <select
-          id="itemsPerPage"
-          value={itemsPerPage}
-          onChange={(e) => {
-            setItemsPerPage(Number(e.target.value));
-            setCurrentPage(1);
-          }}
-          className="border border-gray-300 p-1"
-        >
-          <option value={10}>10</option>
-          <option value={25}>25</option>
-          <option value={100}>100</option>
-        </select>
-      </div>
+  const handleImageClick = (imageUrl: string) => {
+    setSelectedImage(imageUrl); // เมื่อคลิกรูป จะตั้งค่า URL ของรูปให้กับ state
+  };
 
-      {/* ตาราง */}
-      <div className="overflow-x-auto w-full border border-gray-300 rounded-lg">
-        <table className="table-auto border-collapse min-w-[3000px] w-full">
-          <thead className="sticky top-0 bg-gray-100 shadow z-10">
-            <tr className="bg-gray-100">
-              <th className="border border-gray-300 px-4 py-2">ลำดับ</th>
-              <th className="border border-gray-300 px-4 py-2">
-                ชื่อบริษัท (TH)
-              </th>
-              <th className="border border-gray-300 px-4 py-2">
-                ชื่อบริษัท (EN)
-              </th>
-              <th className="border border-gray-300 px-4 py-2 w-[500px]">
-                รายละเอียด
-              </th>
-              <th className="border border-gray-300 px-4 py-2">ที่อยู่</th>
-              <th className="border border-gray-300 px-4 py-2">จังหวัด</th>
-              <th className="border border-gray-300 px-4 py-2">เว็บไซต์</th>
-              <th className="border border-gray-300 px-4 py-2">สวัสดิการ</th>
-              <th className="border border-gray-300 px-4 py-2">ตำแหน่งงาน</th>
-              <th className="border border-gray-300 px-4 py-2">ปีที่ก่อตั้ง</th>
-              <th className="border border-gray-300 px-4 py-2">MOU</th>
-              <th className="border border-gray-300 px-4 py-2">โลโก้</th>
-              <th className="border border-gray-300 px-4 py-2">เครื่องมือ</th>
-              <th className="border border-gray-300 px-4 py-2">ทักษะ</th>
-            </tr>
-          </thead>
-          <tbody>
+  const closeModal = () => {
+    setSelectedImage(null); // ปิด Modal
+  };
+
+  const handleEditClick = async (companyId: string) => {};
+
+  return (
+    <div className="p-4 flex flex-col gap-4">
+      {/* ตัวเลือกจำนวนรายการ */}
+
+      {/*  Table Chadcn */}
+      <div className="overflow-x-auto border-gray-300 h-[500px] max-h-[800px] min-h-[800px] border-1 rounded-3xl flex-1">
+        <Table className="min-w-[3000px] h-[800px] font-Sarabun border">
+          <TableHeader className="">
+            <TableRow className="">
+              <TableHead className="w-[100px] text-center border-r border-gray-300">
+                ลำดับ
+              </TableHead>
+              <TableHead className="w-[300px] text-center border-r border-gray-300">
+                ชื่อบริษัท{"(ไทย)"}
+              </TableHead>
+              <TableHead className="w-[300px] text-center border-r border-gray-300">
+                ชื่อบริษัท{"(อังกฤษ)"}
+              </TableHead>
+              <TableHead className="w-[1000px] text-center border-r border-gray-300">
+                คำอธิบาย
+              </TableHead>
+              <TableHead className="w-[800px] text-center border-r border-gray-300">
+                ที่ตั้ง
+              </TableHead>
+              <TableHead className="w-[150px] text-center border-r border-gray-300">
+                จังหวัด
+              </TableHead>
+              <TableHead className="w-[150px] text-center border-r border-gray-300">
+                เว็บไซต์บริษัท
+              </TableHead>
+              <TableHead className="w-[300px] text-center border-r border-gray-300">
+                Benefit
+              </TableHead>
+              <TableHead className="w-[150px] text-center border-r border-gray-300">
+                สายการเรียน
+              </TableHead>
+              <TableHead className="w-[150px] text-center border-r border-gray-300">
+                สังกัดหน่วยงาน
+              </TableHead>
+              <TableHead className="w-[150px] text-center border-r border-gray-300">
+                MOU
+              </TableHead>
+              <TableHead className="w-[150px] text-center border-r border-gray-300">
+                ภาพบริษัท
+              </TableHead>
+              <TableHead className="w-[300px] text-center border-r border-gray-300">
+                ทักษะ
+              </TableHead>
+              <TableHead className="w-[300px] text-center border-r border-gray-300">
+                เครื่องมือ
+              </TableHead>
+              <TableHead className="w-[150px] text-center">Action</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {currentCompanies.map((company, idx) => (
-              <tr key={company.company_id}>
-                <td className="border border-gray-300 px-4 py-2 text-center">
+              <TableRow key={company.company_id}>
+                <TableCell className="border border-gray-300 px-4 py-2 text-center">
                   {startIndex + idx + 1}
-                </td>
-                <td className="border border-gray-300 px-4 py-2">
+                </TableCell>
+                <TableCell className="border border-gray-300 px-4 py-2">
                   {company.company_name_th}
-                </td>
-                <td className="border border-gray-300 px-4 py-2">
+                </TableCell>
+                <TableCell className="border border-gray-300 px-4 py-2">
                   {company.company_name_en}
-                </td>
-                <td className="border border-gray-300 px-4 py-2">
+                </TableCell>
+                <TableCell className="border border-gray-300 px-4 py-2">
                   {company.company_description || "N/A"}
-                </td>
-                <td className="border border-gray-300 px-4 py-2">
+                </TableCell>
+                <TableCell className="border border-gray-300 px-4 py-2">
                   {company.company_location || "N/A"}
-                </td>
-                <td className="border border-gray-300 px-4 py-2">
+                </TableCell>
+                <TableCell className="border border-gray-300 px-4 py-2">
                   {company.company_province || "N/A"}
-                </td>
-                <td className="border border-gray-300 px-4 py-2">
+                </TableCell>
+                <TableCell className="border border-gray-300 px-4 py-2 text-center">
                   {company.company_website ? (
-                    <a
-                      href={company.company_website}
+                    <button
                       className="text-blue-500 underline"
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      onClick={() => {
+                        if (company.company_website) {
+                          window.open(
+                            company.company_website,
+                            "_blank",
+                            "noopener,noreferrer"
+                          );
+                        }
+                      }}
                     >
-                      {company.company_website}
-                    </a>
+                      เว็บไซต์
+                    </button>
                   ) : (
                     "N/A"
                   )}
-                </td>
-                <td className="border border-gray-300 px-4 py-2">
-                  {company.company_benefit || "N/A"}
-                </td>
-                <td className="border border-gray-300 px-4 py-2">
+                </TableCell>
+
+                <TableCell className="border border-gray-300 px-4 py-2">
+                  {company.company_benefit
+                    ? company.company_benefit
+                        .split("-") // แยกข้อความตามเครื่องหมาย "-"
+                        .filter((benefit) => benefit.trim() !== "") // กรองรายการที่เป็นช่องว่าง
+                        .map((benefit, index) => (
+                          <div key={index}>
+                            {"-"} {benefit.trim()}
+                          </div> // แสดงผลแต่ละรายการใน div
+                        ))
+                    : "N/A"}
+                </TableCell>
+                <TableCell className="border border-gray-300 px-4 py-2 text-left">
                   {company.company_occuption || "N/A"}
-                </td>
-                <td className="border border-gray-300 px-4 py-2">
+                </TableCell>
+                <TableCell className="border border-gray-300 px-4 py-2 text-center">
                   {company.company_established || "N/A"}
-                </td>
-                <td className="border border-gray-300 px-4 py-2 text-center">
+                </TableCell>
+                <TableCell className="border border-gray-300 px-4 py-2 text-center">
                   {company.company_is_mou ? "✅" : "❌"}
-                </td>
-                <td className="border border-gray-300 px-4 py-2">
+                </TableCell>
+                <TableCell className=" px-4 py-2 h-full w-full flex justify-center items-center ">
                   {company.company_logo ? (
                     <img
                       src={company.company_logo}
                       alt="Logo"
-                      className="h-8 w-8 object-cover"
+                      className="h-8 w-8 object-cover cursor-pointer"
+                      onClick={() =>
+                        handleImageClick(company.company_logo || "")
+                      } // On click to show the popup
                     />
                   ) : (
                     "N/A"
                   )}
-                </td>
-                <td className="border border-gray-300 px-4 py-2">
-                  {company.tools_names || "N/A"}
-                </td>
-                <td className="border border-gray-300 px-4 py-2">
-                  {company.skill_names || "N/A"}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+                </TableCell>
+                <TableCell className="border border-gray-300 px-4 py-2">
+                  {company.skill_names
+                    ? company.skill_names
+                        .split(",") // แยกข้อความตามเครื่องหมาย ","
+                        .map((skill) => skill.trim()) // ลบช่องว่างรอบๆ ข้อความ
+                        .filter((skill) => skill !== "" && skill !== "Unknown") // กรองรายการที่ว่างเปล่าและ "Unknown"
+                        .map((skill, index) => (
+                          <div key={index}>
+                            {"-"} {skill}
+                          </div> // แสดงผลแต่ละรายการใน div
+                        ))
+                    : "N/A"}
+                </TableCell>
+                <TableCell className="border border-gray-300 px-4 py-2">
+                  {company.tools_names
+                    ? company.tools_names
+                        .split(",") // แยกข้อความตามเครื่องหมาย ","
+                        .map((tool) => tool.trim()) // ลบช่องว่างรอบๆ ข้อความ
+                        .filter((tool) => tool !== "" && tool !== "Unknown") // กรองรายการที่ว่างเปล่าและ "Unknown"
+                        .map((tool, index) => (
+                          <div key={index}>
+                            {"-"} {tool}
+                          </div> // แสดงผลแต่ละรายการใน div
+                        ))
+                    : "N/A"}
+                </TableCell>
+                <TableCell className="border border-gray-300 px-4 py-2 text-center">
+                  <Link href={`/admin/company-list/edit/${company.company_id}`}>
+                    <button
+                      className="px-4 py-2 bg-blue-500 text-white rounded"
+                    >
+                      แก้ไข
+                    </button>
+                  </Link>
+                </TableCell>
 
-      {/* การนำทางหน้า */}
-      <div className="mt-4 flex justify-between items-center">
-        <button
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-          disabled={currentPage === 1}
-          className="px-4 py-2 bg-gray-300 hover:bg-gray-400 disabled:bg-gray-200"
-        >
-          ก่อนหน้า
-        </button>
-        <span>
-          หน้า {currentPage} จาก {totalPages}
-        </span>
-        <button
-          onClick={() =>
-            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-          }
-          disabled={currentPage === totalPages}
-          className="px-4 py-2 bg-gray-300 hover:bg-gray-400 disabled:bg-gray-200"
-        >
-          ถัดไป
-        </button>
+                {/* <TableCell className="border border-gray-300 px-4 py-2">
+                  {company.tools_names || "N/A"}
+                </TableCell> */}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       </div>
+      {selectedImage && <Modal imageUrl={selectedImage} onClose={closeModal} />}
     </div>
   );
 }

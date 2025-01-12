@@ -14,7 +14,7 @@ export default async function Page() {
     );
   }
   return (
-    <div className="mt-1">
+    <div className="">
       <SearchFilter companies={companies} />
     </div>
   );
