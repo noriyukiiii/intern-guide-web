@@ -23,26 +23,7 @@ const sidebarItems: SidebarItems = {
     { label: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
     { label: 'Company', href: '/admin/company-list', icon: Table },
     { label: 'User', href: '/admin/user-list', icon: Table },
-    // {
-    //   href: '/item/lists',
-    //   icon: List,
-    //   label: 'Lists',
-    // },
-    // {
-    //   href: '/item/bookmarks',
-    //   icon: Bookmark,
-    //   label: 'Bookmarks',
-    // },
-    // {
-    //   href: '/item/communities',
-    //   icon: Users,
-    //   label: 'Communities',
-    // },
-    // {
-    //   href: '/item/profile',
-    //   icon: User,
-    //   label: 'Profile',
-    // },
+    { label: 'Banner', href: '/admin/banner', icon: Table },
   ],
   extras: (
     <div className='flex flex-col gap-2'>

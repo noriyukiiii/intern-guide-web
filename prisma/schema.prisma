@@ -1,7 +1,7 @@
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://postgres:1234@localhost:5432/test_company"
-  // url      = env("DATABASE_URL")
+  // url      = "postgresql://postgres:1234@localhost:5432/test_company"
+  url      = env("DATABASE_URL")
 }
 
 generator client {
@@ -11,6 +11,12 @@ generator client {
 enum Role {
   ADMIN
   MEMBER
+}
+
+enum Status {
+  No_Intern
+  Interning
+  InternSuccess
 }
 
 model User {
@@ -23,6 +29,7 @@ model User {
   emailVerified DateTime?
   image         String @default("/userimage/chef.png")
   password      String?
+  status        Status    @default(No_Intern)
   role          Role      @default(MEMBER)
   sessions      Session[]
 

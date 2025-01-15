@@ -86,3 +86,72 @@ export async function getCompany() {
     throw error;   
   }
 }
+
+export async function getAdminCompany(companyId: string) {
+  try {
+    // ตรวจสอบว่า companyId ถูกส่งมาหรือไม่
+    if (!companyId) {
+      throw new Error("Company ID is required");
+    }
+
+    // ดึงข้อมูลบริษัทที่ตรงกับ companyId
+    const company = await db.company.findUnique({
+      where: {
+        id: companyId, // กรองบริษัทตาม ID
+      },
+      
+      select: {
+        id: true,
+        companyNameTh: true,
+        companyNameEn: true,
+        description: true,
+        location: true,
+        province: true,
+        contractName: true,
+        contractTel: true,
+        contractEmail: true,
+        contractSocial: true,
+        contractSocial_line: true,
+        establishment: true,
+        website: true,
+        benefit: true,
+        occupation: true,
+        imgLink: true,
+        positions: {
+          select: {
+            id: true,
+            name: true,
+            position_description: {
+              select: {
+                id: true,
+                description: true,
+                skills: {
+                  select: {
+                    id: true,
+                    name: true,
+                    tools : {
+                      select: {
+                        id : true,
+                        name : true
+                      }
+                    }
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    // ตรวจสอบว่าพบข้อมูลบริษัทหรือไม่
+    if (!company) {
+      throw new Error(`Company with ID ${companyId} not found`);
+    }
+
+    return company;
+  } catch (error: any) {
+    console.error("Error fetching company data:", error.message || error);
+    throw new Error("Failed to fetch company data"); // ส่งข้อความ error ออกไปยังส่วนที่เรียกใช้
+  }
+}

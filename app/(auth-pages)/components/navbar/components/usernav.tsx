@@ -72,7 +72,7 @@ const UserNav = () => {
           </Link>
         </li> */}
         {session?.user?.role === "ADMIN"}
-        {session?.user?.role === "ADMIN" ? <div className="text-red-300">ADMIN</div> : <div>no ADMIN</div>}
+        {session?.user?.role === "ADMIN" ? <div className="text-red-300">ADMIN</div> : <div></div>}
         {session?.isLoading ? (
           <>
             <div>IS LOADING</div>

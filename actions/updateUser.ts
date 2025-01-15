@@ -67,3 +67,41 @@ export async function updateUserApi(values: UpdateUserInput): Promise<{
     };
   }
 }
+
+
+export async function toggleRoleAction(userId: string) {
+  try {
+    // ค้นหา user ปัจจุบัน
+    const user = await db.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      return {
+        success: false,
+        message: "User not found",
+      };
+    }
+
+    // สลับ role
+    const newRole = user.role === "ADMIN" ? "MEMBER" : "ADMIN";
+
+    // อัปเดต role
+    const updatedUser = await db.user.update({
+      where: { id: userId },
+      data: { role: newRole },
+    });
+
+    return {
+      success: true,
+      message: `User role updated to ${newRole}`,
+      user: updatedUser,
+    };
+  } catch (error) {
+    console.error("Error toggling user role:", error);
+    return {
+      success: false,
+      message: "Internal Server Error",
+    };
+  }
+}

@@ -137,27 +137,27 @@ const EditForm = ({
   
     console.log("Updated Data:", updatedData);
   
-    // try {
-    //   const response = await fetch("http://localhost:5555/api/update_company", {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify(updatedData), // แปลงข้อมูลเป็น JSON
-    //   });
+    try {
+      const response = await fetch("http://localhost:5555/api/update_company", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedData), // แปลงข้อมูลเป็น JSON
+      });
   
-    //   if (response.ok) {
-    //     const result = await response.json();
-    //     console.log("Response from server:", result);
-    //     alert("Data updated successfully!");
-    //   } else {
-    //     console.error("Failed to update data. Status:", response.status);
-    //     alert("Failed to update data.");
-    //   }
-    // } catch (error) {
-    //   console.error("Error occurred while updating data:", error);
-    //   alert("An error occurred. Please try again.");
-    // }
+      if (response.ok) {
+        const result = await response.json();
+        console.log("Response from server:", result);
+        alert("Data updated successfully!");
+      } else {
+        console.error("Failed to update data. Status:", response.status);
+        alert("Failed to update data.");
+      }
+    } catch (error) {
+      console.error("Error occurred while updating data:", error);
+      alert("An error occurred. Please try again.");
+    }
   };
   
 
@@ -208,82 +208,59 @@ const EditForm = ({
   };
   const deletePosition = (positionIndex: number) => {
     const updatedPositions = [...positions];
-    const position = updatedPositions[positionIndex];
-  
-    if (position.id.startsWith("new")) {
-      // ถ้าเป็นตำแหน่งที่เพิ่มใหม่ ให้ลบออกจาก state เลย
-      updatedPositions.splice(positionIndex, 1);
-    } else {
-      // ถ้าเป็นตำแหน่งเก่า ให้ตั้งค่า isDelete เป็น true และเก็บข้อมูลใน state
-      const deletedPosition = {
-        ...position,
-        isDelete: true,
-      };
-      updatedPositions.splice(positionIndex, 1);  // ลบออกจากฟอร์ม
-      setPositions([...updatedPositions, deletedPosition]);  // เพิ่มข้อมูลกลับเข้า state
-    }
-  };
-
-  const deletePositionDescription = (positionIndex: number, descIndex: number) => {
-    const updatedPositions = [...positions];
-    const description = updatedPositions[positionIndex].position_description[descIndex];
-  
-    if (description.id.startsWith("new")) {
-      // ถ้าเป็นคำอธิบายที่เพิ่มใหม่ ให้ลบออกจาก state เลย
-      updatedPositions[positionIndex].position_description.splice(descIndex, 1);
-    } else {
-      // ถ้าเป็นคำอธิบายเก่า ให้ตั้งค่า isDelete เป็น true และเก็บข้อมูลใน state
-      const deletedDescription = {
-        ...description,
-        isDelete: true,
-      };
-      updatedPositions[positionIndex].position_description.splice(descIndex, 1);  // ลบออกจากฟอร์ม
-      updatedPositions[positionIndex].position_description.push(deletedDescription);  // เพิ่มข้อมูลกลับเข้า state
-    }
-  
+    updatedPositions[positionIndex] = {
+      ...updatedPositions[positionIndex],
+      isDelete: true,
+    }; // Mark as deleted
     setPositions(updatedPositions);
   };
 
-  const deleteSkill = (positionIndex: number, descIndex: number, skillIndex: number) => {
+  const deletePositionDescription = (
+    positionIndex: number,
+    descIndex: number
+  ) => {
     const updatedPositions = [...positions];
-    const skill = updatedPositions[positionIndex].position_description[descIndex].skills[skillIndex];
-  
-    if (skill.id.startsWith("new")) {
-      // ถ้าเป็นทักษะที่เพิ่มใหม่ ให้ลบออกจาก state เลย
-      updatedPositions[positionIndex].position_description[descIndex].skills.splice(skillIndex, 1);
-    } else {
-      // ถ้าเป็นทักษะเก่า ให้ตั้งค่า isDelete เป็น true และเก็บข้อมูลใน state
-      const deletedSkill = {
-        ...skill,
-        isDelete: true,
-      };
-      updatedPositions[positionIndex].position_description[descIndex].skills.splice(skillIndex, 1);  // ลบออกจากฟอร์ม
-      updatedPositions[positionIndex].position_description[descIndex].skills.push(deletedSkill);  // เพิ่มข้อมูลกลับเข้า state
-    }
-  
+    updatedPositions[positionIndex].position_description[descIndex] = {
+      ...updatedPositions[positionIndex].position_description[descIndex],
+      isDelete: true,
+    };
     setPositions(updatedPositions);
   };
 
-  const deleteTool = (positionIndex: number, descIndex: number, skillIndex: number, toolIndex: number) => {
+  const deleteSkill = (
+    positionIndex: number,
+    descIndex: number,
+    skillIndex: number
+  ) => {
     const updatedPositions = [...positions];
-    const tool = updatedPositions[positionIndex].position_description[descIndex].skills[skillIndex].tools[toolIndex];
-  
-    if (tool.id.startsWith("new")) {
-      // ถ้าเป็นเครื่องมือที่เพิ่มใหม่ ให้ลบออกจาก state เลย
-      updatedPositions[positionIndex].position_description[descIndex].skills[skillIndex].tools.splice(toolIndex, 1);
-    } else {
-      // ถ้าเป็นเครื่องมือเก่า ให้ตั้งค่า isDelete เป็น true และเก็บข้อมูลใน state
-      const deletedTool = {
-        ...tool,
-        isDelete: true,
-      };
-      updatedPositions[positionIndex].position_description[descIndex].skills[skillIndex].tools.splice(toolIndex, 1);  // ลบออกจากฟอร์ม
-      updatedPositions[positionIndex].position_description[descIndex].skills[skillIndex].tools.push(deletedTool);  // เพิ่มข้อมูลกลับเข้า state
-    }
-  
+    updatedPositions[positionIndex].position_description[descIndex].skills[
+      skillIndex
+    ] = {
+      ...updatedPositions[positionIndex].position_description[descIndex].skills[
+        skillIndex
+      ],
+      isDelete: true,
+    };
     setPositions(updatedPositions);
   };
 
+  const deleteTool = (
+    positionIndex: number,
+    descIndex: number,
+    skillIndex: number,
+    toolIndex: number
+  ) => {
+    const updatedPositions = [...positions];
+    updatedPositions[positionIndex].position_description[descIndex].skills[
+      skillIndex
+    ].tools[toolIndex] = {
+      ...updatedPositions[positionIndex].position_description[descIndex].skills[
+        skillIndex
+      ].tools[toolIndex],
+      isDelete: true,
+    };
+    setPositions(updatedPositions);
+  };
   const handleChangePosition = (newValue: any, index: number) => {
     if (newValue && newValue.value) {
       const updatedPositions = [...positions];
@@ -341,44 +318,54 @@ const EditForm = ({
   };
 
   // Add new position
-const addPosition = () => {
-  const newPosition = {
-    id: `new-${Date.now()}`, // ใช้ "new-" เพื่อระบุว่าเป็นตำแหน่งใหม่
-    name: "",
-    position_description: [],
+  const addPosition = () => {
+    const newPosition = {
+      id: String(Date.now()), // Unique ID based on current timestamp
+      name: "",
+      position_description: [],
+    };
+    setPositions([...positions, newPosition]);
   };
-  setPositions([...positions, newPosition]);
-};
 
+  // Add new description to a position
+  const addDescription = (positionIndex: number) => {
+    const updatedPositions = [...positions];
+    updatedPositions[positionIndex].position_description.push({
+      id: String(Date.now()), // Unique ID based on current timestamp
+      description: "",
+      skills: [],
+    });
+    setPositions(updatedPositions);
+  };
 
-const addDescription = (positionIndex: number) => {
-  const updatedPositions = [...positions];
-  updatedPositions[positionIndex].position_description.push({
-    id: `new-${Date.now()}`, // ใช้ "new-" เพื่อระบุว่าเป็นคำอธิบายใหม่
-    description: "",
-    skills: [],
-  });
-  setPositions(updatedPositions);
-};
+  // Add new skill to a description
+  const addSkill = (positionIndex: number, descIndex: number) => {
+    const updatedPositions = [...positions];
+    updatedPositions[positionIndex].position_description[descIndex].skills.push(
+      {
+        id: String(Date.now()), // Unique ID based on current timestamp
+        name: "",
+        tools: [],
+      }
+    );
+    setPositions(updatedPositions);
+  };
 
-const addSkill = (positionIndex: number, descIndex: number) => {
-  const updatedPositions = [...positions];
-  updatedPositions[positionIndex].position_description[descIndex].skills.push({
-    id: `new-${Date.now()}`, // ใช้ "new-" เพื่อระบุว่าเป็นทักษะใหม่
-    name: "",
-    tools: [],
-  });
-  setPositions(updatedPositions);
-};
-
-const addTool = (positionIndex: number, descIndex: number, skillIndex: number) => {
-  const updatedPositions = [...positions];
-  updatedPositions[positionIndex].position_description[descIndex].skills[skillIndex].tools.push({
-    id: `new-${Date.now()}`, // ใช้ "new-" เพื่อระบุว่าเป็นเครื่องมือใหม่
-    name: "",
-  });
-  setPositions(updatedPositions);
-};
+  // Add new tool to a skill
+  const addTool = (
+    positionIndex: number,
+    descIndex: number,
+    skillIndex: number
+  ) => {
+    const updatedPositions = [...positions];
+    updatedPositions[positionIndex].position_description[descIndex].skills[
+      skillIndex
+    ].tools.push({
+      id: String(Date.now()), // Unique ID based on current timestamp
+      name: "",
+    });
+    setPositions(updatedPositions);
+  };
 
   return (
     <form className="bg-blue-100 mx-auto p-6 grid grid-cols-8 gap-4 font-Prompt">

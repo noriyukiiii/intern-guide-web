@@ -20,7 +20,7 @@ const UserNav = () => {
   const [isPending, startTransition] = useTransition();
   const { session } = useSession();
   const router = useRouter();
-
+  console.log(session.user?.status);
   const handleLogout = async () => {
     startTransition(async () => {
       await signOutActions().then(() => {
@@ -56,6 +56,7 @@ const UserNav = () => {
             รายชื่อสถานประกอบการ
           </Link>
         </li>
+
         {/* <li>
           <Link href="/" className="text-[#002379] hover:text-[#FFDE59] ">
             คำถามที่พบบ่อย
@@ -82,7 +83,7 @@ const UserNav = () => {
             </Link>
           </li>
         ) : (
-          <div>no ADMIN</div>
+          <div></div>
         )}
         {session?.isLoading ? (
           <>
@@ -90,6 +91,11 @@ const UserNav = () => {
           </>
         ) : (
           <>
+            <p>status :{" "}
+              {session.user?.status === 'No_Intern' ? (
+                <span>ยังไม่ออกสหกิจ</span>
+              ) : null}
+            </p>
             {session?.user !== null ? (
               <>
                 <Dropdown>

@@ -100,6 +100,12 @@ export default function Page({ companies }: CompanyTableProps) {
                 ภาพบริษัท
               </TableHead>
               <TableHead className="w-[300px] text-center border-r border-gray-300">
+                สายงาน
+              </TableHead>
+              <TableHead className="w-[300px] text-center border-r border-gray-300">
+                ตำแหน่ง
+              </TableHead>
+              <TableHead className="w-[300px] text-center border-r border-gray-300">
                 ทักษะ
               </TableHead>
               <TableHead className="w-[300px] text-center border-r border-gray-300">
@@ -186,6 +192,32 @@ export default function Page({ companies }: CompanyTableProps) {
                   )}
                 </TableCell>
                 <TableCell className="border border-gray-300 px-4 py-2">
+                  {company.position_names
+                    ? company.position_names
+                        .split(",") // แยกข้อความตามเครื่องหมาย ","
+                        .map((position) => position.trim()) // ลบช่องว่างรอบๆ ข้อความ
+                        .filter((position) => position !== "" && position !== "Unknown") // กรองรายการที่ว่างเปล่าและ "Unknown"
+                        .map((position, index) => (
+                          <div key={index}>
+                            {"-"} {position}
+                          </div> // แสดงผลแต่ละรายการใน div
+                        ))
+                    : "N/A"}
+                </TableCell>
+                <TableCell className="border border-gray-300 px-4 py-2">
+                  {company.position_descriptions
+                    ? company.position_descriptions
+                        .split(",") // แยกข้อความตามเครื่องหมาย ","
+                        .map((description) => description.trim()) // ลบช่องว่างรอบๆ ข้อความ
+                        .filter((description) => description !== "" && description !== "Unknown") // กรองรายการที่ว่างเปล่าและ "Unknown"
+                        .map((description, index) => (
+                          <div key={index}>
+                            {"-"} {description}
+                          </div> // แสดงผลแต่ละรายการใน div
+                        ))
+                    : "N/A"}
+                </TableCell>
+                <TableCell className="border border-gray-300 px-4 py-2">
                   {company.skill_names
                     ? company.skill_names
                         .split(",") // แยกข้อความตามเครื่องหมาย ","
@@ -198,6 +230,7 @@ export default function Page({ companies }: CompanyTableProps) {
                         ))
                     : "N/A"}
                 </TableCell>
+
                 <TableCell className="border border-gray-300 px-4 py-2">
                   {company.tools_names
                     ? company.tools_names
@@ -221,9 +254,7 @@ export default function Page({ companies }: CompanyTableProps) {
                   </Link>
                 </TableCell>
 
-                {/* <TableCell className="border border-gray-300 px-4 py-2">
-                  {company.tools_names || "N/A"}
-                </TableCell> */}
+
               </TableRow>
             ))}
           </TableBody>

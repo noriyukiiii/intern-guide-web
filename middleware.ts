@@ -1,25 +1,23 @@
 import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
 import { AuthService } from "./lib/auth";
-import { isatty } from "tty";
 
 export async function middleware(request: NextRequest) {
   const { auth, isAdmin } = await AuthService.verifySession();
   const authPaths: string[] = ["/sign-in", "/sign-up"];
   const publicPaths: string[] = ["/"];
-  const homePaths: string[] = ["/"];
-  const adminPaths: string[] = ["/admin", "/admin/company-list"];
+  // const homePaths: string[] = ["/"];
+  const adminPaths: string[] = ["/admin", "/admin/company-list", "/admin/user-list"];
   const pathname: string = request.nextUrl.pathname;
 
-  const isHomeRoute = homePaths.includes(pathname);
+  console.log("Auth:", auth, "isAdmin:", isAdmin, "Pathname:", pathname);
+
+  // const isHomeRoute = homePaths.includes(pathname);
   const isAdminRoute = adminPaths.includes(pathname);
   const isPublicRoute = publicPaths.includes(pathname);
   const isAuthRoute = authPaths.includes(pathname);
 
-  if (isHomeRoute) {
-    return NextResponse.redirect(new URL("/home", request.url));
-  }
-
+  // 1. จัดการเส้นทาง Auth
   if (isAuthRoute) {
     if (auth) {
       return NextResponse.redirect(new URL("/home", request.url));
@@ -27,20 +25,22 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // 2. จัดการเส้นทาง Admin
   if (isAdminRoute) {
-    console.log("before is admin route : ", isAdmin)
-    if (auth && !isAdmin) {
-      console.log("IsAdmin : ",isAdmin)
-      return NextResponse.redirect(new URL("/home", request.url));
+    if (!auth || !isAdmin) {
+      return NextResponse.redirect(new URL("/sign-in", request.url));
     }
     return NextResponse.next();
   }
 
-  if (!auth && !isPublicRoute) {
-    return NextResponse.redirect(new URL("/sign-in", request.url));
+  // 3. จัดการเส้นทาง Public
+  if (isPublicRoute) {
+    return NextResponse.next();
+    
   }
 
-  if (!auth && !isAdmin) {
+  // 4. จัดการกรณีไม่มี Auth
+  if (!auth) {
     return NextResponse.redirect(new URL("/sign-in", request.url));
   }
 
