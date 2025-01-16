@@ -61,25 +61,27 @@ export default function Homepage() {
 
   return (
     <>
-      <div className="flex flex-col h-screen mt-24">
+      <div className="flex flex-col h-screen w-screen">
         {/* ปุ่มเลื่อน */}
-        <div className="relative w-full h-[800px]">
+        <div className="relative w-full h-auto max-h-[80vh]">
           {/* ปุ่มเลื่อนซ้าย */}
           <div
             onClick={scrollLeft}
-            className="absolute left-0 h-full top-1/2 transform -translate-y-1/2 z-10 w-16 bg-gradient-to-r from-[#ff7731] to-transparent opacity-30 cursor-pointer flex items-center justify-center transition-all duration-300 ease-in-out hover:bg-gradient-to-r hover:from-[#ff7731] hover:to-transparent hover:opacity-80  hover:shadow-orange-300"
+            className="absolute left-0 h-full top-1/2 transform -translate-y-1/2 z-10 w-16 bg-gradient-to-r from-[#ff7731] to-transparent opacity-30 cursor-pointer flex items-center justify-center transition-all duration-300 ease-in-out hover:bg-gradient-to-r hover:from-[#ff7731] hover:to-transparent hover:opacity-80 hover:shadow-orange-300"
           >
             <IoIosArrowBack
-              className="text-orange-500 mx-auto opacity-100 "
+              className="text-orange-500 mx-auto opacity-100"
               size={60}
             />
           </div>
+
+          {/* ปุ่มเลื่อนขวา */}
           <div
             onClick={scrollRight}
-            className="absolute right-0 h-full top-1/2 transform -translate-y-1/2 z-10 w-16 bg-gradient-to-r from-transparent via-transparent to-orange-500 opacity-30 cursor-pointer flex items-center justify-center transition-all duration-300 ease-in-out hover:bg-gradient-to-r hover:from-transparent hover:to-orange-600 hover:opacity-80  hover:shadow-orange-300"
+            className="absolute right-0 h-full top-1/2 transform -translate-y-1/2 z-10 w-16 bg-gradient-to-r from-transparent via-transparent to-orange-500 opacity-30 cursor-pointer flex items-center justify-center transition-all duration-300 ease-in-out hover:bg-gradient-to-r hover:from-transparent hover:to-orange-600 hover:opacity-80 hover:shadow-orange-300"
           >
             <IoIosArrowForward
-              className="text-orange-500 mx-auto opacity-100 "
+              className="text-orange-500 mx-auto opacity-100"
               size={60}
             />
           </div>
@@ -87,9 +89,9 @@ export default function Homepage() {
           {/* คอนเทนเนอร์เลื่อน */}
           <div
             ref={scrollContainerRef}
-            className="flex overflow-x-hidden  w-full h-[800px]"
+            className="flex overflow-x-hidden w-full h-auto max-h-[80vh]"
           >
-            <div className="flex-shrink-0 w-full h-full relative">
+            <div className="flex-shrink-0 w-full h-auto relative aspect-video">
               <Image
                 src="/landing/homepage_recommend.png"
                 alt="Homepage Recommendation"
@@ -97,7 +99,7 @@ export default function Homepage() {
                 className="object-cover"
               />
             </div>
-            <div className="flex-shrink-0 w-full h-full relative">
+            <div className="flex-shrink-0 w-full h-auto relative aspect-video">
               <Image
                 src="/landing/commingsoon.jpg"
                 alt="Another Recommendation"
@@ -107,7 +109,7 @@ export default function Homepage() {
             </div>
           </div>
 
-          {/* จุดนำทาง */}
+          
           <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
             {Array.from({ length: totalImages }).map((_, index) => (
               <div

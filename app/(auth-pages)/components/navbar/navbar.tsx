@@ -1,23 +1,14 @@
 //app/componet
 "use client";
 
-import { useSession } from "@/hooks/use-session";
-import UserNav from "./components/usernav";
+import { NavbarMain } from "./components/navbar-main";
 
 export default function Navbar() {
-  const { session } = useSession();
+
 
   return (
     <>
-      <UserNav />
-
-
-      {/* 
-      {session?.user?.role === "ADMIN" ? (
-        <UserNav /> // แสดง navbar สำหรับ admin
-      ) : (
-        <UserNav /> // แสดง navbar สำหรับ admin
-      )} */}
+      <NavbarMain />
     </>
   );
 }

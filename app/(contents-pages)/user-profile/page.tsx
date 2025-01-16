@@ -86,7 +86,7 @@ export default function Page() {
       if (result.success) {
         toast.success("User updated successfully!");
         setTimeout(() => {
-          router.push("/"); 
+          router.push("/");
         }, 2000); // หน่วงเวลา 2 วินาที
       } else {
         toast.error(result.message || "Failed to update user.");
@@ -100,13 +100,20 @@ export default function Page() {
   return (
     <div className="flex flex-col min-h-screen bg-[#FFFAE6] overflow-hidden font-Prompt">
       <div className="m-10 p-10 flex items-center justify-center">
-        <h1 className="text-4xl font-bold">Edit Profile</h1>
+        <h1 className="text-4xl font-bold">User Profile</h1>
       </div>
       <div className="grid grid-cols-2 bg-[#FFFAE6] h-full p-4 bg-opacity-50 items-center w-full">
         <div className="flex flex-col items-center">
           <ToastContainer />
-          <div className="grid grid-cols-3 gap-4 bg-white p-20 rounded-3xl">
-            {avatarOptions.map((avatar, index) => (
+          <div className="flex justify-center gap-4 bg-white p-20 rounded-3xl ">
+            <Image
+              src="/userimage/boy.png"
+              alt={`Avatar`}
+              width={64}
+              height={64}
+              className="object-cover"
+            />
+            {/* {avatarOptions.map((avatar, index) => (
               <div
                 key={index}
                 className={`h-16 w-16 rounded-full border-2 ${
@@ -124,9 +131,9 @@ export default function Page() {
                   className="object-cover"
                 />
               </div>
-            ))}
+            ))} */}
           </div>
-          <p className="mt-2 text-sm text-gray-600">Select your avatar</p>
+          <p className="mt-2 text-sm text-gray-600">รูป Avatar</p>
         </div>
         <Form {...form}>
           <form
@@ -139,8 +146,10 @@ export default function Page() {
               render={({ field }) => (
                 <FormItem>
                   <div className="grid grid-cols-6 items-center justify-center">
-                    <FormLabel className="col-span-1">Email</FormLabel>
-                    <FormControl>
+                    <FormLabel className="col-span-6 text-xl">
+                      Email : {session.user?.email}
+                    </FormLabel>
+                    {/* <FormControl>
                       <Input
                         className="col-span-5 bg-gray-200"
                         disabled
@@ -148,7 +157,7 @@ export default function Page() {
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage /> */}
                   </div>
                 </FormItem>
               )}
@@ -159,20 +168,22 @@ export default function Page() {
               render={({ field }) => (
                 <FormItem>
                   <div className="grid grid-cols-6 items-center justify-center">
-                    <FormLabel className="col-span-1">Firstname</FormLabel>
-                    <FormControl>
+                    <FormLabel className="col-span-6 text-xl">
+                      ชื่อ : {session.user?.firstName} {session.user?.lastName}
+                    </FormLabel>
+                    {/* <FormControl>
                       <Input
                         className="col-span-5 focus:bg-gray-100"
                         placeholder="Firstname"
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage /> */}
                   </div>
                 </FormItem>
               )}
             />
-            <FormField
+            {/* <FormField
               control={form.control}
               name="lastname"
               render={({ field }) => (
@@ -190,21 +201,23 @@ export default function Page() {
                   </div>
                 </FormItem>
               )}
-            />
+            /> */}
             <FormField
               control={form.control}
               name="phone"
               render={({ field }) => (
                 <FormItem>
                   <div className="grid grid-cols-6 items-center justify-center">
-                    <FormLabel className="col-span-1">Phone</FormLabel>
-                    <FormControl>
+                    <FormLabel className="col-span-6 text-xl">
+                      Phone : {session.user?.phone}
+                    </FormLabel>
+                    {/* <FormControl>
                       <Input
                         className="col-span-5 focus:bg-gray-100"
                         placeholder="Phone"
                         {...field}
                       />
-                    </FormControl>
+                    </FormControl> */}
                     <FormMessage />
                   </div>
                 </FormItem>
@@ -216,23 +229,34 @@ export default function Page() {
               render={({ field }) => (
                 <FormItem>
                   <div className="grid grid-cols-6 items-center justify-center">
-                    <FormLabel className="col-span-1">Student ID</FormLabel>
-                    <FormControl>
-                      <Input
-                        className="col-span-5 focus:bg-gray-100"
-                        placeholder="Student ID"
-                        {...field}
-                      />
-                    </FormControl>
+                    <FormLabel className="col-span-6 text-xl">
+                      รหัสนักศึกษา : {session.user?.studentId}
+                    </FormLabel>
+
+                    <FormMessage />
+                  </div>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="studentId"
+              render={({ field }) => (
+                <FormItem>
+                  <div className="grid grid-cols-6 items-center justify-center">
+                    <FormLabel className="col-span-6 text-xl">
+                      สถานะ : ยังไม่ออกสหกิจ
+                    </FormLabel>
+
                     <FormMessage />
                   </div>
                 </FormItem>
               )}
             />
             <div className="flex justify-center">
-              <Button type="submit" className="bg-green-700">
+              {/* <Button type="submit" className="bg-green-700">
                 Submit
-              </Button>
+              </Button> */}
             </div>
           </form>
         </Form>

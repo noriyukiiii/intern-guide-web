@@ -115,6 +115,7 @@ export async function getAdminCompany(companyId: string) {
         establishment: true,
         website: true,
         benefit: true,
+        isMou:true,
         occupation: true,
         imgLink: true,
         positions: {

@@ -30,12 +30,12 @@ const Page = () => {
          try {
             // เรียก API เพื่อเข้าสู่ระบบ
             const response = await signInActions(data);
-   
+
             if (!response?.success) {
                alert(response.message);
                return;
             }
-   
+
             // ใช้ redirectTo ที่ส่งมาจาก signInActions
             const redirectTo = response.redirectTo || "/";
             window.location.href = redirectTo;
@@ -46,33 +46,16 @@ const Page = () => {
       });
    };
 
-   // const onSubmit = (data: SignInSchema) => {
-   //    startTransition(async () => {
-   //       try {
-   //          // เรียก API เพื่อเข้าสู่ระบบ
-   //          signInActions(data).then((data) => {
-   //             if (!data?.success) {
-   //                alert(data.message);
-   //             }
-               
-   //             window.location.href = "/";
-   //          });
-   //       } catch (error) {
-   //          console.error("เกิดข้อผิดพลาดระหว่างการเข้าสู่ระบบ:", error);
-   //          alert("เกิดข้อผิดพลาดในระบบ กรุณาลองอีกครั้ง");
-   //       }
-   //    });
-   // };
    return (
-      <div className="grid grid-cols-2 h-screen">
-         <div className="relative w-full mx-auto bg-[#FFFAE6]">
+      <div className="flex flex-col lg:flex-row h-screen">
+         <div className="relative hidden lg:block lg:w-1/2 bg-[#FFFAE6]">
             <Image src="/authpage/testbg.svg" alt="Sign in Background" fill />
          </div>
-         <form
-            onSubmit={handleSubmit(onSubmit)} // เพิ่ม handleSubmit
-            className="w-full bg-[#FFFAE6] flex items-center font-Prompt"
-         >
-            <div className="flex flex-col gap-8 items-center h-fit min-w-[570px] mx-auto px-16 pt-16 pb-16 border bg-white rounded-3xl">
+         <div className="lg:w-1/2 flex items-center justify-center h-full bg-[#FFFAE6] p-4 lg:p-16">
+            <form
+               onSubmit={handleSubmit(onSubmit)}
+               className="flex flex-col gap-8 items-center w-full max-w-md p-8 bg-white rounded-3xl shadow-lg"
+            >
                <h1 className="text-3xl font-bold">เข้าสู่ระบบ</h1>
                <div className="w-full">
                   <Label htmlFor="email">Email</Label>
@@ -116,8 +99,8 @@ const Page = () => {
                      ลงทะเบียน
                   </Link>
                </div>
-            </div>
-         </form>
+            </form>
+         </div>
       </div>
    );
 };

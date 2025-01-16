@@ -10,7 +10,7 @@ const CompanyDetails = async ({
 }) => {
   const { company_id } = await params; // ใช้ await กับ params
   const company = await getCompanyDetails(company_id);
-    console.log(company);
+  
   if (!company) {
     return <p>Company not found</p>;
   }

@@ -1,6 +1,7 @@
 import Navbar from "./components/navbar/navbar";
 
 
+
 type Authlayoutprop = {
     children: React.ReactNode
 }

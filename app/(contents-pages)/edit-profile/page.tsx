@@ -102,7 +102,7 @@ export default function Page() {
       <div className="m-10 p-10 flex items-center justify-center">
         <h1 className="text-4xl font-bold">Edit Profile</h1>
       </div>
-      <div className="grid grid-cols-2 bg-[#FFFAE6] h-full p-4 bg-opacity-50 items-center w-full">
+      <div className="grid grid-cols-1 lg:grid-cols-2 bg-[#FFFAE6] h-full p-4 bg-opacity-50 items-center w-full">
         <div className="flex flex-col items-center">
           <ToastContainer />
           <div className="grid grid-cols-3 gap-4 bg-white p-20 rounded-3xl">
@@ -128,21 +128,21 @@ export default function Page() {
           </div>
           <p className="mt-2 text-sm text-gray-600">Select your avatar</p>
         </div>
-        <Form {...form}>
-          <form
+        <Form {...form} >
+          <form 
             onSubmit={form.handleSubmit(onSubmit)}
-            className="w-2/3 space-y-6 bg-white h-fit p-8 rounded-3xl"
+            className="w-full p-8 lg:w-2/3 lg:p-8 space-y-6 bg-white h-fit rounded-3xl"
           >
             <FormField
               control={form.control}
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <div className="grid grid-cols-6 items-center justify-center">
-                    <FormLabel className="col-span-1">Email</FormLabel>
+                  <div className="grid grid-cols-5 items-center justify-center">
+                    <FormLabel className="col-span-1">Email : </FormLabel>
                     <FormControl>
                       <Input
-                        className="col-span-5 bg-gray-200"
+                        className="col-span-4 bg-gray-200"
                         disabled
                         placeholder="Email"
                         {...field}
@@ -158,11 +158,11 @@ export default function Page() {
               name="firstname"
               render={({ field }) => (
                 <FormItem>
-                  <div className="grid grid-cols-6 items-center justify-center">
+                  <div className="grid grid-cols-5 items-center justify-center">
                     <FormLabel className="col-span-1">Firstname</FormLabel>
                     <FormControl>
                       <Input
-                        className="col-span-5 focus:bg-gray-100"
+                        className="col-span-4 focus:bg-gray-100"
                         placeholder="Firstname"
                         {...field}
                       />
@@ -177,11 +177,11 @@ export default function Page() {
               name="lastname"
               render={({ field }) => (
                 <FormItem>
-                  <div className="grid grid-cols-6 items-center justify-center">
+                  <div className="grid grid-cols-5 items-center justify-center">
                     <FormLabel className="col-span-1">Lastname</FormLabel>
                     <FormControl>
                       <Input
-                        className="col-span-5 focus:bg-gray-100"
+                        className="col-span-4 focus:bg-gray-100"
                         placeholder="Lastname"
                         {...field}
                       />
@@ -196,11 +196,11 @@ export default function Page() {
               name="phone"
               render={({ field }) => (
                 <FormItem>
-                  <div className="grid grid-cols-6 items-center justify-center">
+                  <div className="grid grid-cols-5 items-center justify-center">
                     <FormLabel className="col-span-1">Phone</FormLabel>
                     <FormControl>
                       <Input
-                        className="col-span-5 focus:bg-gray-100"
+                        className="col-span-4 focus:bg-gray-100"
                         placeholder="Phone"
                         {...field}
                       />
@@ -215,11 +215,11 @@ export default function Page() {
               name="studentId"
               render={({ field }) => (
                 <FormItem>
-                  <div className="grid grid-cols-6 items-center justify-center">
+                  <div className="grid grid-cols-5 items-center justify-center">
                     <FormLabel className="col-span-1">Student ID</FormLabel>
                     <FormControl>
                       <Input
-                        className="col-span-5 focus:bg-gray-100"
+                        className="col-span-4 focus:bg-gray-100"
                         placeholder="Student ID"
                         {...field}
                       />
@@ -231,7 +231,7 @@ export default function Page() {
             />
             <div className="flex justify-center">
               <Button type="submit" className="bg-green-700">
-                Submit
+                แก้ไขข้อมูล
               </Button>
             </div>
           </form>
