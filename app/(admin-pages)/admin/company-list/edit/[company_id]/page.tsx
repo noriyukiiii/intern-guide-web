@@ -1,9 +1,7 @@
+"use server"
 import { getOptionAction } from "@/actions/optionAction";
 import EditForm from "./components/edit-form";
 import { getAdminCompany } from "@/actions/companyActions";
-import HelloTest from "./components/test";
-
-
 
 type Option = {
   skill: string[];
@@ -25,9 +23,11 @@ const CompanyDetails = async ({
   // Fetch option data
   const optionData: Option = await getOptionAction();
 
-
   return (
-    <div className="p-4 flex flex-col">
+    <div className="p-4 flex flex-col font-Prompt">
+      <div className="flex items-center justify-center my-10">
+        <p className="font-bold text-2xl">แก้ไขข้อมูลสถานประกอบการ</p>
+      </div>
       <EditForm company={company} optionData={optionData} />
     </div>
   );

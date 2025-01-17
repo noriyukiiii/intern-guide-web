@@ -86,8 +86,8 @@ export default function Page() {
       if (result.success) {
         toast.success("User updated successfully!");
         setTimeout(() => {
-          router.push("/");
-        }, 2000); // หน่วงเวลา 2 วินาที
+          router.push("/profile");
+        }, 2000);
       } else {
         toast.error(result.message || "Failed to update user.");
       }
@@ -100,64 +100,36 @@ export default function Page() {
   return (
     <div className="flex flex-col min-h-screen bg-[#FFFAE6] overflow-hidden font-Prompt">
       <div className="m-10 p-10 flex items-center justify-center">
-        <h1 className="text-4xl font-bold">User Profile</h1>
+        <h1 className="text-4xl font-bold text-[#4A90E2]">User Profile</h1>
       </div>
-      <div className="grid grid-cols-2 bg-[#FFFAE6] h-full p-4 bg-opacity-50 items-center w-full">
-        <div className="flex flex-col items-center">
+      <div className="grid grid-cols-1 md:grid-cols-2 bg-[#FFFAE6] h-full p-4 bg-opacity-50 items-center w-full">
+        <div className="flex flex-col items-center mb-8 md:mb-0">
           <ToastContainer />
-          <div className="flex justify-center gap-4 bg-white p-20 rounded-3xl ">
+          <div className="flex justify-center gap-4 bg-white p-10 rounded-3xl shadow-xl">
             <Image
-              src="/userimage/boy.png"
+              src={form.watch("avatar")}
               alt={`Avatar`}
-              width={64}
-              height={64}
-              className="object-cover"
+              width={80}
+              height={80}
+              className="object-cover rounded-full border-4 border-[#4A90E2]"
             />
-            {/* {avatarOptions.map((avatar, index) => (
-              <div
-                key={index}
-                className={`h-16 w-16 rounded-full border-2 ${
-                  form.watch("avatar") === avatar
-                    ? "border-blue-500"
-                    : "border-gray-300"
-                } cursor-pointer overflow-hidden`}
-                onClick={() => handleAvatarSelect(avatar)}
-              >
-                <Image
-                  src={avatar}
-                  alt={`Avatar ${index + 1}`}
-                  width={64}
-                  height={64}
-                  className="object-cover"
-                />
-              </div>
-            ))} */}
           </div>
-          <p className="mt-2 text-sm text-gray-600">รูป Avatar</p>
+          <p className="mt-2 text-lg text-gray-600">รูป Avatar</p>
         </div>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="w-2/3 space-y-6 bg-white h-fit p-8 rounded-3xl"
+            className="w-full md:w-2/3 space-y-6 bg-white h-fit p-8 rounded-3xl shadow-lg"
           >
             <FormField
               control={form.control}
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <div className="grid grid-cols-6 items-center justify-center">
-                    <FormLabel className="col-span-6 text-xl">
+                  <div className="grid grid-cols-1 md:grid-cols-6 items-center justify-center">
+                    <FormLabel className="col-span-6 text-xl text-[#4A90E2]">
                       Email : {session.user?.email}
                     </FormLabel>
-                    {/* <FormControl>
-                      <Input
-                        className="col-span-5 bg-gray-200"
-                        disabled
-                        placeholder="Email"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage /> */}
                   </div>
                 </FormItem>
               )}
@@ -167,57 +139,23 @@ export default function Page() {
               name="firstname"
               render={({ field }) => (
                 <FormItem>
-                  <div className="grid grid-cols-6 items-center justify-center">
-                    <FormLabel className="col-span-6 text-xl">
+                  <div className="grid grid-cols-1 md:grid-cols-6 items-center justify-center">
+                    <FormLabel className="col-span-6 text-xl text-[#4A90E2]">
                       ชื่อ : {session.user?.firstName} {session.user?.lastName}
                     </FormLabel>
-                    {/* <FormControl>
-                      <Input
-                        className="col-span-5 focus:bg-gray-100"
-                        placeholder="Firstname"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage /> */}
                   </div>
                 </FormItem>
               )}
             />
-            {/* <FormField
-              control={form.control}
-              name="lastname"
-              render={({ field }) => (
-                <FormItem>
-                  <div className="grid grid-cols-6 items-center justify-center">
-                    <FormLabel className="col-span-1">Lastname</FormLabel>
-                    <FormControl>
-                      <Input
-                        className="col-span-5 focus:bg-gray-100"
-                        placeholder="Lastname"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </div>
-                </FormItem>
-              )}
-            /> */}
             <FormField
               control={form.control}
               name="phone"
               render={({ field }) => (
                 <FormItem>
-                  <div className="grid grid-cols-6 items-center justify-center">
-                    <FormLabel className="col-span-6 text-xl">
+                  <div className="grid grid-cols-1 md:grid-cols-6 items-center justify-center">
+                    <FormLabel className="col-span-6 text-xl text-[#4A90E2]">
                       Phone : {session.user?.phone}
                     </FormLabel>
-                    {/* <FormControl>
-                      <Input
-                        className="col-span-5 focus:bg-gray-100"
-                        placeholder="Phone"
-                        {...field}
-                      />
-                    </FormControl> */}
                     <FormMessage />
                   </div>
                 </FormItem>
@@ -228,11 +166,10 @@ export default function Page() {
               name="studentId"
               render={({ field }) => (
                 <FormItem>
-                  <div className="grid grid-cols-6 items-center justify-center">
-                    <FormLabel className="col-span-6 text-xl">
+                  <div className="grid grid-cols-1 md:grid-cols-6 items-center justify-center">
+                    <FormLabel className="col-span-6 text-xl text-[#4A90E2]">
                       รหัสนักศึกษา : {session.user?.studentId}
                     </FormLabel>
-
                     <FormMessage />
                   </div>
                 </FormItem>
@@ -243,21 +180,15 @@ export default function Page() {
               name="studentId"
               render={({ field }) => (
                 <FormItem>
-                  <div className="grid grid-cols-6 items-center justify-center">
-                    <FormLabel className="col-span-6 text-xl">
+                  <div className="grid grid-cols-1 md:grid-cols-6 items-center justify-center">
+                    <FormLabel className="col-span-6 text-xl text-[#4A90E2]">
                       สถานะ : ยังไม่ออกสหกิจ
                     </FormLabel>
-
                     <FormMessage />
                   </div>
                 </FormItem>
               )}
             />
-            <div className="flex justify-center">
-              {/* <Button type="submit" className="bg-green-700">
-                Submit
-              </Button> */}
-            </div>
           </form>
         </Form>
       </div>

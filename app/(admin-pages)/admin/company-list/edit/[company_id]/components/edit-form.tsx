@@ -4,6 +4,11 @@ import { useEffect, useState } from "react";
 import CreatableSelect from "react-select/creatable";
 import Select from "react-select";
 import { SingleValue } from "react-select";
+import { X } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Button } from "@nextui-org/react";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 interface Company {
   id: string;
@@ -71,6 +76,7 @@ const EditForm = ({
   const [isClient, setIsClient] = useState(false);
   const [formData, setFormData] = useState<Company | null>(null);
   const [positions, setPositions] = useState<Position[]>([]);
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -154,7 +160,16 @@ const EditForm = ({
       if (response.ok) {
         const result = await response.json();
         console.log("Response from server:", result);
-        alert("Data updated successfully!");
+        // แสดง toast เมื่ออัปเดตข้อมูลสำเร็จ
+        toast.success("Data updated successfully!", {
+          position: "top-center", // ใช้ตำแหน่งเป็น string
+          autoClose: 3000, // ปิดเองภายใน 3 วินาที
+        });
+
+        // รอ 2 วินาทีก่อนที่จะทำการ push
+        setTimeout(() => {
+          router.push("/admin/company-list");
+        }, 2000);
       } else {
         console.error("Failed to update data. Status:", response.status);
         alert("Failed to update data.");
@@ -275,6 +290,12 @@ const EditForm = ({
       { label: "อุบลราชธานี", value: "อุบลราชธานี" },
       { label: "อ่างทอง", value: "อ่างทอง" },
       { label: "อื่นๆ", value: "อื่นๆ" },
+    ],
+    occupation: [
+      { label: "Network", value: "Network" },
+      { label: "Database", value: "database" },
+      { label: "Both", value: "both" },
+      { label: "ไม่มีข้อมูล", value: "No_Info" },
     ],
     establishment: [
       { label: "เอกชน", value: "เอกชน" },
@@ -461,14 +482,13 @@ const EditForm = ({
       [field]: selectedOption ? selectedOption.value : "", // ใช้ prevFormData! เพื่อหลีกเลี่ยงปัญหา null
     }));
   };
-  const handleChange2 = (e : any, fieldName : any) => {
+  const handleChange2 = (e: any, fieldName: any) => {
     const { name, value } = e.target;
     setFormData({
       ...formData!,
       [fieldName || name]: value,
     });
   };
-
 
   const handleChangePosition = (newValue: any, positionId: string) => {
     if (newValue && newValue.value) {
@@ -479,6 +499,9 @@ const EditForm = ({
         setPositions(updatedPositions);
       }
     }
+  };
+  const handleNavigation = () => {
+    router.push("/admin/company-list"); // นำไปยังหน้าที่ต้องการ
   };
 
   // Handle changes in description select
@@ -600,381 +623,450 @@ const EditForm = ({
   };
 
   return (
-    <form className="bg-gray-200 border-black border-2 mx-auto p-6 grid grid-cols-8 gap-4 font-Prompt rounded-md">
-      <div className="col-span-4">
-        <label htmlFor="companyNameTh">Company Name (TH):</label>
-        <input
-          type="text"
-          id="companyNameTh"
-          name="companyNameTh"
-          value={formData?.companyNameTh || ""}
-          onChange={(e) => handleChange(e, "companyNameTh")} // เรียกฟังก์ชัน handleChange
-          className="border p-2 w-full"
-        />
-      </div>
+    <div className="mx-auto">
+      <ToastContainer />
+      <form className="bg-gray-200 border-black border-2 mx-auto p-6 grid grid-cols-8 gap-4 font-Prompt rounded-md">
+        <div className="col-span-4">
+          <label htmlFor="companyNameTh">Company Name (TH):</label>
+          <input
+            type="text"
+            id="companyNameTh"
+            name="companyNameTh"
+            value={formData?.companyNameTh || ""}
+            onChange={(e) => handleChange(e, "companyNameTh")} // เรียกฟังก์ชัน handleChange
+            className="border p-2 w-full"
+          />
+        </div>
 
-      <div className="col-span-4">
-        <label htmlFor="companyNameEn">Company Name (EN):</label>
-        <Input
-          type="text"
-          id="companyNameEn"
-          placeholder="Company Name (EN)"
-          value={formData?.companyNameEn || ""}
-          onChange={(e) => handleChange(e, "companyNameEn")} // เรียกฟังก์ชัน handleChange
-          className="border p-2 w-full"
-        />
-      </div>
-      <div className="col-span-4">
-        <label htmlFor="description">คำอธิบายบริษัท :</label>
-        <Input
-          type="text"
-          id="description"
-          placeholder="คำอธิบายบริษัท"
-          value={formData?.description || ""}
-          onChange={(e) => handleChange(e, "description")} // เรียกฟังก์ชัน handleChange
-          className="border p-2 w-full"
-        />
-      </div>
-      <div className="col-span-4">
-        <label htmlFor="location">ที่อยู่บริษัท:</label>
-        <Input
-          type="text"
-          id="location"
-          placeholder="location"
-          value={formData?.location || ""}
-          onChange={(e) => handleChange(e, "location")} // เรียกฟังก์ชัน handleChange
-          className="border p-2 w-full"
-        />
-      </div>
-      <div className="col-span-4">
-        <label htmlFor="province">จังหวัด :</label>
-        <Select
-          isClearable
-          options={transformedOptions.province} // ใช้ options จาก transformedOptions.province
-          value={
-            formData?.province
-              ? { label: formData.province, value: formData.province }
-              : null
-          } // ใช้ค่า province จาก formData
-          onChange={(selectedOption) => {
-            handleSelectChange(selectedOption, "province"); // เรียกฟังก์ชัน handleSelectChange
-          }}
-          placeholder="Select or Create Province" // ข้อความในช่องเลือก
-        />
-      </div>
-      <div className="col-span-4">
-        <label htmlFor="contractName">contractName:</label>
-        <Input
-          type="text"
-          id="contractName"
-          placeholder="contractName"
-          value={formData?.contractName || ""}
-          onChange={(e) => handleChange(e, "contractName")} // เรียกฟังก์ชัน handleChange
-          className="border p-2 w-full"
-        />
-      </div>
-      <div className="col-span-4">
-        <label htmlFor="contractTel">contractTel:</label>
-        <Input
-          type="text"
-          id="contractTel"
-          placeholder="contractTel"
-          value={formData?.contractTel || ""}
-          onChange={(e) => handleChange(e, "contractTel")} // เรียกฟังก์ชัน handleChange
-          className="border p-2 w-full"
-        />
-      </div>
-      <div className="col-span-4">
-        <label htmlFor="contractSocial">contractSocial:</label>
-        <Input
-          type="text"
-          id="contractSocial"
-          placeholder="contractSocial"
-          value={formData?.contractSocial || ""}
-          onChange={(e) => handleChange(e, "contractSocial")} // เรียกฟังก์ชัน handleChange
-          className="border p-2 w-full"
-        />
-      </div>
-      <div className="col-span-4">
-        <label htmlFor="contractSocial_line">contractSocial_line:</label>
-        <Input
-          type="text"
-          id="contractSocial_line"
-          placeholder="Line ID : xxx"
-          value={formData?.contractSocial_line || ""}
-          onChange={(e) => handleChange(e, "contractSocial_line")} // เรียกฟังก์ชัน handleChange
-          className="border p-2 w-full"
-        />
-      </div>
-      <div className="col-span-4">
-        <label htmlFor="establishment">establishment:</label>
-        <Select
-          isClearable
-          options={transformedOptions.establishment} // ใช้ options จาก transformedOptions.province
-          value={
-            formData?.establishment
-              ? { label: formData.establishment, value: formData.establishment }
-              : null
-          } // ใช้ค่า province จาก formData
-          onChange={(selectedOption) => {
-            handleSelectChange(selectedOption, "establishment"); // เรียกฟังก์ชัน handleSelectChange
-          }}
-          placeholder="Select or Create Province" // ข้อความในช่องเลือก
-        />
-      </div>
-      <div className="col-span-8">
-        <label htmlFor="website">website:</label>
-        <Input
-          type="text"
-          id="website"
-          placeholder="ลิ้งเว็บไซต์บริษัท"
-          value={formData?.website || ""}
-          onChange={(e) => handleChange(e, "website")} // เรียกฟังก์ชัน handleChange
-          className="border p-2 w-full"
-        />
-      </div>
-      <div className="col-span-4">
-        <label htmlFor="benefit">benefit:</label>
-        <Input
-          type="text"
-          id="benefit"
-          placeholder="Line ID : xxx"
-          value={formData?.benefit || ""}
-          onChange={(e) => handleChange(e, "benefit")} // เรียกฟังก์ชัน handleChange
-          className="border p-2 w-full"
-        />
-      </div>
-      <div className="col-span-4">
-        <label htmlFor="benefit">ลิ้งภาพบริษัท :</label>
-        <Input
-          type="text"
-          id="imgLink"
-          placeholder="Line ID : xxx"
-          value={formData?.imgLink || ""}
-          onChange={(e) => handleChange(e, "imgLink")} // เรียกฟังก์ชัน handleChange
-          className="border p-2 w-full"
-        />
-      </div>
-      <div className="col-span-4">
-        <select
-          id="isMou"
-          name="isMou"
-          value={formData?.isMou?.toString() || ""}
-          onChange={(e) =>
-            handleChange2(
-              { target: { name: "isMou", value: e.target.value === "true" } },
-              "isMou"
-            )
-          }
-          className="border p-2 w-full"
-        >
-          <option value="">-- เลือกสถานะ --</option>
-          <option value="true">อยู่</option>
-          <option value="false">ไม่อยู่</option>
-        </select>
-      </div>
-      {/* Render Positions */}
-      <div className="col-span-4">
-        {positions
-          ?.filter((position) => !position.isDelete) // กรองเฉพาะตำแหน่งที่ไม่ได้ถูกลบ
-          .map((position, positionIndex) => (
-            <div key={position.id} className="mb-4">
-              <label htmlFor={`position-${positionIndex}`}>
-                Position {positionIndex + 1}:
-              </label>
-              <CreatableSelect
-                id={`position-${positionIndex}`}
-                name={`position-${positionIndex}`}
-                value={
-                  position.name
-                    ? { label: position.name, value: position.name }
-                    : null
-                }
-                onChange={(newValue) =>
-                  handleChangePosition(newValue, position.id)
-                }
-                options={transformedOptions.position}
-                placeholder="Select or type to add"
-                isClearable
-              />
-              {/* Delete Position */}
-              <button
-                type="button"
-                onClick={() => deletePosition(position.id)}
-                className="mt-2 p-2 bg-red-500 text-white rounded"
-              >
-                ลบตำแหน่ง {position.name}
-              </button>
+        <div className="col-span-4">
+          <label htmlFor="companyNameEn">Company Name (EN):</label>
+          <Input
+            type="text"
+            id="companyNameEn"
+            placeholder="Company Name (EN)"
+            value={formData?.companyNameEn || ""}
+            onChange={(e) => handleChange(e, "companyNameEn")} // เรียกฟังก์ชัน handleChange
+            className="border p-2 w-full"
+          />
+        </div>
+        <div className="col-span-4">
+          <label htmlFor="description">คำอธิบายบริษัท :</label>
+          <Input
+            type="text"
+            id="description"
+            placeholder="คำอธิบายบริษัท"
+            value={formData?.description || ""}
+            onChange={(e) => handleChange(e, "description")} // เรียกฟังก์ชัน handleChange
+            className="border p-2 w-full"
+          />
+        </div>
+        <div className="col-span-4">
+          <label htmlFor="province">จังหวัด :</label>
+          <Select
+            isClearable
+            options={transformedOptions.province} // ใช้ options จาก transformedOptions.province
+            value={
+              formData?.province
+                ? { label: formData.province, value: formData.province }
+                : null
+            } // ใช้ค่า province จาก formData
+            onChange={(selectedOption) => {
+              handleSelectChange(selectedOption, "province"); // เรียกฟังก์ชัน handleSelectChange
+            }}
+            placeholder="Select or Create Province" // ข้อความในช่องเลือก
+          />
+        </div>
+        <div className="col-span-8">
+          <label htmlFor="location">ที่อยู่บริษัท:</label>
+          <Input
+            type="text"
+            id="location"
+            placeholder="location"
+            value={formData?.location || ""}
+            onChange={(e) => handleChange(e, "location")} // เรียกฟังก์ชัน handleChange
+            className="border p-2 w-full"
+          />
+        </div>
 
-              {/* Render Position Descriptions */}
-              {position.position_description
-                ?.filter((description) => !description.isDelete) // กรองคำอธิบายที่ไม่ได้ถูกลบ
-                .map((description, descIndex) => (
-                  <div key={description.id} className="pl-10">
-                    <label htmlFor={`description-${descIndex}`}>
-                      Description {descIndex + 1}:
-                    </label>
+        <div className="col-span-4">
+          <label htmlFor="contractName">ชื่อผู้ติดต่อ:</label>
+          <Input
+            type="text"
+            id="contractName"
+            placeholder="ชื่อผู้ติดต่อ"
+            value={formData?.contractName || ""}
+            onChange={(e) => handleChange(e, "contractName")} // เรียกฟังก์ชัน handleChange
+            className="border p-2 w-full"
+          />
+        </div>
+        <div className="col-span-4">
+          <label htmlFor="contractTel">เบอร์โทรผู้ติดต่อ:</label>
+          <Input
+            type="text"
+            id="contractTel"
+            placeholder="เบอร์โทรผู้ติดต่อ"
+            value={formData?.contractTel || ""}
+            onChange={(e) => handleChange(e, "contractTel")} // เรียกฟังก์ชัน handleChange
+            className="border p-2 w-full"
+          />
+        </div>
+        <div className="col-span-4">
+          <label htmlFor="contractSocial">ช่องทางการติดต่อ Social:</label>
+          <Input
+            type="text"
+            id="contractSocial"
+            placeholder="ช่องทางการติดต่อ"
+            value={formData?.contractSocial || ""}
+            onChange={(e) => handleChange(e, "contractSocial")} // เรียกฟังก์ชัน handleChange
+            className="border p-2 w-full"
+          />
+        </div>
+        <div className="col-span-4">
+          <label htmlFor="contractSocial_line">ช่องทางการติดต่อ Line:</label>
+          <Input
+            type="text"
+            id="contractSocial_line"
+            placeholder="Line ID : xxx"
+            value={formData?.contractSocial_line || ""}
+            onChange={(e) => handleChange(e, "contractSocial_line")} // เรียกฟังก์ชัน handleChange
+            className="border p-2 w-full"
+          />
+        </div>
+        <div className="col-span-4">
+          <label htmlFor="establishment">สังกัดหน่วยงาน:</label>
+          <Select
+            isClearable
+            options={transformedOptions.establishment} // ใช้ options จาก transformedOptions.province
+            value={
+              formData?.establishment
+                ? {
+                    label: formData.establishment,
+                    value: formData.establishment,
+                  }
+                : null
+            } // ใช้ค่า province จาก formData
+            onChange={(selectedOption) => {
+              handleSelectChange(selectedOption, "establishment"); // เรียกฟังก์ชัน handleSelectChange
+            }}
+            placeholder="Select or Create Province" // ข้อความในช่องเลือก
+          />
+        </div>
+        <div className="col-span-4">
+          <label htmlFor="establishment">สายการเรียน:</label>
+          <Select
+            isClearable
+            options={transformedOptions.occupation} // ใช้ options จาก transformedOptions.province
+            value={
+              formData?.occupation
+                ? { label: formData.occupation, value: formData.occupation }
+                : null
+            } // ใช้ค่า province จาก formData
+            onChange={(selectedOption) => {
+              handleSelectChange(selectedOption, "occupation"); // เรียกฟังก์ชัน handleSelectChange
+            }}
+            placeholder="สายการเรียนที่รับ" // ข้อความในช่องเลือก
+          />
+        </div>
+        <div className="col-span-8">
+          <label htmlFor="website">ลิ้งค์เว็บไซต์ของบริษัท:</label>
+          <Input
+            type="text"
+            id="website"
+            placeholder="ลิ้งเว็บไซต์บริษัท"
+            value={formData?.website || ""}
+            onChange={(e) => handleChange(e, "website")} // เรียกฟังก์ชัน handleChange
+            className="border p-2 w-full"
+          />
+        </div>
+        <div className="col-span-4">
+          <label htmlFor="benefit">สวัสดิการบริษัท:</label>
+          <Input
+            type="text"
+            id="benefit"
+            placeholder="สวัสดิการบริษัท"
+            value={formData?.benefit || ""}
+            onChange={(e) => handleChange(e, "benefit")} // เรียกฟังก์ชัน handleChange
+            className="border p-2 w-full"
+          />
+        </div>
+        <div className="col-span-4">
+          <label htmlFor="benefit">ลิ้งภาพบริษัท :</label>
+          <Input
+            type="text"
+            id="imgLink"
+            placeholder="Link ภาพของ บริษัท"
+            value={formData?.imgLink || ""}
+            onChange={(e) => handleChange(e, "imgLink")} // เรียกฟังก์ชัน handleChange
+            className="border p-2 w-full"
+          />
+        </div>
+        <div className="col-span-4">
+          <label htmlFor="benefit">อยู่ใน Mou :</label>
+          <select
+            id="isMou"
+            name="isMou"
+            value={formData?.isMou?.toString() || ""}
+            onChange={(e) =>
+              handleChange2(
+                { target: { name: "isMou", value: e.target.value === "true" } },
+                "isMou"
+              )
+            }
+            className="border p-2 w-full"
+          >
+            <option value="true">อยู่</option>
+            <option value="false">ไม่อยู่</option>
+          </select>
+        </div>
+
+        {/* Render Positions */}
+        <div className="col-span-8">
+          {positions
+            ?.filter((position) => !position.isDelete) // กรองเฉพาะตำแหน่งที่ไม่ได้ถูกลบ
+            .map((position, positionIndex) => (
+              <div key={position.id} className="mb-4">
+                <label htmlFor={`position-${positionIndex}`}>
+                  ตำแหน่งที่ {positionIndex + 1}
+                </label>
+                <div className="col-span-4">
+                  <div className="flex items-center gap-4">
                     <CreatableSelect
-                      id={`description-${descIndex}`}
-                      name={`description-${descIndex}`}
+                      id={`position-${positionIndex}`}
+                      name={`position-${positionIndex}`}
                       value={
-                        description.description
-                          ? {
-                              label: description.description,
-                              value: description.description,
-                            }
+                        position.name
+                          ? { label: position.name, value: position.name }
                           : null
                       }
                       onChange={(newValue) =>
-                        handleChangePositionDescription(
-                          newValue,
-                          position.id,
-                          description.id
-                        )
+                        handleChangePosition(newValue, position.id)
                       }
-                      options={transformedOptions.positiondescription}
+                      options={transformedOptions.position}
                       placeholder="Select or type to add"
                       isClearable
+                      className="flex-1" // ให้ Select ใช้พื้นที่ที่เหลือ
                     />
-                    {/* Delete Position Description */}
                     <button
                       type="button"
-                      onClick={() =>
-                        deletePositionDescription(position.id, description.id)
-                      }
-                      className="mt-2 p-2 bg-red-500 text-white rounded"
+                      onClick={() => deletePosition(position.id)}
+                      className="p-2 bg-red-500 text-white rounded"
                     >
-                      ลบคำอธิบายตำแหน่ง : {description.description}
+                      <X size={20} />
                     </button>
-
-                    {/* Render Skills and Tools */}
-                    {description.skills
-                      ?.filter((skill) => !skill.isDelete) // กรองทักษะที่ไม่ได้ถูกลบ
-                      .map((skill, skillIndex) => (
-                        <div key={skill.id} className="pl-10">
-                          <label htmlFor={`skill-${descIndex}`}>
-                            Skill {skillIndex + 1}:
-                          </label>
+                    {/* Delete Position */}
+                  </div>
+                </div>
+                {/* Render Position Descriptions */}
+                {position.position_description
+                  ?.filter((description) => !description.isDelete) // กรองคำอธิบายที่ไม่ได้ถูกลบ
+                  .map((description, descIndex) => (
+                    <div key={description.id} className="pl-10 mt-2">
+                      <label htmlFor={`description-${descIndex}`}>
+                        ตำแหน่งงาน {descIndex + 1}
+                      </label>
+                      <div className="col-span-4">
+                        <div className="flex items-center gap-4">
                           <CreatableSelect
-                            id={`skill-${descIndex}`}
-                            name={`skill-${descIndex}`}
+                            id={`description-${descIndex}`}
+                            name={`description-${descIndex}`}
                             value={
-                              skill.name
-                                ? { label: skill.name, value: skill.name }
+                              description.description
+                                ? {
+                                    label: description.description,
+                                    value: description.description,
+                                  }
                                 : null
                             }
                             onChange={(newValue) =>
-                              handleChangeSkill(
+                              handleChangePositionDescription(
                                 newValue,
                                 position.id,
-                                description.id,
-                                skill.id
+                                description.id
                               )
                             }
-                            options={transformedOptions.skill}
+                            options={transformedOptions.positiondescription}
                             placeholder="Select or type to add"
+                            className="flex-1"
                             isClearable
                           />
-                          {/* Delete Skill */}
+                          {/* Delete Position Description */}
+
                           <button
                             type="button"
                             onClick={() =>
-                              deleteSkill(position.id, description.id, skill.id)
+                              deletePositionDescription(
+                                position.id,
+                                description.id
+                              )
                             }
-                            className="mt-2 p-2 bg-red-500 text-white rounded"
+                            className="p-2 bg-red-500 text-white rounded "
                           >
-                            Delete Skill
+                            <X size={20} />
                           </button>
+                        </div>
+                      </div>
 
-                          {/* Render Tools */}
-                          {skill.tools
-                            ?.filter((tool) => !tool.isDelete) // กรองเครื่องมือที่ไม่ได้ถูกลบ
-                            .map((tool, toolIndex) => (
-                              <div key={tool.id} className="pl-10">
-                                <label htmlFor={`tool-${descIndex}`}>
-                                  Tool {toolIndex + 1}:
-                                </label>
+                      {/* Render Skills and Tools */}
+                      {description.skills
+                        ?.filter((skill) => !skill.isDelete) // กรองทักษะที่ไม่ได้ถูกลบ
+                        .map((skill, skillIndex) => (
+                          <div key={skill.id} className="pl-10">
+                            <label htmlFor={`skill-${descIndex}`}>
+                              ทักษะ {skillIndex + 1}
+                            </label>
+                            <div className="col-span-4">
+                              <div className="flex items-center gap-4">
                                 <CreatableSelect
-                                  id={`tool-${descIndex}`}
-                                  name={`tool-${descIndex}`}
+                                  id={`skill-${descIndex}`}
+                                  name={`skill-${descIndex}`}
                                   value={
-                                    tool.name
-                                      ? { label: tool.name, value: tool.name }
+                                    skill.name
+                                      ? { label: skill.name, value: skill.name }
                                       : null
                                   }
                                   onChange={(newValue) =>
-                                    handleChangeTool(
+                                    handleChangeSkill(
                                       newValue,
                                       position.id,
                                       description.id,
-                                      skill.id,
-                                      tool.id
+                                      skill.id
                                     )
                                   }
-                                  options={transformedOptions.tool}
+                                  options={transformedOptions.skill}
                                   placeholder="Select or type to add"
+                                  className="flex-1"
                                   isClearable
                                 />
-                                {/* Delete Tool */}
+                                {/* Delete Skill */}
                                 <button
                                   type="button"
                                   onClick={() =>
-                                    deleteTool(
+                                    deleteSkill(
                                       position.id,
                                       description.id,
-                                      skill.id,
-                                      tool.id
+                                      skill.id
                                     )
                                   }
-                                  className="mt-2 p-2 bg-red-500 text-white rounded"
+                                  className=" p-2 bg-red-500 text-white rounded"
                                 >
-                                  Delete Tool
+                                  <X size={20} />
                                 </button>
                               </div>
-                            ))}
-                          <button
-                            type="button"
-                            onClick={() =>
-                              addTool(position.id, description.id, skill.id)
-                            } // ส่ง positionId, descId, skillId
-                            className="mt-2 p-2 bg-green-500 text-white rounded"
-                          >
-                            Add Tool
-                          </button>
-                        </div>
-                      ))}
-                    <button
-                      type="button"
-                      onClick={() => addSkill(position.id, description.id)} // ส่ง positionId และ descId
-                      className="mt-2 p-2 bg-green-500 text-white rounded"
-                    >
-                      Add Skill
-                    </button>
-                  </div>
-                ))}
+                            </div>
+                            {/* Render Tools */}
+                            {skill.tools
+                              ?.filter((tool) => !tool.isDelete) // กรองเครื่องมือที่ไม่ได้ถูกลบ
+                              .map((tool, toolIndex) => (
+                                <div key={tool.id} className="pl-10">
+                                  <label htmlFor={`tool-${descIndex}`}>
+                                    เครื่องมือ {toolIndex + 1}
+                                  </label>
+                                  <div className="col-span-4">
+                                    <div className="flex items-center gap-4">
+                                      <CreatableSelect
+                                        id={`tool-${descIndex}`}
+                                        name={`tool-${descIndex}`}
+                                        value={
+                                          tool.name
+                                            ? {
+                                                label: tool.name,
+                                                value: tool.name,
+                                              }
+                                            : null
+                                        }
+                                        onChange={(newValue) =>
+                                          handleChangeTool(
+                                            newValue,
+                                            position.id,
+                                            description.id,
+                                            skill.id,
+                                            tool.id
+                                          )
+                                        }
+                                        options={transformedOptions.tool}
+                                        placeholder="Select or type to add"
+                                        className="flex-1"
+                                        isClearable
+                                      />
+                                      {/* Delete Tool */}
+                                      <button
+                                        type="button"
+                                        onClick={() =>
+                                          deleteTool(
+                                            position.id,
+                                            description.id,
+                                            skill.id,
+                                            tool.id
+                                          )
+                                        }
+                                        className="p-2 bg-red-500 text-white rounded"
+                                      >
+                                        <X size={20} />
+                                      </button>
+                                    </div>
+                                  </div>
+                                </div>
+                              ))}
 
-              <button
-                type="button"
-                onClick={() => addDescription(position.id)} // ส่ง positionId
-                className="mt-2 p-2 bg-green-500 text-white rounded"
-              >
-                Add Description
-              </button>
-            </div>
-          ))}
+                            <button
+                              type="button"
+                              onClick={() =>
+                                addTool(position.id, description.id, skill.id)
+                              } // ส่ง positionId, descId, skillId
+                              className="mt-2 px-4 p-2 ml-10 bg-green-500 text-white rounded"
+                            >
+                              เพิ่มเครื่องมือ
+                            </button>
+                          </div>
+                        ))}
 
-        <button
-          type="button"
-          onClick={addPosition}
-          className="mt-4 p-2 bg-blue-500 text-white rounded"
-        >
-          Add Position
-        </button>
-        <button className="p-2 bg-rose-200" onClick={handleSubmit}>
-          ยืนยันการแก้ไขข้อมูล
-        </button>
-      </div>
-    </form>
+                      <button
+                        type="button"
+                        onClick={() => addSkill(position.id, description.id)} // ส่ง positionId และ descId
+                        className="mt-2 p-2 px-4 ml-10  bg-green-500 text-white rounded"
+                      >
+                        เพิ่มทักษะ
+                      </button>
+                    </div>
+                  ))}
+
+                <button
+                  type="button"
+                  onClick={() => addDescription(position.id)} // ส่ง positionId
+                  className="mt-2 ml-10 p-2 px-4 bg-green-500 text-white rounded"
+                >
+                  เพิ่มตำแหน่งงาน
+                </button>
+              </div>
+            ))}
+
+          <button
+            type="button"
+            onClick={addPosition}
+            className="mt-4 px-4 p-2 bg-blue-500 text-white rounded"
+          >
+            เพื่มตำแหน่ง
+          </button>
+        </div>
+
+        <div className="col-span-4 flex justify-end">
+          <Button
+            className="p-2 bg-white w-[120px] rounded-md border-2 border-gray-400 hover:bg-gray-300 transition"
+            onPress={handleNavigation}
+          >
+            <div className="text-center">ยกเลิก</div>
+          </Button>
+        </div>
+        <div className="col-span-4 flex justify-start">
+          <button
+            className="p-2 bg-red-400 w-[120px] rounded-md border-2 border-gray-400 hover:bg-red-600 transition"
+            onClick={handleSubmit}
+          >
+            <div className="text-center text-white">ยืนยันการแก้ไข</div>
+          </button>
+        </div>
+      </form>
+    </div>
   );
 };
 
