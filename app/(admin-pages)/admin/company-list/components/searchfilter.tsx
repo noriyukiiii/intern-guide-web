@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Table from "./table";
-
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
 interface CompanyTableProps {
   companies: {
     company_id: string;
@@ -24,6 +25,7 @@ interface CompanyTableProps {
   }[];
 }
 const SearchFilter = ({ companies }: CompanyTableProps) => {
+  const router = useRouter()
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedPosition, setSelectedPosition] = useState<string>(""); // ตำแหน่ง
   const [selectedSkill, setSelectedSkill] = useState<string>(""); // ทักษะ
@@ -35,6 +37,12 @@ const SearchFilter = ({ companies }: CompanyTableProps) => {
   const [selectedIsMou, setSelectedIsMou] = useState<string>(""); // ฟิลเตอร์บริษัทใน MOU
   const [itemsPerPage, setItemsPerPage] = useState<number>(10); // จำนวนรายการต่อหน้า
   const [currentPage, setCurrentPage] = useState<number>(1); // หน้าปัจจุบัน
+
+  const HandleInsertButton = () => {
+    router.push("/admin/company-list/insert-company");
+  };
+
+
 
   // คำนวณรายการที่ต้องแสดง
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -305,7 +313,11 @@ const SearchFilter = ({ companies }: CompanyTableProps) => {
           </div>
         </div>
       </div>
-
+      <div className="flex flex-row justify-end items-center mt-4">
+        <Button onClick={HandleInsertButton}>
+              เพื่มสถานประกอบการ
+        </Button>
+      </div>
       <div className="">
         <Table companies={paginatedCompanies} />
       </div>

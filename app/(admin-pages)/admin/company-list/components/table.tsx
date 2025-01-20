@@ -44,6 +44,31 @@ export default function Page({ companies }: CompanyTableProps) {
   const currentCompanies = companies.slice(startIndex, endIndex);
   const totalPages = Math.ceil(companies.length / itemsPerPage);
 
+  const deleteCompany = async (companyId: string) => {
+    try {
+      // ตัวอย่างการเรียก API เพื่อทำ soft delete โดยการตั้งค่า deletedAt
+      const response = await fetch(
+        `http://localhost:5555/api/companies/${companyId}`,
+        {
+          method: "PATCH", // ใช้ PATCH แทน DELETE เพื่อทำการอัปเดตฟิลด์ deletedAt
+        }
+      );
+
+      // ตรวจสอบสถานะการตอบกลับ
+      if (response.ok) {
+        // หากสำเร็จให้แสดงข้อความ
+        alert("Company deleted successfully");
+        // คุณสามารถอัปเดต UI หรือการแสดงผล เช่น ลบบริษัทออกจากรายการหรือรีเฟรชหน้าจอ
+        window.location.reload(); // รีเฟรชหน้าเว็บ
+      } else {
+        throw new Error("Failed to delete company");
+      }
+    } catch (error) {
+      console.error("Error deleting company:", error);
+      alert("Failed to delete company");
+    }
+  };
+
   const handleImageClick = (imageUrl: string) => {
     setSelectedImage(imageUrl); // เมื่อคลิกรูป จะตั้งค่า URL ของรูปให้กับ state
   };
@@ -51,8 +76,6 @@ export default function Page({ companies }: CompanyTableProps) {
   const closeModal = () => {
     setSelectedImage(null); // ปิด Modal
   };
-
-  const handleEditClick = async (companyId: string) => {};
 
   return (
     <div className="p-4 flex flex-col gap-4">
@@ -196,7 +219,10 @@ export default function Page({ companies }: CompanyTableProps) {
                     ? company.position_names
                         .split(",") // แยกข้อความตามเครื่องหมาย ","
                         .map((position) => position.trim()) // ลบช่องว่างรอบๆ ข้อความ
-                        .filter((position) => position !== "" && position !== "Unknown") // กรองรายการที่ว่างเปล่าและ "Unknown"
+                        .filter(
+                          (position) =>
+                            position !== "" && position !== "Unknown"
+                        ) // กรองรายการที่ว่างเปล่าและ "Unknown"
                         .map((position, index) => (
                           <div key={index}>
                             {"-"} {position}
@@ -209,7 +235,10 @@ export default function Page({ companies }: CompanyTableProps) {
                     ? company.position_descriptions
                         .split(",") // แยกข้อความตามเครื่องหมาย ","
                         .map((description) => description.trim()) // ลบช่องว่างรอบๆ ข้อความ
-                        .filter((description) => description !== "" && description !== "Unknown") // กรองรายการที่ว่างเปล่าและ "Unknown"
+                        .filter(
+                          (description) =>
+                            description !== "" && description !== "Unknown"
+                        ) // กรองรายการที่ว่างเปล่าและ "Unknown"
                         .map((description, index) => (
                           <div key={index}>
                             {"-"} {description}
@@ -245,16 +274,23 @@ export default function Page({ companies }: CompanyTableProps) {
                     : "N/A"}
                 </TableCell>
                 <TableCell className="border border-gray-300 px-4 py-2 text-center">
-                  <Link href={`/admin/company-list/edit/${company.company_id}`}>
-                    <button
-                      className="px-4 py-2 bg-blue-500 text-white rounded"
+                  <div className="flex gap-2">
+                    <Link
+                      href={`/admin/company-list/edit/${company.company_id}`}
                     >
-                      แก้ไข
+                      <button className="px-4 py-2 bg-blue-500 text-white rounded">
+                        แก้ไข
+                      </button>
+                    </Link>
+
+                    <button
+                      className="px-4 py-2 bg-red-500 text-white rounded"
+                      onClick={() => deleteCompany(company.company_id)} // Pass the company id here
+                    >
+                      ลบ
                     </button>
-                  </Link>
+                  </div>
                 </TableCell>
-
-
               </TableRow>
             ))}
           </TableBody>

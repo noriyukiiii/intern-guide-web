@@ -1,7 +1,10 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { useSession } from "@/hooks/use-session";
+import { Star } from "lucide-react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 interface CompanyCardProps {
   companies: {
@@ -14,17 +17,72 @@ interface CompanyCardProps {
     company_website: string | null;
     company_benefit: string | null;
     company_occuption: string | null; // เพิ่ม occuption
-    company_established: string| null; // เพิ่ม established
+    company_established: string | null; // เพิ่ม established
+    contract_name: string | null;
+    contract_email: string | null;
+    contract_tel: string | null;
+    contract_social: string | null;
+    contract_line: string | null;
     company_is_mou: boolean; // เพิ่ม isMou
     company_logo: string | null;
     position_descriptions: string | null;
     position_names: string;
     skill_names: string;
     tools_names: string;
+    is_favorite: boolean;
   };
 }
 
 const CompanyCard = ({ companies }: CompanyCardProps) => {
+  const [isSelected, setIsSelected] = useState(companies.is_favorite);
+  const [loading, setLoading] = useState(true); // เพิ่ม loading state
+  const { session } = useSession();
+  const userId = session.user?.id;
+
+  // เรียกใช้ฟังก์ชัน getFavoriteStatus เมื่อ component โหลด
+  useEffect(() => {
+    if (userId) {
+      // ดึงสถานะจากเซิร์ฟเวอร์
+      setLoading(false); // เปลี่ยนค่า loading เป็น false เมื่อการดึงข้อมูลเสร็จสิ้น
+    }
+  }, [userId]);
+
+  // ฟังก์ชันอัปเดตสถานะรายการโปรด
+  const handleToggleFavorite = async () => {
+    if (!userId) return;
+
+    const newStatus = !isSelected;
+    setIsSelected(newStatus);
+
+    try {
+      const res = await fetch("http://localhost:5555/update-favorite", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId,
+          companyId: companies.company_id,
+          isSelected: newStatus,
+        }),
+      });
+
+      const responseData = await res.json();
+
+      if (responseData.success) {
+        console.log("Favorite updated successfully");
+      } else {
+        console.error("Failed to update favorite status");
+      }
+    } catch (error) {
+      console.error("Error updating favorite status:", error);
+    }
+  };
+
+  // ตรวจสอบสถานะการโหลด และแสดงผล
+  if (loading) {
+    return <div>Loading...</div>; // แสดง "Loading..." ขณะโหลดข้อมูล
+  }
   return (
     <div
       key={companies.company_id}
@@ -47,15 +105,15 @@ const CompanyCard = ({ companies }: CompanyCardProps) => {
             <p className="">สายการเรียน</p>
             <p className="">:</p>
           </div>
-          {companies.company_occuption === "both" || "No_info" ? (
-            <>
-              <p className="col-span-4">ไม่ระบุ</p>
-            </>
-          ) : (
-            <>
-            {companies.company_occuption || "ไม่ระบุ"}
-            </>
-          )}
+          <div className="col-span-4">
+            <p>
+              {companies.company_occuption === "No_info"
+                ? "ไม่ระบุ"
+                : companies.company_occuption === "both"
+                  ? "Network, Database"
+                  : companies.company_occuption}
+            </p>
+          </div>
         </div>
 
         <div className="grid grid-cols-5 gap-4 mt-2">
@@ -96,9 +154,15 @@ const CompanyCard = ({ companies }: CompanyCardProps) => {
           </div>
         )}
 
-        <div className="flex justify-end items-end mt-auto">
+        <div className="flex justify-end items-end mt-auto gap-2">
+          <Button
+            onClick={handleToggleFavorite}
+            className={`mt-2 ${isSelected ? "bg-green-500" : "bg-gray-500"}`}
+          >
+            {isSelected ? <Star color="#fafafa" /> : <Star color="#fafafa" />}
+          </Button>
           <Link href={`/company-list/${companies.company_id}`}>
-            <Button className="mt-4 bg-blue-500">View Company Details</Button>
+            <Button className="mt-4 bg-blue-500">ดูรายละเอียด</Button>
           </Link>
         </div>
       </div>

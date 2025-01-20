@@ -61,6 +61,14 @@ const NavbarDesktop = () => {
             รายชื่อสถานประกอบการ
           </Link>
         </li>
+        <li>
+          <Link
+            href="/dashboard"
+            className="text-[#002379] hover:text-[#FFDE59]"
+          >
+            Dashboard
+          </Link>
+        </li>
         {session?.user?.role === "ADMIN" && (
           <li>
             <Link

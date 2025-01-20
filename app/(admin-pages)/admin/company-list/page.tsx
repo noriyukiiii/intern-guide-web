@@ -1,4 +1,4 @@
-import { getCompany } from "@/actions/companyActions";
+import { getCompany } from "@/actions/admincompanyActions";
 import SearchFilter from "./components/searchfilter";
 
 export default async function Page() {

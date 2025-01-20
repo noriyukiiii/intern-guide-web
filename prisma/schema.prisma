@@ -27,7 +27,7 @@ model User {
   phone         String
   studentId     String
   emailVerified DateTime?
-  image         String @default("/userimage/chef.png")
+  image         String    @default("/userimage/chef.png")
   password      String?
   status        Status    @default(No_Intern)
   role          Role      @default(MEMBER)
@@ -38,6 +38,7 @@ model User {
   deletedAt DateTime?
 
   companyStudentInterned Company_Student_Interned[]
+  FavoriteCompanies      FavoriteCompanies[]
 }
 
 model Session {
@@ -81,6 +82,7 @@ model Company {
 
   positions              positions[]
   companyStudentInterned Company_Student_Interned[]
+  FavoriteCompanies      FavoriteCompanies[]
 }
 
 model Company_Student_Interned {
@@ -141,4 +143,14 @@ model tools {
   deletedAt DateTime?
 
   skill skills @relation(fields: [skillId], references: [id], onDelete: Cascade)
+}
+
+model FavoriteCompanies {
+  id        String   @id @default(cuid())
+  userId    String
+  companyId String
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Company Company @relation(fields: [companyId], references: [id], onDelete: Cascade) 
 }

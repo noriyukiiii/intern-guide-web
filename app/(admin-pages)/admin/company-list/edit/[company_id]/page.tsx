@@ -1,7 +1,6 @@
-"use server"
 import { getOptionAction } from "@/actions/optionAction";
-import EditForm from "./components/edit-form";
 import { getAdminCompany } from "@/actions/companyActions";
+import EditForm from "./components/edit-form";
 
 type Option = {
   skill: string[];
@@ -11,26 +10,46 @@ type Option = {
   positiondescription: string[];
 };
 
-const CompanyDetails = async ({
-  params,
-}: {
-  params: { company_id: string };
-}) => {
-  const { company_id } = await params;
+// ใช้ type นี้ในการตรวจสอบ params
+type PageProps = {
+  params: {
+    company_id: string;
+  };
+};
 
-  const company = await getAdminCompany(company_id);
+const CompanyDetails = async ({ params }: PageProps) => {
+  const { company_id } = params;
 
-  // Fetch option data
-  const optionData: Option = await getOptionAction();
+  if (!company_id) {
+    console.error("Missing company_id");
+    return <div>Missing company ID</div>;
+  }
 
-  return (
-    <div className="p-4 flex flex-col font-Prompt">
-      <div className="flex items-center justify-center my-10">
-        <p className="font-bold text-2xl">แก้ไขข้อมูลสถานประกอบการ</p>
+  try {
+    // ดึงข้อมูลจาก API
+    const company = await getAdminCompany(company_id); // ดึงข้อมูลสถานประกอบการ
+    const optionData = await getOptionAction(); // ดึงข้อมูล option
+
+    console.log("Fetched optionData:", optionData);
+
+    if (!company || !optionData) {
+      console.error("Error fetching data");
+      return <div>Error fetching data</div>;
+    }
+
+    return (
+      
+      <div className="p-4 flex flex-col font-Prompt">
+        <div className="flex items-center justify-center my-10">
+          <p className="font-bold text-2xl">แก้ไขข้อมูลสถานประกอบการ</p>
+        </div>
+        <EditForm company={company} optionData={optionData} />
       </div>
-      <EditForm company={company} optionData={optionData} />
-    </div>
-  );
+    );
+  } catch (error) {
+    console.error("Error:", error);
+    return <div>Error fetching data</div>;
+  }
 };
 
 export default CompanyDetails;

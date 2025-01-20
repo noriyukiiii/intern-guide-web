@@ -490,6 +490,10 @@ const EditForm = ({
     });
   };
 
+  const handleNavigation = () => {
+    router.push("/admin/company-list"); // นำไปยังหน้าที่ต้องการ
+  };
+  
   const handleChangePosition = (newValue: any, positionId: string) => {
     if (newValue && newValue.value) {
       const updatedPositions = [...positions];
@@ -500,10 +504,6 @@ const EditForm = ({
       }
     }
   };
-  const handleNavigation = () => {
-    router.push("/admin/company-list"); // นำไปยังหน้าที่ต้องการ
-  };
-
   // Handle changes in description select
   const handleChangePositionDescription = (
     newValue: any,

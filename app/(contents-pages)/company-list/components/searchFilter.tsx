@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import CompanyCard from "./companyCard";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 interface CompanyCardProps {
   companies: {
@@ -15,12 +17,18 @@ interface CompanyCardProps {
     company_benefit: string | null;
     company_occuption: string | null; // เพิ่ม occuption
     company_established: string | null; // เพิ่ม established
+    contract_name: string | null;
+    contract_email: string | null;
+    contract_tel: string | null;
+    contract_social: string | null;
+    contract_line: string | null;
     company_is_mou: boolean; // เพิ่ม isMou
     company_logo: string | null;
     position_descriptions: string | null;
     position_names: string;
     skill_names: string;
     tools_names: string;
+    is_favorite: boolean;
   }[];
 }
 const SearchFilter = ({ companies }: CompanyCardProps) => {
@@ -35,10 +43,19 @@ const SearchFilter = ({ companies }: CompanyCardProps) => {
   const [selectedIsMou, setSelectedIsMou] = useState<string>(""); // ฟิลเตอร์บริษัทใน MOU
   const [itemsPerPage, setItemsPerPage] = useState<number>(10); // จำนวนรายการต่อหน้า
   const [currentPage, setCurrentPage] = useState<number>(1); // หน้าปัจจุบัน
+  const [currentFavoritePage, setCurrentFavoritePage] =
+    useState<boolean>(false); // ตรวจสอบหน้าที่กรอง is_favorite
 
   // คำนวณรายการที่ต้องแสดง
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
+
+  const handleFavoriteToggle = () => {
+    // เปลี่ยนสถานะการกรอง favorite
+    setCurrentPage(1)
+    setCurrentFavoritePage((prev) => !prev);
+  };
+
 
   const uniquePositions = Array.from(
     new Set(
@@ -78,6 +95,9 @@ const SearchFilter = ({ companies }: CompanyCardProps) => {
     const normalize = (str: string) => str?.replace(/\s+/g, "").toLowerCase(); // ลบช่องว่างและแปลงเป็นตัวพิมพ์เล็ก
     const normalizedSearch = normalize(searchTerm); // Normalize คำค้นหา
 
+    const isFavoritePage = currentFavoritePage === true;
+
+
     return (
       (normalize(company.company_name_th).includes(normalizedSearch) ||
         normalize(company.company_name_en).includes(normalizedSearch)) &&
@@ -104,7 +124,8 @@ const SearchFilter = ({ companies }: CompanyCardProps) => {
         company.company_established === selectedEstablished) &&
       (selectedIsMou === "" ||
         (selectedIsMou === "true" && company.company_is_mou) ||
-        (selectedIsMou === "false" && !company.company_is_mou))
+        (selectedIsMou === "false" && !company.company_is_mou)) &&
+      (!isFavoritePage || company.is_favorite) // ตรวจสอบว่าเป็นหน้า 2 ขึ้นไปหรือไม่ ถ้าใช่ให้กรองเฉพาะบริษัทที่ is_favorite เป็น true
     );
   });
 
@@ -295,23 +316,38 @@ const SearchFilter = ({ companies }: CompanyCardProps) => {
       </div>
 
       {/* Select Items Per Page */}
-      <div className="m-4 w-24 flex flex-col ">
-        <label
-          htmlFor="itemsPerPage"
-          className="block text-sm font-medium text-gray-700"
-        >
-          แสดงผลต่อหน้า
-        </label>
-        <select
-          id="itemsPerPage"
-          value={itemsPerPage}
-          onChange={(e) => setItemsPerPage(Number(e.target.value))}
-          className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-        >
-          <option value={10}>10</option>
-          <option value={25}>25</option>
-          <option value={100}>100</option>
-        </select>
+      <div className="grid grid-cols-2">
+        <div className="m-4 w-24 flex flex-col ">
+          <label
+            htmlFor="itemsPerPage"
+            className="block text-sm font-medium text-gray-700"
+          >
+            แสดงผลต่อหน้า
+          </label>
+          <select
+            id="itemsPerPage"
+            value={itemsPerPage}
+            onChange={(e) => setItemsPerPage(Number(e.target.value))}
+            className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          >
+            <option value={10}>10</option>
+            <option value={25}>25</option>
+            <option value={100}>100</option>
+          </select>
+        </div>
+        <div className="flex justify-end items-center ">
+          <button
+            onClick={handleFavoriteToggle}
+            className="m-4 p-4 py-2 bg-blue-500 text-white rounded"
+          >
+            {currentFavoritePage ? "แสดงบริษัททั้งหมด" : "แสดงเฉพาะที่เป็น Favorite"}
+          </button>
+          <Link href="/company-list/insert-company">
+            <Button className="bg-green-400 text-white">
+              เพื่มสถานประกอบการ
+            </Button>
+          </Link>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

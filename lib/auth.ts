@@ -98,3 +98,23 @@ export class AuthService {
         }
     }
 }
+
+// เพิ่มฟังก์ชัน getSession
+export async function getSession() {
+    try {
+      const token = (await cookies()).get(SESSION_COOKIE)?.value;
+      if (!token) {
+        return null;
+      }
+  
+      const user = await AuthService.getCurrentUser();
+      if (!user) {
+        return null;
+      }
+  
+      return { user };
+    } catch (error) {
+      console.error("Failed to get session", error);
+      return null;
+    }
+  }

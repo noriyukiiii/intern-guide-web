@@ -7,8 +7,7 @@ import { LuCopyright } from "react-icons/lu";
 const Footer = () => {
   return (
     <footer>
-      {/* Section 1: Main Content */}
-      <div className="w-full bg-[#002379] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 py-12 px-6 lg:px-20 text-white font-semibold font-Sarabun">
+      <div className="w-full bg-[#002379] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 py-12 px-6 lg:px-20 text-white font-semibold font-Sarabun mt-4">
         {/* Column 1 */}
         <div>
           <h3 className="text-lg mb-4">

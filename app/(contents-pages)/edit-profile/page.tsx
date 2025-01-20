@@ -100,7 +100,7 @@ export default function Page() {
   return (
     <div className="flex flex-col min-h-screen bg-[#FFFAE6] overflow-hidden font-Prompt">
       <div className="m-10 p-10 flex items-center justify-center">
-        <h1 className="text-4xl font-bold">Edit Profile</h1>
+        <h1 className="text-4xl font-bold">แก้ไขโปรไฟล์</h1>
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 bg-[#FFFAE6] h-full p-4 bg-opacity-50 items-center w-full">
         <div className="flex flex-col items-center">
@@ -139,7 +139,7 @@ export default function Page() {
               render={({ field }) => (
                 <FormItem>
                   <div className="grid grid-cols-5 items-center justify-center">
-                    <FormLabel className="col-span-1">Email : </FormLabel>
+                    <FormLabel className="col-span-1">Email  </FormLabel>
                     <FormControl>
                       <Input
                         className="col-span-4 bg-gray-200"
@@ -159,7 +159,7 @@ export default function Page() {
               render={({ field }) => (
                 <FormItem>
                   <div className="grid grid-cols-5 items-center justify-center">
-                    <FormLabel className="col-span-1">Firstname</FormLabel>
+                    <FormLabel className="col-span-1">ชื่อจริง</FormLabel>
                     <FormControl>
                       <Input
                         className="col-span-4 focus:bg-gray-100"
@@ -178,7 +178,7 @@ export default function Page() {
               render={({ field }) => (
                 <FormItem>
                   <div className="grid grid-cols-5 items-center justify-center">
-                    <FormLabel className="col-span-1">Lastname</FormLabel>
+                    <FormLabel className="col-span-1">นามสกุล</FormLabel>
                     <FormControl>
                       <Input
                         className="col-span-4 focus:bg-gray-100"
@@ -197,7 +197,7 @@ export default function Page() {
               render={({ field }) => (
                 <FormItem>
                   <div className="grid grid-cols-5 items-center justify-center">
-                    <FormLabel className="col-span-1">Phone</FormLabel>
+                    <FormLabel className="col-span-1">โทรศัพท์</FormLabel>
                     <FormControl>
                       <Input
                         className="col-span-4 focus:bg-gray-100"
@@ -216,7 +216,7 @@ export default function Page() {
               render={({ field }) => (
                 <FormItem>
                   <div className="grid grid-cols-5 items-center justify-center">
-                    <FormLabel className="col-span-1">Student ID</FormLabel>
+                    <FormLabel className="col-span-1">รหัสนักศึกษา</FormLabel>
                     <FormControl>
                       <Input
                         className="col-span-4 focus:bg-gray-100"

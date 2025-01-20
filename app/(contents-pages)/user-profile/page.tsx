@@ -15,10 +15,8 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import Image from "next/image";
 import { useRouter } from "next/navigation"; // Import useRouter
-import { updateUserApi } from "@/actions/updateUser";
 
 const FormSchema = z.object({
   email: z.string().email({
@@ -76,31 +74,10 @@ export default function Page() {
     }
   }, [session, form]);
 
-  const handleAvatarSelect = (avatar: string) => {
-    form.setValue("avatar", avatar);
-  };
-
-  async function onSubmit(data: z.infer<typeof FormSchema>) {
-    try {
-      const result = await updateUserApi(data);
-      if (result.success) {
-        toast.success("User updated successfully!");
-        setTimeout(() => {
-          router.push("/profile");
-        }, 2000);
-      } else {
-        toast.error(result.message || "Failed to update user.");
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error("An error occurred while updating the user.");
-    }
-  }
-
   return (
     <div className="flex flex-col min-h-screen bg-[#FFFAE6] overflow-hidden font-Prompt">
       <div className="m-10 p-10 flex items-center justify-center">
-        <h1 className="text-4xl font-bold text-[#4A90E2]">User Profile</h1>
+        <h1 className="text-4xl font-bold text-black">ข้อมูลผู้ใช้</h1>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 bg-[#FFFAE6] h-full p-4 bg-opacity-50 items-center w-full">
         <div className="flex flex-col items-center mb-8 md:mb-0">
@@ -117,17 +94,14 @@ export default function Page() {
           <p className="mt-2 text-lg text-gray-600">รูป Avatar</p>
         </div>
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="w-full md:w-2/3 space-y-6 bg-white h-fit p-8 rounded-3xl shadow-lg"
-          >
+          <form className="w-full md:w-2/3 space-y-6 bg-white h-fit p-8 rounded-3xl shadow-lg">
             <FormField
               control={form.control}
               name="email"
               render={({ field }) => (
                 <FormItem>
                   <div className="grid grid-cols-1 md:grid-cols-6 items-center justify-center">
-                    <FormLabel className="col-span-6 text-xl text-[#4A90E2]">
+                    <FormLabel className="col-span-6 text-xl ">
                       Email : {session.user?.email}
                     </FormLabel>
                   </div>
@@ -140,7 +114,7 @@ export default function Page() {
               render={({ field }) => (
                 <FormItem>
                   <div className="grid grid-cols-1 md:grid-cols-6 items-center justify-center">
-                    <FormLabel className="col-span-6 text-xl text-[#4A90E2]">
+                    <FormLabel className="col-span-6 text-xl ">
                       ชื่อ : {session.user?.firstName} {session.user?.lastName}
                     </FormLabel>
                   </div>
@@ -153,8 +127,8 @@ export default function Page() {
               render={({ field }) => (
                 <FormItem>
                   <div className="grid grid-cols-1 md:grid-cols-6 items-center justify-center">
-                    <FormLabel className="col-span-6 text-xl text-[#4A90E2]">
-                      Phone : {session.user?.phone}
+                    <FormLabel className="col-span-6 text-xl">
+                      โทรศัพท์ : {session.user?.phone}
                     </FormLabel>
                     <FormMessage />
                   </div>
@@ -167,7 +141,7 @@ export default function Page() {
               render={({ field }) => (
                 <FormItem>
                   <div className="grid grid-cols-1 md:grid-cols-6 items-center justify-center">
-                    <FormLabel className="col-span-6 text-xl text-[#4A90E2]">
+                    <FormLabel className="col-span-6 text-xl">
                       รหัสนักศึกษา : {session.user?.studentId}
                     </FormLabel>
                     <FormMessage />
@@ -181,8 +155,17 @@ export default function Page() {
               render={({ field }) => (
                 <FormItem>
                   <div className="grid grid-cols-1 md:grid-cols-6 items-center justify-center">
-                    <FormLabel className="col-span-6 text-xl text-[#4A90E2]">
-                      สถานะ : ยังไม่ออกสหกิจ
+                    <FormLabel className="col-span-6 flex gap-2 text-xl">
+                      สถานะ :
+                      {session.user?.status === "No_Intern" && (
+                        <p>ยังไม่ออกสหกิจ</p>
+                      )}
+                      {session.user?.status === "Interning" && (
+                        <p>กำลังอยู่ระหว่างออกสหกิจ</p>
+                      )}
+                      {session.user?.status === "InternSuccess" && (
+                        <p>ออกสหกิจเสร็จสิ้น</p>
+                      )}
                     </FormLabel>
                     <FormMessage />
                   </div>

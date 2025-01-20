@@ -55,9 +55,7 @@ export const getCompanyDetails = async (companyId: string) => {
       new Set(
         company.positions.flatMap((position) =>
           position.position_description.flatMap((desc) =>
-            desc.skills.flatMap((skill) =>
-              skill.tools.map((tool) => tool.name)
-            )
+            desc.skills.flatMap((skill) => skill.tools.map((tool) => tool.name))
           )
         )
       )
@@ -74,6 +72,11 @@ export const getCompanyDetails = async (companyId: string) => {
       company_website: company.website,
       company_benefit: company.benefit,
       company_logo: company.imgLink,
+      contract_name: company.contractName,
+      contract_email: company.contractEmail,
+      contract_tel: company.contractTel,
+      contract_social: company.contractSocial,
+      contract_line: company.contractSocial_line,
       position_names: positionNames,
       position_descriptions: positionDescriptions,
       skill_names: skillNames,
