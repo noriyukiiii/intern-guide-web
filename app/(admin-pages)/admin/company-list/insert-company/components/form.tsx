@@ -17,6 +17,8 @@ import Select from "react-select";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 
+import { UploadButton } from "@/utils/uploadthing";
+
 interface Tool {
   id: string;
   name: string;
@@ -563,13 +565,15 @@ export function InsertForm({ optionData }: { optionData: Option }) {
         </div>
 
         <div className="col-span-1 md:col-span-2">
-          <Label>Image Link</Label>
-          <Input
-            {...register("imgLink")}
-            placeholder="Enter image link"
-            error={errors.imgLink?.message}
-            disabled={isPending}
-            className="w-full"
+          <UploadButton
+            endpoint="imageUploader"
+            onClientUploadComplete={(res) => {
+              setValue("imgLink", res[0].url);
+              alert("Upload Complete!");
+            }}
+            onUploadError={(error: Error) => {
+              alert(`ERROR! ${error.message}`);
+            }}
           />
         </div>
 
@@ -776,7 +780,7 @@ export function InsertForm({ optionData }: { optionData: Option }) {
       </form>
       <div className="flex w-full justify-center gap-4">
         <div className="flex justify-end">
-        <button
+          <button
             onClick={handleNavigation}
             className="p-2 bg-white md:w-[200px] rounded-md border-2 border-gray-400 hover:bg-gray-300 transition"
           >
