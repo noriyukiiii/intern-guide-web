@@ -47,11 +47,11 @@ const Page = () => {
    };
 
    return (
-      <div className="flex flex-col lg:flex-row h-screen">
-         <div className="relative hidden lg:block lg:w-1/2 bg-[#FFFAE6]">
+      <div className="flex flex-row h-screen">
+         <div className="relative lg:w-1/2 bg-[#FFFAE6]">
             <Image src="/authpage/testbg.svg" alt="Sign in Background" fill />
          </div>
-         <div className="lg:w-1/2 flex items-center justify-center h-full bg-[#FFFAE6] p-4 lg:p-16">
+         <div className="lg:w-1/2 flex items-center justify-center h-full w-full bg-[#FFFAE6] p-4 lg:p-16">
             <form
                onSubmit={handleSubmit(onSubmit)}
                className="flex flex-col gap-8 items-center w-full max-w-md p-8 bg-white rounded-3xl shadow-lg"

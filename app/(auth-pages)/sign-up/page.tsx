@@ -116,21 +116,16 @@ export default function page() {
   }, [currentStep]);
 
   return (
-    <div className="flex flex-col lg:flex-row h-screen">
-         <div className="relative hidden lg:block lg:w-1/2 bg-[#FFFAE6]">
-         <Image
-          src="/authpage/testbg.svg"
-          alt="register rmutt Image"
-          fill
-          className="hidden lg:block"
-        />
+    <div className="flex flex-row h-screen">
+      <div className="relative lg:w-1/2 bg-[#FFFAE6]">
+        <Image src="/authpage/testbg.svg" alt="Sign in Background" fill />
       </div>
-      <div className="lg:w-1/2 flex items-center justify-center h-full bg-[#FFFAE6] p-4 lg:p-16">
-      <form
+      <div className="lg:w-1/2 flex items-center justify-center h-full w-full bg-[#FFFAE6] p-4 lg:p-16">
+        <form
           onSubmit={handleSubmit(onSubmit)}
           className="w-full bg-[#FFFAE6] flex items-center font-Prompt"
         >
-          <div className="flex flex-col gap-8 items-center h-fit min-w-[570px] min-h-[600px] mx-auto px-16 pt-16 pb-4 border border-gr bg-white rounded-3xl">
+          <div className="flex flex-col gap-8 items-center h-fit  md:min-w-[570px] md:min-h-[600px] mx-auto px-16 pt-16 pb-4 border border-gr bg-white rounded-3xl">
             <h1 className="text-3xl font-bold">ลงทะเบียน</h1>
 
             {/* หน้าแรก (Step 1) */}

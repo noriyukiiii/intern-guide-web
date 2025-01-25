@@ -54,6 +54,7 @@ export function InsertForm({ optionData }: { optionData: Option }) {
   const [positions, setPositions] = useState<Position[]>([]); // Specify the type of positions
   const [isClient, setIsClient] = useState(false);
   const [formData, setFormData] = useState<any>(null);
+  const [uploadedImageUrl, setUploadedImageUrl] = useState("");
 
   const router = useRouter();
 
@@ -325,6 +326,29 @@ export function InsertForm({ optionData }: { optionData: Option }) {
       });
   };
 
+  const deleteOldImage = async (oldImageUrl: string) => {
+    try {
+      // เอาแค่ชื่อไฟล์จาก URL ที่ส่งมา (ตัด https://utfs.io/ ออก)
+      const fileName = oldImageUrl.split("/").pop(); // ใช้ .split() เพื่อดึงแค่ชื่อไฟล์จาก URL
+
+      if (fileName) {
+        const deleteUrl = `http://localhost:5555/uploadthing/delete/${fileName}`;
+        await fetch(deleteUrl, { method: "DELETE" });
+        toast.success("ลบรูปภาพเก่าเรียบร้อยแล้ว", {
+          position: "top-center",
+          autoClose: 1000,
+        });
+      } else {
+        throw new Error("ไม่พบชื่อไฟล์ที่ต้องการลบ");
+      }
+    } catch (error) {
+      toast.error("ไม่สามารถลบรูปภาพเก่าได้", {
+        position: "top-center",
+        autoClose: 1000,
+      });
+    }
+  };
+
   useEffect(() => {
     // Check if window object is available
     setIsClient(typeof window !== "undefined");
@@ -565,14 +589,39 @@ export function InsertForm({ optionData }: { optionData: Option }) {
         </div>
 
         <div className="col-span-1 md:col-span-2">
+          {uploadedImageUrl && (
+            <div className="mt-4 flex justify-center items-center">
+              <img
+                src={uploadedImageUrl}
+                alt="Uploaded"
+                className="max-w-[200px] h-auto rounded-md shadow-lg"
+              />
+            </div>
+          )}
+        </div>
+
+        <div className="col-span-1 md:col-span-2">
           <UploadButton
             endpoint="imageUploader"
             onClientUploadComplete={(res) => {
+              // ลบภาพเก่า (ถ้ามี)
+              if (uploadedImageUrl) {
+                deleteOldImage(uploadedImageUrl); // ลบภาพเก่าก่อน
+              }
+
+              // เก็บ URL ของภาพใหม่
+              setUploadedImageUrl(res[0].url); // เก็บ URL ของภาพใหม่
               setValue("imgLink", res[0].url);
-              alert("Upload Complete!");
+              toast.success("อัพโหลดรูปสำเร็จ", {
+                position: "top-center", // ใช้ตำแหน่งเป็น string
+                autoClose: 1000,
+              });
             }}
-            onUploadError={(error: Error) => {
-              alert(`ERROR! ${error.message}`);
+            onUploadError={(error) => {
+              toast.error("อัพโหลดรูปภาพไม่สำเร็จ", {
+                position: "top-center",
+                autoClose: 1000,
+              });
             }}
           />
         </div>
