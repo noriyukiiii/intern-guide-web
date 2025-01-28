@@ -305,7 +305,7 @@ export function InsertForm({ optionData }: { optionData: Option }) {
     console.log("Form Submitted with values:", formData);
 
     axios
-      .post("http://localhost:5555/add-company", formData)
+      .post("http://localhost:5555/company/createCompany", formData)
       .then((response) => {
         console.log(response);
         toast.success("เพิ่มสถานประกอบการสำเร็จ \nกำลังกลับสู่หน้าหลัก", {
@@ -313,7 +313,7 @@ export function InsertForm({ optionData }: { optionData: Option }) {
           autoClose: 3000, // ปิดเองภายใน 3 วินาที
         });
         setTimeout(() => {
-          router.push("/company-list");
+          router.push("/admin/company-list");
         }, 2000);
       })
       .catch((error) => {

@@ -149,7 +149,7 @@ const EditForm = ({
     console.log("Updated Data:", updatedData);
 
     try {
-      const response = await fetch("http://localhost:5555/api/update_company", {
+      const response = await fetch("http://localhost:5555/company/update_company", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

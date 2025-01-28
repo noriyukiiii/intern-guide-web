@@ -44,13 +44,38 @@ export default function Page({ companies }: CompanyTableProps) {
   const currentCompanies = companies.slice(startIndex, endIndex);
   const totalPages = Math.ceil(companies.length / itemsPerPage);
 
+  const softdeleteCompany = async (companyId: string) => {
+    try {
+      // ตัวอย่างการเรียก API เพื่อทำ soft delete โดยการตั้งค่า deletedAt
+      const response = await fetch(
+        `http://localhost:5555/company/softdeleteCompany/${companyId}`,
+        {
+          method: "PATCH", // ใช้ PATCH แทน DELETE เพื่อทำการอัปเดตฟิลด์ deletedAt
+        }
+      );
+
+      // ตรวจสอบสถานะการตอบกลับ
+      if (response.ok) {
+        // หากสำเร็จให้แสดงข้อความ
+        alert("Company Soft deleted successfully");
+        // คุณสามารถอัปเดต UI หรือการแสดงผล เช่น ลบบริษัทออกจากรายการหรือรีเฟรชหน้าจอ
+        window.location.reload(); // รีเฟรชหน้าเว็บ
+      } else {
+        throw new Error("Failed to Soft delete company");
+      }
+    } catch (error) {
+      console.error("Error deleting company:", error);
+      alert("Failed to delete company");
+    }
+  };
+
   const deleteCompany = async (companyId: string) => {
     try {
       // ตัวอย่างการเรียก API เพื่อทำ soft delete โดยการตั้งค่า deletedAt
       const response = await fetch(
-        `http://localhost:5555/api/companies/${companyId}`,
+        `http://localhost:5555/company/deleteCompany/${companyId}`,
         {
-          method: "PATCH", // ใช้ PATCH แทน DELETE เพื่อทำการอัปเดตฟิลด์ deletedAt
+          method: "DELETE", // ใช้ PATCH แทน DELETE เพื่อทำการอัปเดตฟิลด์ deletedAt
         }
       );
 
@@ -288,6 +313,12 @@ export default function Page({ companies }: CompanyTableProps) {
                       onClick={() => deleteCompany(company.company_id)} // Pass the company id here
                     >
                       ลบ
+                    </button>
+                    <button
+                      className="px-4 py-2 bg-red-500 text-white rounded"
+                      onClick={() => softdeleteCompany(company.company_id)} // Pass the company id here
+                    >
+                      ลบ (soft)
                     </button>
                   </div>
                 </TableCell>

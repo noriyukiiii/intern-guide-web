@@ -30,8 +30,6 @@ const CompanyDetails = async ({ params }: PageProps) => {
     const company = await getAdminCompany(company_id); // ดึงข้อมูลสถานประกอบการ
     const optionData = await getOptionAction(); // ดึงข้อมูล option
 
-    console.log("Fetched optionData:", optionData);
-
     if (!company || !optionData) {
       console.error("Error fetching data");
       return <div>Error fetching data</div>;
