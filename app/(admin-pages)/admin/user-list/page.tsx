@@ -5,7 +5,7 @@ import UserTable from "./components/table";
 
 const page = async () => {
     const user = await getUser();
-    console.log(user);
+    // console.log(user);
     return ( <div>
         <UserTable user = {user} />
     </div> );

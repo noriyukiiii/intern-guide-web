@@ -10,7 +10,7 @@ export async function middleware(request: NextRequest) {
   const adminPaths: string[] = ["/admin", "/admin/company-list", "/admin/user-list"];
   const pathname: string = request.nextUrl.pathname;
 
-  console.log("Auth:", auth, "isAdmin:", isAdmin, "Pathname:", pathname);
+  // console.log("Auth:", auth, "isAdmin:", isAdmin, "Pathname:", pathname);
 
   // const isHomeRoute = homePaths.includes(pathname);
   const isAdminRoute = adminPaths.includes(pathname);
