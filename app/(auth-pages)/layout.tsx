@@ -8,7 +8,7 @@ type Authlayoutprop = {
 
 const Authlayout = ({children}:Authlayoutprop) => {
     return ( 
-        <div className="min-h-screen flex flex-col gap-1">
+        <div className="min-h-screen max-h-screen flex flex-col gap-1">
             <Navbar />
             {children}
         </div>

@@ -54,7 +54,8 @@ export default function page() {
       router.push("/sign-in");
 
       if (!response.success) {
-        console.error(response.message);
+        // เช็คก่อนว่ามี property `message` หรือไม่
+        console.error(response.message || "Unknown error occurred");
         return;
       }
 
@@ -127,12 +128,11 @@ export default function page() {
         >
           <div className="flex flex-col gap-8 items-center h-fit  md:min-w-[570px] md:min-h-[600px] mx-auto px-16 pt-16 pb-4 border border-gr bg-white rounded-3xl">
             <h1 className="text-3xl font-bold">ลงทะเบียน</h1>
-
             {/* หน้าแรก (Step 1) */}
             {currentStep === 1 && (
               <>
                 <div className="w-full">
-                  <Label htmlFor="email">Email</Label>
+                  {/* <Label htmlFor="email">Email</Label>
                   <Input
                     {...register("email")}
                     placeholder="Email Address"
@@ -163,8 +163,40 @@ export default function page() {
                         setEmailError(emailErrorMessage);
                       }
                     }}
-                  />
+                  /> */}
+                  <div className="w-full">
+                    <Label htmlFor="email">Email</Label>
+                    <div className="flex w-full border border-gray-300 rounded-lg overflow-hidden">
+                      {/* ช่องให้พิมพ์ตัวเลข */}
+                      <Input
+                        // {...register("email")}
+                        placeholder="กรอกหมายเลข"
+                        disabled={isPending}
+                        className="w-full p-2 border border-gray-300 rounded-lg outline-none"
+                        onChange={(e) => {
+                          const inputValue = e.target.value.trim(); // ลบช่องว่าง
+
+                          // ถ้ามี @ แล้ว ให้ตัดออก
+                          const cleanValue = inputValue.includes("@")
+                            ? inputValue.split("@")[0]
+                            : inputValue;
+
+                          setValue("email", `${cleanValue}@mail.rmutt.ac.th`); // อัปเดต email ที่จะส่ง
+                        }}
+                      />
+                      {/* ส่วนที่เป็น @mail.rmutt.ac.th (แก้ไขไม่ได้) */}
+                      <span className="bg-gray-200 px-3 flex items-center text-gray-600">
+                        @mail.rmutt.ac.th
+                      </span>
+                    </div>
+
+                    {/* เช็ค error */}
+                    {emailError && (
+                      <p className="text-red-500 text-sm mt-1">{emailError}</p>
+                    )}
+                  </div>
                 </div>
+
                 <div className="w-full">
                   <Label htmlFor="password">Password</Label>
                   <Input

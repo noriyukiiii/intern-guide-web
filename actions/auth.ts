@@ -5,7 +5,9 @@ import { db } from "@/lib/db";
 import { SignInSchema, signInSchema } from "@/validations/sign-in.validation";
 import { SignUpSchema, signUpSchema } from "@/validations/sign-up.validation";
 import { compareSync, hashSync } from "bcryptjs";
+import { randomBytes } from "crypto";
 import { revalidatePath } from "next/cache";
+import { sendVerificationEmail } from "@/lib/mailer";
 
 export async function signUpActions(values: SignUpSchema): Promise<{
   success: boolean;
@@ -33,6 +35,9 @@ export async function signUpActions(values: SignUpSchema): Promise<{
       };
     }
 
+    // สร้าง verificationToken
+    const verificationToken = randomBytes(16).toString("hex");
+
     const hashedPassword = hashSync(password, 10);
     const user = await db.user.create({
       data: {
@@ -44,13 +49,19 @@ export async function signUpActions(values: SignUpSchema): Promise<{
         studentId: student_id,
         image: "/userimage/boy.png",
         role: "MEMBER",
+        verificationToken, // บันทึก token
       },
     });
 
+    // ส่งอีเมลยืนยัน
+    await sendVerificationEmail(email, verificationToken);
+
     revalidatePath("/");
+
     return {
       success: true,
-      message: "Register successfully",
+      message:
+        "Register successfully. Please check your email to verify your account.",
     };
   } catch (error) {
     return {
@@ -110,8 +121,22 @@ export async function signInActions(values: SignInSchema): Promise<{
   }
 }
 
+export const resetPasswordActions = async ({ email }: { email: string }) => {
+  try {
+     const res = await fetch("http://localhost:5555/auth/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+     });
+
+     const data = await res.json();
+     return data;
+  } catch (error) {
+     return { success: false, message: "เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง" };
+  }
+};
+
 export async function signOutActions() {
   await AuthService.clearSession();
   revalidatePath("/");
 }
-

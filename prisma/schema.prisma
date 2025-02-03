@@ -20,18 +20,21 @@ enum Status {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  email         String    @unique
-  firstName     String
-  lastName      String
-  phone         String
-  studentId     String
-  emailVerified DateTime?
-  image         String    @default("/userimage/chef.png")
-  password      String?
-  status        Status    @default(No_Intern)
-  role          Role      @default(MEMBER)
-  sessions      Session[]
+  id                   String    @id @default(cuid())
+  email                String    @unique
+  firstName            String
+  lastName             String
+  phone                String
+  studentId            String
+  emailVerified        Boolean   @default(false)
+  verificationToken    String?   @unique
+  resetPasswordToken   String? // เพิ่มฟิลด์นี้
+  resetPasswordExpires DateTime? // ใช้ตรวจสอบเวลาหมดอายุของ Token
+  image                String    @default("/userimage/chef.png")
+  password             String?
+  status               Status    @default(No_Intern)
+  role                 Role      @default(MEMBER)
+  sessions             Session[]
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -39,7 +42,7 @@ model User {
 
   companyStudentInterned Company_Student_Interned[]
   FavoriteCompanies      FavoriteCompanies[]
-  banners   Banner[] // ความสัมพันธ์กับตาราง Banner
+  banners                Banner[] // ความสัมพันธ์กับตาราง Banner
 }
 
 model Session {
@@ -166,5 +169,5 @@ model Banner {
   updatedAt DateTime @updatedAt
   userId    String
 
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

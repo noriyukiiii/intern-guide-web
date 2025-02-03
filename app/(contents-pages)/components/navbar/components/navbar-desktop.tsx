@@ -27,7 +27,8 @@ const NavbarDesktop = () => {
 
   const handleLogout = async () => {
     await signOutActions().then(() => {
-      router.push("/sign-in"); // เปลี่ยนไปหน้า login โดยไม่ต้องรีโหลดหน้า
+      // router.replace("/sign-in"); // เปลี่ยนเส้นทาง
+      window.location.reload(); // รีโหลดหน้า
     });
   };
 
