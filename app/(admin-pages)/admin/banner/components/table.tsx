@@ -14,6 +14,8 @@ import { Switch } from "@/components/ui/switch";
 import BannerDialog from "./BannerDialog";
 import { ArrowDown, ArrowUp, Pencil, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import EditBannerDialog from "./editbanner";
+import { useSession } from "@/hooks/use-session";
 
 interface Banner {
   id: string;
@@ -31,6 +33,7 @@ interface Banner {
 
 export default function TableComponent({ data }: { data: Banner[] }) {
   const router = useRouter();
+  const { session } = useSession();
   const [activeStates, setActiveStates] = useState<Record<string, boolean>>(
     data.reduce(
       (acc, item) => {
@@ -68,8 +71,13 @@ export default function TableComponent({ data }: { data: Banner[] }) {
       await axios.delete(
         `http://localhost:5555/banner/deleteBanner/${bannerId}`
       );
-      toast.success("ลบแบนเนอร์สำเร็จ");
-      router.refresh(); // รีเฟรชข้อมูล
+      toast.success("ลบแบนเนอร์สำเร็จ", {
+        position: "top-center",
+        autoClose: 1000,
+      });
+      setTimeout(() => {
+        location.reload(); // รีเฟรชหน้า
+      }, 1000); // หน่วงเวลา 1 วินาทีให้ toast แสดงก่อนรีเฟรช
     } catch (error) {
       console.error("Error deleting banner:", error);
       toast.error("ลบแบนเนอร์ไม่สำเร็จ");
@@ -161,6 +169,7 @@ export default function TableComponent({ data }: { data: Banner[] }) {
         <TableHeader className="stick top-0 bg-white z-10 border">
           <TableRow>
             {/* <TableHead>ลำดับ</TableHead> */}
+            <TableHead>ลำดับ</TableHead>
             <TableHead>รูปภาพ</TableHead>
             <TableHead>คำอธิบาย</TableHead>
             <TableHead>สถานะ</TableHead>
@@ -173,7 +182,7 @@ export default function TableComponent({ data }: { data: Banner[] }) {
         <TableBody className="overflow-y-auto max-h-[400px] border">
           {banners.map((item) => (
             <TableRow key={item.id}>
-              {/* <TableCell>{item.order}</TableCell> */}
+              <TableCell>{item.order}</TableCell>
               <TableCell className="max-w-[300px]">
                 <img
                   src={item.image}
@@ -215,9 +224,12 @@ export default function TableComponent({ data }: { data: Banner[] }) {
               </TableCell>
               <TableCell>
                 <div className="flex justify-center items-center space-x-2">
-                  <Button variant="ghost" className="hover:bg-gray-200">
-                    <Pencil />
-                  </Button>
+                  {session.user?.id && (
+                    <EditBannerDialog
+                      banner={item}
+                      user={{ id: session.user.id }}
+                    />
+                  )}
                   <Button
                     variant="ghost"
                     className="hover:bg-rose-500 text-red-500"

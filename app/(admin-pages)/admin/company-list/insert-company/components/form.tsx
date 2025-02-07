@@ -16,7 +16,7 @@ import { X } from "lucide-react";
 import Select from "react-select";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
-
+import { useSession } from "@/hooks/use-session";
 import { UploadButton } from "@/utils/uploadthing";
 
 interface Tool {
@@ -55,7 +55,8 @@ export function InsertForm({ optionData }: { optionData: Option }) {
   const [isClient, setIsClient] = useState(false);
   const [formData, setFormData] = useState<any>(null);
   const [uploadedImageUrl, setUploadedImageUrl] = useState("");
-
+  const { session } = useSession();
+  const user_id = session.user?.id;
   const router = useRouter();
 
   const {
@@ -302,22 +303,29 @@ export function InsertForm({ optionData }: { optionData: Option }) {
 
   const onSubmit = () => {
     const formData = watch(); // รับข้อมูลจาก watch
-    console.log("Form Submitted with values:", formData);
+
+    const requestData = {
+      ...formData,
+      approvalStatus: "approved", // ตั้งค่าสถานะให้รออนุมัติ
+      userId: user_id, // เพิ่ม userId ของคนที่เพิ่ม
+    };
+
+    console.log("Form Submitted with values:", requestData);
 
     axios
-      .post("http://localhost:5555/company/createCompany", formData)
+      .post("http://localhost:5555/company/createCompany", requestData)
       .then((response) => {
         console.log(response);
         toast.success("เพิ่มสถานประกอบการสำเร็จ \nกำลังกลับสู่หน้าหลัก", {
-          position: "top-center", // ใช้ตำแหน่งเป็น string
-          autoClose: 3000, // ปิดเองภายใน 3 วินาที
+          position: "top-center",
+          autoClose: 3000,
         });
+
         setTimeout(() => {
           router.push("/admin/company-list");
         }, 2000);
       })
       .catch((error) => {
-        // เพิ่มการแสดงข้อความ error
         console.error("Error adding company:", error);
         toast.error("Error adding company. Please try again.", {
           position: "top-center",

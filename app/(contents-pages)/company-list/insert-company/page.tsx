@@ -5,8 +5,8 @@
 import { getOptionAction } from "@/actions/optionAction";
 import { InsertForm } from "./components/form";
 import { Label } from "@/components/ui/label";
-
 export default async function Page() {
+
   const optionData = await getOptionAction(); // ดึงข้อมูล option
 
   return (
@@ -16,7 +16,7 @@ export default async function Page() {
           <Label className="font-bold text-2xl">เพิ่มสถานประกอบการ</Label>
         </div>
       </div>
-      <InsertForm optionData={optionData} />
+      <InsertForm optionData={optionData}/>
     </div>
   );
 }

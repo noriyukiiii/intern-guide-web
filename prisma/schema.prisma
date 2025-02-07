@@ -40,6 +40,7 @@ model User {
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
 
+  companyCreators        CompanyCreator[]
   companyStudentInterned Company_Student_Interned[]
   FavoriteCompanies      FavoriteCompanies[]
   banners                Banner[] // ความสัมพันธ์กับตาราง Banner
@@ -79,14 +80,29 @@ model Company {
   occupation          String?
   imgLink             String?
   isMou               Boolean
+  approvalStatus      String  @default("pending") // เพิ่มสถานะการอนุมัติ
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
 
   positions              positions[]
+  companyCreators        CompanyCreator[]
   companyStudentInterned Company_Student_Interned[]
   FavoriteCompanies      FavoriteCompanies[]
+}
+
+model CompanyCreator {
+  id        String @id @default(cuid())
+  userId    String // คนเพิ่มบริษัท
+  companyId String // บริษัทที่ถูกเพิ่ม
+
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade) // เพิ่ม onDelete: Cascade
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade) // เพิ่ม onDelete: Cascade
+
+  @@unique([userId, companyId]) // ห้าม user เดิมเพิ่มบริษัทเดิมซ้ำ
 }
 
 model Company_Student_Interned {

@@ -74,7 +74,7 @@ export async function signUpActions(values: SignUpSchema): Promise<{
 export async function signInActions(values: SignInSchema): Promise<{
   success: boolean;
   message: string;
-  redirectTo?: string; // เพิ่ม redirect path
+  redirectTo?: string;
 }> {
   try {
     const validation = signInSchema.safeParse(values);
@@ -89,6 +89,7 @@ export async function signInActions(values: SignInSchema): Promise<{
     const { email, password } = validation.data;
 
     const user = await db.user.findUnique({ where: { email } });
+
     if (!user || !compareSync(password, user.password ?? "")) {
       return {
         success: false,
@@ -96,22 +97,29 @@ export async function signInActions(values: SignInSchema): Promise<{
       };
     }
 
-    await AuthService.createSessionCookies(user.id, user.role);
-
-    // ตรวจสอบบทบาทของผู้ใช้
-    let redirectTo = "/";
-    if (user.role === "ADMIN") {
-      redirectTo = "/admin/company-list"; // หากเป็น admin
-    } else if (user.role === "MEMBER") {
-      redirectTo = "/"; // หากเป็นสมาชิกทั่วไป
+    // ✅ เช็คว่า email ถูก verify หรือยัง
+    if (!user.emailVerified) {
+      return {
+        success: false,
+        message: "กรุณายืนยันอีเมลก่อน",
+      };
     }
 
-    revalidatePath(redirectTo); // Revalidate หน้าใหม่
+    await AuthService.createSessionCookies(user.id, user.role);
+
+    let redirectTo = "/";
+    if (user.role === "ADMIN") {
+      redirectTo = "/admin/company-list";
+    } else if (user.role === "MEMBER") {
+      redirectTo = "/";
+    }
+
+    revalidatePath(redirectTo);
 
     return {
       success: true,
-      message: "login successfully",
-      redirectTo, // ส่งกลับเส้นทาง
+      message: "Login successfully",
+      redirectTo,
     };
   } catch (error) {
     return {
@@ -123,16 +131,16 @@ export async function signInActions(values: SignInSchema): Promise<{
 
 export const resetPasswordActions = async ({ email }: { email: string }) => {
   try {
-     const res = await fetch("http://localhost:5555/auth/forgot-password", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-     });
+    const res = await fetch("http://localhost:5555/auth/forgot-password", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    });
 
-     const data = await res.json();
-     return data;
+    const data = await res.json();
+    return data;
   } catch (error) {
-     return { success: false, message: "เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง" };
+    return { success: false, message: "เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง" };
   }
 };
 

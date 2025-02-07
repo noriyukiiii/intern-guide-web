@@ -35,7 +35,11 @@ export default function Homepage() {
   }, []);
 
   if (loading) {
-    return <div className="flex justify-center items-center h-screen">Loading...</div>; // แสดง "Loading..." ขณะโหลดข้อมูล
+    return (
+      <div className="flex justify-center items-center h-screen">
+        Loading...
+      </div>
+    ); // แสดง "Loading..." ขณะโหลดข้อมูล
   }
 
   return (
@@ -43,15 +47,15 @@ export default function Homepage() {
       <div className="flex flex-col h-screen w-screen">
         {/* Carousel สำหรับแสดงแบนเนอร์ */}
         <div className="flex justify-center items-center ">
-          <Carousel className="w-full max-w-[1700px] h-auto">
+          <Carousel className="w-full max-w-[1700px] h-[720px]">
             <CarouselContent>
               {banners.map((banner, index) => (
-                <CarouselItem key={index}>
-                  <div className="p-1">
+                <CarouselItem key={index} className="h-[720px]">
+                  <div className="p-1 h-full">
                     <img
-                      src={banner.image} // แสดงภาพแบนเนอร์จากข้อมูลที่ได้
+                      src={banner.image}
                       alt={banner.title}
-                      className="object-cover w-full h-full"
+                      className="w-full h-full object-cover rounded-lg"
                     />
                   </div>
                 </CarouselItem>

@@ -7,6 +7,7 @@ export async function getCompany() {
     const companies = await db.company.findMany({
       where: {
         deletedAt: null, // เฉพาะบริษัทที่ยังไม่ถูกลบ
+        approvalStatus : "approved"
       },
       include: {
         positions: {

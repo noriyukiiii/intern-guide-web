@@ -1,6 +1,13 @@
 // components/BannerDialog.tsx
 "use client";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import Image from "next/image";
 
 interface BannerDialogProps {
@@ -13,6 +20,9 @@ interface BannerDialogProps {
 const BannerDialog = ({ open, onClose, image, title }: BannerDialogProps) => {
   return (
     <Dialog open={open} onOpenChange={onClose}>
+      <DialogDescription>
+         แสดงรูปภาพขนาดใหญ่
+      </DialogDescription>
       <DialogTrigger asChild>
         {/* รูปภาพเป็น trigger ที่เปิด dialog */}
       </DialogTrigger>

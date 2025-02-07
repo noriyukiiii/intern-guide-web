@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import React from "react";
 import {
   FaEnvelope,
@@ -14,10 +15,12 @@ interface CompanyDetailProps {
     company_id: string;
     company_name_th: string;
     company_name_en: string;
+    company_benefit: string | null;
     company_description: string | null;
     company_location: string | null;
     company_province: string | null;
     company_website: string | null;
+    company_occupation: string | null;
     company_logo: string | null;
     contract_name: string | null;
     contract_email: string | null;
@@ -33,7 +36,7 @@ interface CompanyDetailProps {
 
 const CompDetail = ({ company }: CompanyDetailProps) => {
   return (
-    <div className="max-w-5xl mx-auto p-8 bg-gray-50 rounded-lg shadow-md">
+    <div className="max-w-5xl mx-auto p-8 bg-gray-200 rounded-lg shadow-md">
       {/* Header Section */}
       <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
         {/* Company Logo */}
@@ -56,8 +59,16 @@ const CompDetail = ({ company }: CompanyDetailProps) => {
           <h2 className="text-xl text-gray-600 mb-4">
             {company.company_name_th || "ชื่อบริษัท (ภาษาไทย)"}
           </h2>
+
           {company.company_description && (
-            <p className="text-gray-700 mb-6">{company.company_description}</p>
+            <p className="text-gray-700 mb-4">{company.company_description}</p>
+          )}
+
+          {company.company_benefit && (
+            <div className="bg-blue-100 text-blue-800 p-4 rounded-lg mb-6">
+              <h3 className="text-lg font-semibold">สวัสดิการ</h3>
+              <p>{company.company_benefit}</p>
+            </div>
           )}
 
           {/* Location and Province */}
@@ -121,11 +132,17 @@ const CompDetail = ({ company }: CompanyDetailProps) => {
         <h3 className="text-2xl font-semibold text-gray-800 mb-4">
           ตำแหน่งที่เปิดรับ
         </h3>
+
+        {/* Occupation Section */}
+        {company.company_occupation && (
+          <div className="my-2">
+            <h4 className="text-lg font-medium text-gray-700">สายการเรียน</h4>
+            <p className="text-gray-600">{company.company_occupation}</p>
+          </div>
+        )}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div>
-            <h4 className="text-lg font-medium text-gray-700">
-              ตำแหน่ง
-            </h4>
+            <h4 className="text-lg font-medium text-gray-700">ตำแหน่ง</h4>
             <p className="text-gray-600">
               {company.position_names && company.position_names !== "Unknown"
                 ? company.position_names
@@ -135,7 +152,8 @@ const CompDetail = ({ company }: CompanyDetailProps) => {
           <div>
             <h4 className="text-lg font-medium text-gray-700">ตำแหน่งงาน</h4>
             <p className="text-gray-600">
-              {company.position_descriptions && company.position_descriptions !== "Unknown"
+              {company.position_descriptions &&
+              company.position_descriptions !== "Unknown"
                 ? company.position_descriptions
                 : "ไม่ระบุ"}
             </p>
@@ -187,6 +205,11 @@ const CompDetail = ({ company }: CompanyDetailProps) => {
           </a>
         </div>
       )}
+      <div>
+        <Button>
+          เลือกสถานประกอบการนี้เพื่อออกสหกิจ
+        </Button>
+      </div>
     </div>
   );
 };

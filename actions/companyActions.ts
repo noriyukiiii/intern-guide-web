@@ -20,6 +20,7 @@ export async function getCompany(userId : string) {
     const companies = await db.company.findMany({
       where: {
         deletedAt: null,
+        approvalStatus: "approved", // กรองเฉพาะบริษัทที่อนุมัติ
       },
       include: {
         positions: {

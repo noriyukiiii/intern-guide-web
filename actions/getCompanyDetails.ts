@@ -71,6 +71,7 @@ export const getCompanyDetails = async (companyId: string) => {
       company_province: company.province,
       company_website: company.website,
       company_benefit: company.benefit,
+      company_occupation : company.occupation,
       company_logo: company.imgLink,
       contract_name: company.contractName,
       contract_email: company.contractEmail,

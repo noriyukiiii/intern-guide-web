@@ -12,6 +12,7 @@ import { signInSchema, SignInSchema } from "@/validations/sign-in.validation";
 import { Input } from "@/components/ui/inputtest";
 import { Label } from "@/components/ui/label";
 import { signInActions } from "@/actions/auth";
+import { toast, ToastContainer } from "react-toastify";
 
 const Page = () => {
   const [isPending, startTransition] = useTransition();
@@ -32,7 +33,7 @@ const Page = () => {
         const response = await signInActions(data);
 
         if (!response?.success) {
-          alert(response.message);
+          toast.warning(response.message);
           return;
         }
 
@@ -48,6 +49,7 @@ const Page = () => {
 
   return (
     <div className="flex flex-row h-screen">
+      <ToastContainer />
       <div className="relative lg:w-1/2 bg-[#FFFAE6]">
         <Image src="/authpage/testbg.svg" alt="Sign in Background" fill />
       </div>
