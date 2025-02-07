@@ -2,11 +2,11 @@
 import React, { useEffect } from "react"; // นำเข้า React
 import Navbar from "./components/navbar/navbar";
 
-type AuthLayoutProp = {
+type ContentLayoutProp = {
   children: React.ReactNode; // ตรวจสอบให้ children เป็น ReactElement ที่สามารถรับ props user
 };
 
-const Authlayout = ({ children }: AuthLayoutProp) => {
+const Contentlayout = ({ children }: ContentLayoutProp) => {
   return (
     <div className="min-h-screen flex flex-col gap-1">
       <Navbar />
@@ -15,4 +15,4 @@ const Authlayout = ({ children }: AuthLayoutProp) => {
   );
 };
 
-export default Authlayout;
+export default Contentlayout;
