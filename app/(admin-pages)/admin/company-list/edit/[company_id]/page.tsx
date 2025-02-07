@@ -12,7 +12,9 @@ type Option = {
 
 type PageProps = {
   params: Promise<{
+  params: Promise<{
     company_id: string;
+  }>;
   }>;
 };
 
@@ -35,7 +37,6 @@ const CompanyDetails = async ({ params }: PageProps) => {
     }
 
     return (
-      
       <div className="p-4 flex flex-col font-Prompt">
         <div className="flex items-center justify-center my-10">
           <p className="font-bold text-2xl">แก้ไขข้อมูลสถานประกอบการ</p>

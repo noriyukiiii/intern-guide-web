@@ -13,7 +13,17 @@ import {
 import { toggleRoleAction } from "@/actions/updateUser";
 
 interface UserProp {
-  user: User[];
+  user: {
+    id: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    phone: string;
+    studentId: string;
+    emailVerified: boolean;
+    image: string;
+    role: Role;
+  }[];
 }
 
 const UserTable = ({ user }: UserProp) => {
@@ -126,51 +136,50 @@ const UserTable = ({ user }: UserProp) => {
             ))}
           </TableBody>
         </Table>
-            <div className="flex justify-between items-center p-2 border-t">
-              {/* ตัวเลือกจำนวนที่แสดง */}
-              <select
-                value={itemsPerPage}
-                onChange={(e) => {
-                  setItemsPerPage(Number(e.target.value));
-                  setCurrentPage(1); // รีเซ็ตหน้าเมื่อเปลี่ยนจำนวนที่แสดง
-                }}
-                className="border p-2 rounded-md"
-              >
-                <option value={5}>5</option>
-                <option value={10}>10</option>
-                <option value={20}>20</option>
-              </select>
+        <div className="flex justify-between items-center p-2 border-t">
+          {/* ตัวเลือกจำนวนที่แสดง */}
+          <select
+            value={itemsPerPage}
+            onChange={(e) => {
+              setItemsPerPage(Number(e.target.value));
+              setCurrentPage(1); // รีเซ็ตหน้าเมื่อเปลี่ยนจำนวนที่แสดง
+            }}
+            className="border p-2 rounded-md"
+          >
+            <option value={5}>5</option>
+            <option value={10}>10</option>
+            <option value={20}>20</option>
+          </select>
 
-              {/* Pagination */}
-              <div className="flex gap-2">
-                <button
-                  onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                  disabled={currentPage === 1}
-                  className={`px-4 py-2 border rounded-lg ${
-                    currentPage === 1 ? "bg-gray-300" : "bg-blue-500 text-white"
-                  }`}
-                >
-                  ก่อนหน้า
-                </button>
-                <span className="px-2 items-center flex">
-                  หน้า {currentPage} / {totalPages}
-                </span>
-                <button
-                  onClick={() =>
-                    setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-                  }
-                  disabled={currentPage === totalPages}
-                  className={`px-4 py-2 border rounded-lg ${
-                    currentPage === totalPages
-                      ? "bg-gray-300"
-                      : "bg-blue-500 text-white"
-                  }`}
-                >
-                  ถัดไป
-                </button>
-              </div>
-            </div>
-
+          {/* Pagination */}
+          <div className="flex gap-2">
+            <button
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+              className={`px-4 py-2 border rounded-lg ${
+                currentPage === 1 ? "bg-gray-300" : "bg-blue-500 text-white"
+              }`}
+            >
+              ก่อนหน้า
+            </button>
+            <span className="px-2 items-center flex">
+              หน้า {currentPage} / {totalPages}
+            </span>
+            <button
+              onClick={() =>
+                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+              }
+              disabled={currentPage === totalPages}
+              className={`px-4 py-2 border rounded-lg ${
+                currentPage === totalPages
+                  ? "bg-gray-300"
+                  : "bg-blue-500 text-white"
+              }`}
+            >
+              ถัดไป
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* Confirm Modal */}
