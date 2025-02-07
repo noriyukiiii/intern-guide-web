@@ -12,14 +12,12 @@ type Option = {
 
 type PageProps = {
   params: Promise<{
-  params: Promise<{
     company_id: string;
-  }>;
   }>;
 };
 
 const CompanyDetails = async ({ params }: PageProps) => {
-  const { company_id } = await params;  // Now we need await since params is a Promise
+  const { company_id } = await params; // Now we need await since params is a Promise
 
   if (!company_id) {
     console.error("Missing company_id");

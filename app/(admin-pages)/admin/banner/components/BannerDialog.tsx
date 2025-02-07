@@ -20,9 +20,7 @@ interface BannerDialogProps {
 const BannerDialog = ({ open, onClose, image, title }: BannerDialogProps) => {
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogDescription>
-         แสดงรูปภาพขนาดใหญ่
-      </DialogDescription>
+      <DialogDescription></DialogDescription>
       <DialogTrigger asChild>
         {/* รูปภาพเป็น trigger ที่เปิด dialog */}
       </DialogTrigger>

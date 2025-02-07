@@ -12,7 +12,7 @@ type PageProps = {
 const CompanyDetails = async ({ params }: PageProps) => {
   const { company_id } = await params; // ใช้ await กับ params
   const company = await getCompanyDetails(company_id);
-  console.log(company);
+  // console.log(company);
   if (!company) {
     return <p>Company not found</p>;
   }
