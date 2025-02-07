@@ -1,4 +1,3 @@
-"use server";
 import axios from "axios";
 import BannerPage from "./components/BannerPage";
 
@@ -11,16 +10,23 @@ interface Banner {
   userID: string;
 }
 
-// ใช้ async function ในการดึงข้อมูลแบบ server-side
-const Page = async () => {
-  const res = await axios.get("http://localhost:5555/banner");
-  const data_format = await res.data;
+export const dynamic = 'force-dynamic';
 
-  return (
-    <div className="h-full w-full flex flex-col items-center justify-center">
-      <BannerPage banners={data_format} />
-    </div>
-  );
+const Page = async () => {
+  try {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5555';
+    const res = await axios.get(`${apiUrl}/banner`);
+    const data_format = res.data;
+
+    return (
+      <div className="h-full w-full flex flex-col items-center justify-center">
+        <BannerPage banners={data_format} />
+      </div>
+    );
+  } catch (error) {
+    console.error('Error fetching banners:', error);
+    return <div>Error loading banners</div>;
+  }
 };
 
 export default Page;
