@@ -10,15 +10,14 @@ type Option = {
   positiondescription: string[];
 };
 
-// ใช้ type นี้ในการตรวจสอบ params
 type PageProps = {
-  params: {
+  params: Promise<{
     company_id: string;
-  };
+  }>;
 };
 
 const CompanyDetails = async ({ params }: PageProps) => {
-  const { company_id } = params;
+  const { company_id } = await params;  // Now we need await since params is a Promise
 
   if (!company_id) {
     console.error("Missing company_id");

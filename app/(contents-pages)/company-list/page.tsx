@@ -1,25 +1,36 @@
-"use server";
 import { getCompany } from "@/actions/companyActions";
 import SearchFilter from "./components/searchFilter";
 import { getSession } from "@/lib/auth";
 
-export default async function Page() {
-  const session = await getSession();
+export const revalidate = 0;
 
-  const userid = session?.user?.id;
-  const companies = await getCompany(userid || "");
-  //ต้องแก้ defaultvalue User
-  if (!companies) {
+export default async function Page() {
+  try {
+    const session = await getSession();
+    const userid = session?.user?.id;
+    const companies = await getCompany(userid || "");
+
+    if (!companies) {
+      return (
+        <div>
+          <h1>Company List</h1>
+          <p>No companies found.</p>
+        </div>
+      );
+    }
+
     return (
       <div>
-        <h1>Company List</h1>
-        <p>No companies found.</p>
+        <SearchFilter companies={companies} />
+      </div>
+    );
+  } catch (error) {
+    console.error('Error loading companies:', error);
+    return (
+      <div>
+        <h1>Error</h1>
+        <p>Failed to load companies</p>
       </div>
     );
   }
-  return (
-    <div>
-      <SearchFilter companies={companies} />
-    </div>
-  );
 }

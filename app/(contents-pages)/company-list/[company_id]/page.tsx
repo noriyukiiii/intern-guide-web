@@ -3,14 +3,16 @@ import { getCompanyDetails } from "@/actions/getCompanyDetails";
 // import noimage from "./assets/noimage.png";
 import CompDetail from "./components/comDetail";
 
-const CompanyDetails = async ({
-  params,
-}: {
-  params: { company_id: string };
-}) => {
+type PageProps = {
+  params: Promise<{
+    company_id: string;
+  }>;
+};
+
+const CompanyDetails = async ({ params }: PageProps) => {
   const { company_id } = await params; // ใช้ await กับ params
   const company = await getCompanyDetails(company_id);
-  console.log(company)
+  console.log(company);
   if (!company) {
     return <p>Company not found</p>;
   }

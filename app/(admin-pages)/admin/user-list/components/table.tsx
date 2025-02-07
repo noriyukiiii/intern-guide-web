@@ -1,5 +1,5 @@
 "use client";
-import { Role } from "@prisma/client";
+import { Role, User } from "@prisma/client";
 import { useState } from "react";
 import {
   Table,
@@ -13,21 +13,7 @@ import {
 import { toggleRoleAction } from "@/actions/updateUser";
 
 interface UserProp {
-  user: {
-    id: string;
-    email: string;
-    firstName: string;
-    lastName: string;
-    phone: string;
-    studentId: string;
-    emailVerified: Date | null;
-    image: string;
-    password: string | null;
-    role: Role;
-    createdAt: Date;
-    updatedAt: Date;
-    deletedAt: Date | null;
-  }[];
+  user: User[];
 }
 
 const UserTable = ({ user }: UserProp) => {
