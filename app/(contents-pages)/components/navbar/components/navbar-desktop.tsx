@@ -76,7 +76,7 @@ const NavbarDesktop = () => {
               href="/admin/company-list"
               className="text-[#002379] hover:text-[#FFDE59]"
             >
-              ADMIN DASHBOARD
+              ADMIN
             </Link>
           </li>
         )}
