@@ -1,36 +1,82 @@
 "use client";
 import { useEffect, useState } from "react";
 import OccupationChart from "./occupation-chart";
-import { ChartData } from "@/lib/dashboardtype";
 import PositionChart from "./position-chart";
 import BenefitChart from "./benefit-chart";
 import ProvinceChart from "./province-chart";
+import { ChartData } from "@/lib/dashboardtype";
+import API from "@/lib/axios";
+import CompanyTable from "./company-table";
 
-export default function ContentChart({ allData }: { allData: ChartData }) {
+export default function ContentChart() {
   const [selectedOccupation, setSelectedOccupation] = useState<string | null>(
     null
   );
+  const [selectedPosition, setSelectedPosition] = useState<string | null>(null);
+  const [selectedProvince, setSelectedProvince] = useState<string | null>(null);
+  const [selectedBenefit, setSelectedBenefit] = useState<string | null>(null);
+  const [allData, setAllData] = useState<ChartData | null>(null);
 
+  // ✅ โหลดข้อมูลใหม่ทุกครั้งที่เลือกค่า
   useEffect(() => {
-    console.log("occuaption : ",selectedOccupation);
-  }, [selectedOccupation]); // ✅ ถูกต้องแล้ว
+    async function fetchData() {
+      try {
+        const query = new URLSearchParams({
+          occupation: selectedOccupation || "",
+          position: selectedPosition || "",
+          province: selectedProvince || "",
+          benefit: selectedBenefit || "",
+        }).toString();
+
+        const res = await API.get(
+          `http://localhost:5555/company/get_chart?${query}`
+        );
+
+        console.log(res.data); // ตรวจสอบข้อมูลที่ได้รับ
+        setAllData(res.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    }
+
+    fetchData();
+  }, [selectedOccupation, selectedPosition, selectedProvince, selectedBenefit]);
+
+  if (!allData) return <p>Loading...</p>; // ✅ แสดง Loading ก่อนโหลดเสร็จ
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 h-full w-full pb-10">
       <div className="mt-10 w-full flex justify-end">
         <OccupationChart
           allData={allData}
-          onSelect={(selected) => setSelectedOccupation(selected)}
+          onSelect={setSelectedOccupation}
+          selected={selectedOccupation}
         />
       </div>
       <div className="mt-10 w-full flex justify-end">
-        <PositionChart allData={allData} />
+        <PositionChart
+          allData={allData}
+          onSelect={setSelectedPosition}
+          selected={selectedPosition}
+        />
       </div>
       <div className="mt-10 w-full flex justify-end">
-        <ProvinceChart allData={allData} />
+        <ProvinceChart
+          allData={allData}
+          onSelect={setSelectedProvince}
+          selected={selectedProvince}
+        />
       </div>
       <div className="mt-10 w-full flex justify-end ">
-        <BenefitChart allData={allData} />
+        <BenefitChart
+          allData={allData}
+          onSelect={setSelectedBenefit}
+          selected={selectedBenefit}
+        />
+      </div>
+      <div className="col-span-1 md:col-span-2 mt-4">
+        <CompanyTable allData={allData.company}
+        />
       </div>
     </div>
   );

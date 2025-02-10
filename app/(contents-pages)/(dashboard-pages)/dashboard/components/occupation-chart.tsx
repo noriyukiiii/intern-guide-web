@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -110,14 +110,29 @@ const OccupationChart = React.memo(
   ({
     allData,
     onSelect,
+    selected, // ✅ รับค่าที่ถูกเลือกจาก `ContentChart`
   }: {
     allData: ChartData;
     onSelect: (selected: string | null) => void;
+    selected: string | null; // ✅ เพิ่ม prop นี้
   }) => {
     const [activeIndex, setActiveIndex] = useState<number | undefined>(-1);
     const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
     const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
+
+    // ✅ แปลงข้อมูลให้อยู่ในรูปที่ PieChart ใช้ได้
+    const occupationData = Object.keys(allData.occupation ?? {}).map((key) => ({
+      name: key,
+      value: allData.occupation?.[key] ?? 0,
+    }));
+
+    // ✅ เมื่อ `selected` เปลี่ยน ต้อง sync กับ `selectedIndex`
+    useEffect(() => {
+      const index = occupationData.findIndex((item) => item.name === selected);
+      setSelectedIndex(index !== -1 ? index : null);
+      setActiveIndex(index !== -1 ? index : undefined);
+    }, [selected, occupationData]);
 
     const onPieEnter = (_: any, index: any) => {
       if (selectedIndex === null) {
@@ -126,23 +141,17 @@ const OccupationChart = React.memo(
     };
 
     const onPieLeave = () => {
-      setActiveIndex(selectedIndex ?? undefined); // คืนค่า activeIndex เป็น selectedIndex หรือ undefined ถ้าไม่มี
+      setActiveIndex(selectedIndex ?? undefined);
     };
 
-const onPieClick = (data: any, index: number) => {
-  const newIndex = index === selectedIndex ? null : index;
-  setSelectedIndex(newIndex);
-  setActiveIndex(newIndex ?? undefined);
-  
-  // ✅ ส่งค่าชื่ออาชีพกลับไปให้ Parent Component
-  onSelect(newIndex !== null ? occupationData[newIndex].name : null);
-};
+    const onPieClick = (data: any, index: number) => {
+      const newIndex = index === selectedIndex ? null : index;
+      setSelectedIndex(newIndex);
+      setActiveIndex(newIndex ?? undefined);
 
-
-    const occupationData = Object.keys(allData.occupation ?? {}).map((key) => ({
-      name: key,
-      value: allData.occupation?.[key] ?? 0,
-    }));
+      // ✅ ส่งค่าชื่ออาชีพกลับไปให้ Parent Component
+      onSelect(newIndex !== null ? occupationData[newIndex].name : null);
+    };
 
     return (
       <div className="w-full h-fit flex justify-center">
@@ -168,7 +177,7 @@ const onPieClick = (data: any, index: number) => {
                   fill="#8884d8"
                   dataKey="value"
                   onMouseEnter={onPieEnter}
-                  onMouseLeave={onPieLeave} // ✅ ทำให้ activeIndex กลับมาเป็น selectedIndex
+                  onMouseLeave={onPieLeave}
                   onClick={onPieClick}
                 >
                   {occupationData.map((entry, index) => (
@@ -179,7 +188,7 @@ const onPieClick = (data: any, index: number) => {
                         selectedIndex === null || selectedIndex === index
                           ? 1
                           : 0.6
-                      } // ✅ ควบคุม opacity ตามการเลือก
+                      }
                     />
                   ))}
                 </Pie>

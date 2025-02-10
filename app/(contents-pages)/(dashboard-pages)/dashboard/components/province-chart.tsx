@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -106,74 +106,99 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   return null;
 };
 
-const ProvinceChart = React.memo(({ allData }: { allData: ChartData }) => {
-  const [activeIndex, setActiveIndex] = useState(0);
+const ProvinceChart = React.memo(
+  ({
+    allData,
+    onSelect,
+    selected, // ✅ รับค่าที่ถูกเลือกจาก `ContentChart`
+  }: {
+    allData: ChartData;
+    onSelect: (selected: string | null) => void;
+    selected: string | null; // ✅ เพิ่ม prop นี้
+  }) => {
+    const [activeIndex, setActiveIndex] = useState<number | undefined>(-1);
+    const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
-  const provinceData = Object.keys(allData.province ?? {}).map((key) => ({
-    name: key,
-    value: allData.province?.[key] ?? 0,
-  }));
+    const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
-  const COLORS = [
-    "#0088FE",
-    "#00C49F",
-    "#FFBB28",
-    "#FF8042", // 4 สีเดิม
-    "#0070E0",
-    "#00A77E",
-    "#E0A700",
-    "#E05C00", // โทนเข้มขึ้น
-    "#339CFF",
-    "#33D1A1",
-    "#FFD166",
-    "#FF9F66", // โทนอ่อนลง
-    "#0056A0",
-    "#008060", // เพิ่มเฉดที่เข้มกว่าตัวหลัก
-  ];
+    // ✅ แปลงข้อมูลให้อยู่ในรูปที่ PieChart ใช้ได้
+    const provinceData = Object.keys(allData.province ?? {}).map((key) => ({
+      name: key,
+      value: allData.province[key] ?? 0,
+    }));
 
-  const generateColor = (index: number) => COLORS[index % COLORS.length];
+    // ✅ เมื่อ `selected` เปลี่ยน ต้อง sync กับ `selectedIndex`
+    useEffect(() => {
+      const index = provinceData.findIndex((item) => item.name === selected);
+      setSelectedIndex(index !== -1 ? index : null);
+      setActiveIndex(index !== -1 ? index : undefined);
+    }, [selected, provinceData]);
 
-  const onPieEnter = (_: any, index: any) => {
-    setActiveIndex(index);
-  };
+    const onPieEnter = (_: any, index: any) => {
+      if (selectedIndex === null) {
+        setActiveIndex(index);
+      }
+    };
 
-  return (
-    <div className="w-full h-fit flex justify-center">
-      <Card className="w-[600px]">
-        {/* <CardHeader className="text-center">จังหวัด</CardHeader> */}
-        <CardContent>
-          <ResponsiveContainer width="100%" height={400}>
-            <PieChart>
-              <Tooltip content={<CustomTooltip />} />
-              <Legend
-                layout="horizontal"
-                align="center"
-                verticalAlign="bottom"
-                wrapperStyle={{ fontSize: "12px" }} // ✅ ใช้ wrapperStyle
-              />
+    const onPieLeave = () => {
+      setActiveIndex(selectedIndex ?? undefined);
+    };
 
-              <Pie
-                activeIndex={activeIndex}
-                activeShape={renderActiveShape}
-                data={provinceData}
-                cx="50%"
-                cy="50%"
-                innerRadius={60}
-                outerRadius={100}
-                fill="#8884d8"
-                dataKey="value"
-                onMouseEnter={onPieEnter}
-              >
-                {provinceData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={generateColor(index)} />
-                ))}
-              </Pie>
-            </PieChart>
-          </ResponsiveContainer>
-        </CardContent>
-      </Card>
-    </div>
-  );
-});
+    const onPieClick = (data: any, index: number) => {
+      const newIndex = index === selectedIndex ? null : index;
+      setSelectedIndex(newIndex);
+      setActiveIndex(newIndex ?? undefined);
+
+      // ✅ ส่งค่าชื่ออาชีพกลับไปให้ Parent Component
+      onSelect(newIndex !== null ? provinceData[newIndex].name : null);
+    };
+
+    return (
+      <div className="w-full h-fit flex justify-center">
+        <Card className="w-[600px]">
+          <CardContent>
+            <ResponsiveContainer width="100%" height={400}>
+              <PieChart>
+                <Tooltip content={<CustomTooltip />} />
+                <Legend
+                  layout="horizontal"
+                  align="center"
+                  verticalAlign="bottom"
+                  wrapperStyle={{ fontSize: "12px" }}
+                />
+                <Pie
+                  activeIndex={activeIndex}
+                  activeShape={renderActiveShape}
+                  data={provinceData}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={60}
+                  outerRadius={100}
+                  fill="#8884d8"
+                  dataKey="value"
+                  onMouseEnter={onPieEnter}
+                  onMouseLeave={onPieLeave}
+                  onClick={onPieClick}
+                >
+                  {provinceData.map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={COLORS[index % COLORS.length]}
+                      opacity={
+                        selectedIndex === null || selectedIndex === index
+                          ? 1
+                          : 0.6
+                      }
+                    />
+                  ))}
+                </Pie>
+              </PieChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+);
 
 export default ProvinceChart;
