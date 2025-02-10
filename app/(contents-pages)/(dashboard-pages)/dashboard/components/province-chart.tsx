@@ -114,7 +114,24 @@ const ProvinceChart = React.memo(({ allData }: { allData: ChartData }) => {
     value: allData.province?.[key] ?? 0,
   }));
 
-  const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
+  const COLORS = [
+    "#0088FE",
+    "#00C49F",
+    "#FFBB28",
+    "#FF8042", // 4 สีเดิม
+    "#0070E0",
+    "#00A77E",
+    "#E0A700",
+    "#E05C00", // โทนเข้มขึ้น
+    "#339CFF",
+    "#33D1A1",
+    "#FFD166",
+    "#FF9F66", // โทนอ่อนลง
+    "#0056A0",
+    "#008060", // เพิ่มเฉดที่เข้มกว่าตัวหลัก
+  ];
+
+  const generateColor = (index: number) => COLORS[index % COLORS.length];
 
   const onPieEnter = (_: any, index: any) => {
     setActiveIndex(index);
@@ -122,18 +139,17 @@ const ProvinceChart = React.memo(({ allData }: { allData: ChartData }) => {
 
   return (
     <div className="w-full h-fit flex justify-center">
-      <Card className="w-[500px]">
-        <CardHeader className="text-center">
-          รายชื่อสถานประกอบการแยกตามสายการเรียน
-        </CardHeader>
+      <Card className="w-[600px]">
+        {/* <CardHeader className="text-center">จังหวัด</CardHeader> */}
         <CardContent>
-          <ResponsiveContainer width="100%" height={300}>
+          <ResponsiveContainer width="100%" height={400}>
             <PieChart>
               <Tooltip content={<CustomTooltip />} />
               <Legend
                 layout="horizontal"
                 align="center"
                 verticalAlign="bottom"
+                wrapperStyle={{ fontSize: "12px" }} // ✅ ใช้ wrapperStyle
               />
 
               <Pie
@@ -142,17 +158,14 @@ const ProvinceChart = React.memo(({ allData }: { allData: ChartData }) => {
                 data={provinceData}
                 cx="50%"
                 cy="50%"
-                innerRadius={45}
-                outerRadius={80}
+                innerRadius={60}
+                outerRadius={100}
                 fill="#8884d8"
                 dataKey="value"
                 onMouseEnter={onPieEnter}
               >
                 {provinceData.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={COLORS[index % COLORS.length]}
-                  />
+                  <Cell key={`cell-${index}`} fill={generateColor(index)} />
                 ))}
               </Pie>
             </PieChart>

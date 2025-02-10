@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useState } from "react";
 import {
   Card,
@@ -44,8 +44,8 @@ const renderActiveShape = (props: any) => {
 
   return (
     <g>
-      <text x={cx} y={cy} dy={8} textAnchor="middle" fill={fill}>
-        {payload.name}
+      <text x={cx} y={cy} dy={8} textAnchor="middle">
+        สายการเรียน
       </text>
       <Sector
         cx={cx}
@@ -106,54 +106,90 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   return null;
 };
 
-const OccupationChart = React.memo(({ allData }: { allData: ChartData }) => {
-  const [activeIndex, setActiveIndex] = useState(0);
+const OccupationChart = React.memo(
+  ({
+    allData,
+    onSelect,
+  }: {
+    allData: ChartData;
+    onSelect: (selected: string | null) => void;
+  }) => {
+    const [activeIndex, setActiveIndex] = useState<number | undefined>(-1);
+    const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
-  const occupationData = Object.keys(allData.occupation ?? {}).map((key) => ({
-    name: key,
-    value: allData.occupation?.[key] ?? 0,
-  }));
+    const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
-  const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
+    const onPieEnter = (_: any, index: any) => {
+      if (selectedIndex === null) {
+        setActiveIndex(index);
+      }
+    };
 
-  const onPieEnter = (_: any, index: any) => {
-    setActiveIndex(index);
-  };
+    const onPieLeave = () => {
+      setActiveIndex(selectedIndex ?? undefined); // คืนค่า activeIndex เป็น selectedIndex หรือ undefined ถ้าไม่มี
+    };
 
-  return (
-    <div className="w-full h-fit flex justify-center">
-      <Card className="w-[500px]">
-        <CardHeader className="text-center">รายชื่อสถานประกอบการแยกตามสายการเรียน</CardHeader>
-        <CardContent>
-          <ResponsiveContainer width="100%" height={300}>
-            <PieChart>
-              <Tooltip content={<CustomTooltip />} />
-              <Legend layout="horizontal" align="center" verticalAlign="bottom" />
-              <Pie
-                activeIndex={activeIndex}
-                activeShape={renderActiveShape}
-                data={occupationData}
-                cx="50%"
-                cy="50%"
-                innerRadius={45}
-                outerRadius={80}
-                fill="#8884d8"
-                dataKey="value"
-                onMouseEnter={onPieEnter}
-              >
-                {occupationData.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={COLORS[index % COLORS.length]}
-                  />
-                ))}
-              </Pie>
-            </PieChart>
-          </ResponsiveContainer>
-        </CardContent>
-      </Card>
-    </div>
-  );
-});
+const onPieClick = (data: any, index: number) => {
+  const newIndex = index === selectedIndex ? null : index;
+  setSelectedIndex(newIndex);
+  setActiveIndex(newIndex ?? undefined);
+  
+  // ✅ ส่งค่าชื่ออาชีพกลับไปให้ Parent Component
+  onSelect(newIndex !== null ? occupationData[newIndex].name : null);
+};
+
+
+    const occupationData = Object.keys(allData.occupation ?? {}).map((key) => ({
+      name: key,
+      value: allData.occupation?.[key] ?? 0,
+    }));
+
+    return (
+      <div className="w-full h-fit flex justify-center">
+        <Card className="w-[600px]">
+          <CardContent>
+            <ResponsiveContainer width="100%" height={400}>
+              <PieChart>
+                <Tooltip content={<CustomTooltip />} />
+                <Legend
+                  layout="horizontal"
+                  align="center"
+                  verticalAlign="bottom"
+                  wrapperStyle={{ fontSize: "16px" }}
+                />
+                <Pie
+                  activeIndex={activeIndex}
+                  activeShape={renderActiveShape}
+                  data={occupationData}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={60}
+                  outerRadius={100}
+                  fill="#8884d8"
+                  dataKey="value"
+                  onMouseEnter={onPieEnter}
+                  onMouseLeave={onPieLeave} // ✅ ทำให้ activeIndex กลับมาเป็น selectedIndex
+                  onClick={onPieClick}
+                >
+                  {occupationData.map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={COLORS[index % COLORS.length]}
+                      opacity={
+                        selectedIndex === null || selectedIndex === index
+                          ? 1
+                          : 0.6
+                      } // ✅ ควบคุม opacity ตามการเลือก
+                    />
+                  ))}
+                </Pie>
+              </PieChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+);
 
 export default OccupationChart;

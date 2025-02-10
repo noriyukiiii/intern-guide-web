@@ -9,3 +9,8 @@ export interface SidebarItems {
   }>;
   extras?: ReactNode;
 }
+
+
+export interface CompanyTableChart {
+  companyNameth: string;
+}

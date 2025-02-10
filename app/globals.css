@@ -6,6 +6,14 @@
 @tailwind components;
 @tailwind utilities;
 
+.recharts-layer.recharts-pie,
+.recharts-sector:focus {
+  outline: none !important;
+  outline-color: none;
+  outline-style: none;
+  outline-width: none;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -86,4 +94,9 @@
   body {
     @apply bg-background text-foreground;
   }
+  
+}
+
+.recharts-layer {
+  outline: none !important;
 }
