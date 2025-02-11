@@ -174,6 +174,8 @@ const OccupationChart = React.memo(
                   cy="50%"
                   innerRadius={60}
                   outerRadius={100}
+                  paddingAngle={1}
+
                   fill="#8884d8"
                   dataKey="value"
                   onMouseEnter={onPieEnter}

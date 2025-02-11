@@ -8,39 +8,47 @@ import {
 } from "@/components/ui/table";
 import { Company } from "@/lib/dashboardtype";
 
-// สร้าง interface สำหรับ props ของ CompanyTable
 interface CompanyTableProps {
-  allData: Company[]; // รับข้อมูลเฉพาะบริษัทเป็น array ของ Company
+  allData: Company[];
 }
 
 export default function CompanyTable({ allData }: CompanyTableProps) {
   return (
-    <div className="overflow-x-auto">
-      <Table className="min-w-full">
-        <TableHeader className="sticky top-0 bg-white z-10">
-          <TableRow>
-            <TableHead>ลำดับ</TableHead>
-            <TableHead>Company Name (TH)</TableHead>
-            <TableHead>Company Name (EN)</TableHead>
-            <TableHead>Description</TableHead>
-            <TableHead>Location</TableHead>
-            <TableHead>Province</TableHead>
-            <TableHead>Website</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody className="max-h-[400px] overflow-y-auto block bg-sky-50">
-          {allData.map((company: Company, index: number) => (
-            <TableRow key={company.id}>
-              <TableCell>{index + 1}</TableCell>
-              <TableCell>{company.companyNameTh}</TableCell>
-              <TableCell>{company.companyNameEn}</TableCell>
-              <TableCell>{company.description}</TableCell>
-              <TableCell>{company.location}</TableCell>
-              <TableCell>{company.province}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+    <div className="m-6 border rounded-lg shadow-md overflow-hidden font-Prompt">
+      <div className="max-h-[500px] overflow-auto">
+        <table className="w-full border-collapse">
+          <thead className="sticky top-0 bg-white z-10 shadow-md">
+            <tr>
+              <th className="p-3 text-left border-b">ลำดับ</th>
+              <th className="p-3 text-left border-b">ชื่อบริษัท (TH)</th>
+              <th className="p-3 text-left border-b">ชื่อบริษัท (EN)</th>
+              <th className="p-3 text-center border-b w-[150px]">สวัสดิการ</th>
+              <th className="p-3 text-left border-b">ที่ตั้ง</th>
+            </tr>
+          </thead>
+          <tbody>
+            {allData.map((company: Company, index: number) => (
+              <tr key={company.id} className="even:bg-gray-100">
+                <td className="p-3 border-b">{index + 1}</td>
+                <td className="p-3 border-b truncate max-w-[150px]">{company.companyNameTh}</td>
+                <td className="p-3 border-b truncate max-w-[150px]">{company.companyNameEn}</td>
+                <td>
+                  <div
+                    className={`flex justify-center mx-6 rounded-2xl p-2 truncate max-w-[120px] ${
+                      company.benefit
+                        ? "bg-green-200 text-green-800"
+                        : "bg-red-200 text-red-800"
+                    }`}
+                  >
+                    {company.benefit ? "มีสวัสดิการ" : "ไม่มีข้อมูล"}
+                  </div>
+                </td>
+                <td className="p-3 border-b truncate max-w-[200px]">{company.location}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

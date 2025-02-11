@@ -16,7 +16,21 @@ import {
   Sector,
   Legend,
 } from "recharts";
-
+const PositionLabel = ({ viewBox }: { viewBox: any }) => {
+  const { cx, cy } = viewBox;
+  return (
+    <text
+      x={cx}
+      y={cy - 20} // ขยับขึ้นเล็กน้อย
+      textAnchor="middle"
+      fontSize={16}
+      fontWeight="bold"
+      fill="#333"
+    >
+      ตำแหน่ง
+    </text>
+  );
+};
 const renderActiveShape = (props: any) => {
   const RADIAN = Math.PI / 180;
   const {
@@ -159,6 +173,7 @@ const BenefitChart = React.memo(
           <CardContent>
             <ResponsiveContainer width="100%" height={400}>
               <PieChart>
+                <PositionLabel viewBox={{ cx: "50%", cy: "50%" }} />
                 <Tooltip content={<CustomTooltip />} />
                 <Legend
                   layout="horizontal"

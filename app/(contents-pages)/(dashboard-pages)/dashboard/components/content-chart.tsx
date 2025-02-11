@@ -75,8 +75,7 @@ export default function ContentChart() {
         />
       </div>
       <div className="col-span-1 md:col-span-2 mt-4">
-        <CompanyTable allData={allData.company}
-        />
+        <CompanyTable allData={allData.company} />
       </div>
     </div>
   );
