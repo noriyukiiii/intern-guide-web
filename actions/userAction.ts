@@ -20,6 +20,7 @@ export async function getUser() {
         emailVerified: true,
         image: true,
         role: true,
+        status: true,
       },
     });
 

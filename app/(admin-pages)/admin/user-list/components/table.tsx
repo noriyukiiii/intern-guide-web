@@ -11,7 +11,18 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { toggleRoleAction } from "@/actions/updateUser";
-
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Ellipsis } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import AddAdminDialog from "./addDialog";
+import { ToastContainer } from "react-toastify";
 interface UserProp {
   user: {
     id: string;
@@ -23,6 +34,7 @@ interface UserProp {
     emailVerified: boolean;
     image: string;
     role: Role;
+    status: string;
   }[];
 }
 
@@ -57,29 +69,35 @@ const UserTable = ({ user }: UserProp) => {
 
   return (
     <>
-      <div className="flex gap-2 mb-2 font-Prompt">
-        <button
-          onClick={() => {
-            selectPage("MEMBER");
-            setCurrentPage(1); // รีเซ็ตหน้าเมื่อเปลี่ยน role
-          }}
-          className={`px-4 py-2 border w-[100px] rounded-xl ${
-            page === "MEMBER" ? "bg-blue-500 text-white" : "bg-gray-200"
-          }`}
-        >
-          MEMBER
-        </button>
-        <button
-          onClick={() => {
-            selectPage("ADMIN");
-            setCurrentPage(1);
-          }}
-          className={`px-4 py-2 border w-[100px] rounded-xl ${
-            page === "ADMIN" ? "bg-blue-500 text-white" : "bg-gray-200"
-          }`}
-        >
-          ADMIN
-        </button>
+      <div className="flex justify-between">
+        <ToastContainer />
+        <div className="flex gap-2 mb-2 font-Prompt">
+          <button
+            onClick={() => {
+              selectPage("MEMBER");
+              setCurrentPage(1); // รีเซ็ตหน้าเมื่อเปลี่ยน role
+            }}
+            className={`px-4 py-2 border w-[100px] rounded-xl ${
+              page === "MEMBER" ? "bg-blue-500 text-white" : "bg-gray-200"
+            }`}
+          >
+            MEMBER
+          </button>
+          <button
+            onClick={() => {
+              selectPage("ADMIN");
+              setCurrentPage(1);
+            }}
+            className={`px-4 py-2 border w-[100px] rounded-xl ${
+              page === "ADMIN" ? "bg-blue-500 text-white" : "bg-gray-200"
+            }`}
+          >
+            ADMIN
+          </button>
+        </div>
+        <div className="flex justify-end mr-4">
+          <AddAdminDialog />
+        </div>
       </div>
       <div className="border rounded-md font-Sarabun">
         <Table>
@@ -117,20 +135,38 @@ const UserTable = ({ user }: UserProp) => {
                   </div>
                 </TableCell>
                 <TableCell className="text-center">
-                  <button
-                    onClick={() =>
-                      setConfirmModal({
-                        visible: true,
-                        userId: user.id,
-                        userName: `${user.firstName} ${user.lastName}`,
-                        userStudentid: `${user.studentId}`,
-                      })
-                    }
-                    className="px-4 py-2 bg-yellow-500 text-white rounded-lg"
-                  >
-                    {page === "MEMBER" && <>เปลี่ยน Admin</>}
-                    {page === "ADMIN" && <>เปลี่ยนเป็น Member</>}
-                  </button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <button className="px-2 py-1 bg-gray-200 text-white rounded-lg">
+                        <Ellipsis color="black" />
+                      </button>
+                    </DropdownMenuTrigger>
+
+                    <DropdownMenuContent>
+                      <DropdownMenuLabel>จัดการ</DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem>แก้ไข</DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() =>
+                          setConfirmModal({
+                            visible: true,
+                            userId: user.id,
+                            userName: `${user.firstName} ${user.lastName}`,
+                            userStudentid: `${user.studentId}`,
+                          })
+                        }
+                      >
+                        {page === "MEMBER"
+                          ? "เปลี่ยนเป็น Admin"
+                          : "เปลี่ยนเป็น Member"}
+                      </DropdownMenuItem>
+
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem onClick={() => alert("ลบ")}>
+                        ลบ
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </TableCell>
               </TableRow>
             ))}

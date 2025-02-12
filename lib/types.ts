@@ -1,5 +1,5 @@
-import { LucideIcon } from 'lucide-react';
-import { ReactNode } from 'react';
+import { LucideIcon } from "lucide-react";
+import { ReactNode } from "react";
 
 export interface SidebarItems {
   links: Array<{
@@ -10,7 +10,15 @@ export interface SidebarItems {
   extras?: ReactNode;
 }
 
-
-export interface CompanyTableChart {
-  companyNameth: string;
+export interface AdminDashboardType {
+  totalUsers: number;
+  totalCompanies: {
+    company: number;
+    mou: number;
+    nonMou: number;
+  };
+  pendingCompanies: number;
+  totalPositions: number;
+  interning: number;
+  successfulInterns: number;
 }

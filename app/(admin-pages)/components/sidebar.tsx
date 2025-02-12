@@ -24,6 +24,7 @@ const sidebarItems: SidebarItems = {
     { label: 'Company', href: '/admin/company-list', icon: Table },
     { label: 'User', href: '/admin/user-list', icon: Table },
     { label: 'Banner', href: '/admin/banner', icon: Table },
+    { label: 'คำขอสร้างบริษัท', href: '/admin/approvecompany', icon: Table },
   ],
   extras: (
     <div className='flex flex-col gap-2'>
