@@ -115,7 +115,8 @@ export default function Page() {
                 <FormItem>
                   <div className="grid grid-cols-1 md:grid-cols-6 items-center justify-center">
                     <FormLabel className="col-span-6 text-xl ">
-                      ชื่อ : {session.user?.firstName} {session.user?.lastName}
+                      ชื่อ-นามสกุล: : {session.user?.firstName}{" "}
+                      {session.user?.lastName}
                     </FormLabel>
                   </div>
                 </FormItem>

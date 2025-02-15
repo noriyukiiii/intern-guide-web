@@ -1,11 +1,7 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
+
+import React, { useEffect, useState, useRef } from "react"; // เพิ่ม useRef ที่นี่
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { ChartData } from "@/lib/dashboardtype";
 import {
   PieChart,
@@ -30,7 +26,6 @@ const renderActiveShape = (props: any) => {
     fill,
     payload,
     percent,
-    value,
   } = props;
   const sin = Math.sin(-RADIAN * midAngle);
   const cos = Math.cos(-RADIAN * midAngle);
@@ -45,7 +40,7 @@ const renderActiveShape = (props: any) => {
   return (
     <g>
       <text x={cx} y={cy} dy={8} textAnchor="middle">
-        จังหวัด
+        {payload.name}
       </text>
       <Sector
         cx={cx}
@@ -76,7 +71,9 @@ const renderActiveShape = (props: any) => {
         y={ey}
         textAnchor={textAnchor}
         fill="#333"
-      >{`${payload.name}`}</text>
+      >
+        {`${payload.name}`}
+      </text>
       <text
         x={ex + (cos >= 0 ? 1 : -1) * 12}
         y={ey}
@@ -90,10 +87,9 @@ const renderActiveShape = (props: any) => {
   );
 };
 
-const CustomTooltip = ({ active, payload, label }: any) => {
+const CustomTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
-    const { name, value } = payload[0]; // ดึงข้อมูลจาก payload ที่ถูกส่งมา
-
+    const { name, value } = payload[0];
     return (
       <div className="custom-tooltip p-3 rounded-lg shadow-lg bg-white opacity-90 border border-gray-200">
         <p className="label text-sm font-semibold text-gray-700">
@@ -102,7 +98,6 @@ const CustomTooltip = ({ active, payload, label }: any) => {
       </div>
     );
   }
-
   return null;
 };
 
@@ -110,24 +105,54 @@ const ProvinceChart = React.memo(
   ({
     allData,
     onSelect,
-    selected, // ✅ รับค่าที่ถูกเลือกจาก `ContentChart`
+    selected,
   }: {
     allData: ChartData;
     onSelect: (selected: string | null) => void;
-    selected: string | null; // ✅ เพิ่ม prop นี้
+    selected: string | null;
   }) => {
     const [activeIndex, setActiveIndex] = useState<number | undefined>(-1);
     const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
-    const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
+    // ใช้ useRef เก็บสี เพื่อไม่ให้ข้อมูลหายเมื่อ allData เปลี่ยนแปลง
+    const colorsRef = useRef<Map<string, string>>(new Map());
 
-    // ✅ แปลงข้อมูลให้อยู่ในรูปที่ PieChart ใช้ได้
+    // กำหนดสีเริ่มต้นสำหรับแต่ละชื่อของ position
+    useEffect(() => {
+      // กำหนดสีเริ่มต้นสำหรับแต่ละ position หาก colorsRef ยังไม่มีการตั้งค่า
+      if (colorsRef.current.size === 0) {
+        const defaultColors = [
+          "#0088FE",
+          "#00C49F",
+          "#FFBB28",
+          "#FF8042",
+          "#A28BFF",
+          "#FF6384",
+          "#36A2EB",
+          "#FFCE56",
+          "#4BC0C0",
+          "#9966FF",
+          "#FF9F40",
+          "#0088FE",
+        ];
+
+        Object.keys(allData.province ?? {}).forEach((key, index) => {
+          colorsRef.current.set(
+            key,
+            defaultColors[index % defaultColors.length]
+          );
+        });
+      }
+    }, [allData]);
+
+    // กำหนด positionData โดยใช้สีที่เก็บไว้ใน colorsRef
     const provinceData = Object.keys(allData.province ?? {}).map((key) => ({
       name: key,
       value: allData.province[key] ?? 0,
+      color: colorsRef.current.get(key) || "#8884d8", // ใช้สีที่เก็บไว้
     }));
 
-    // ✅ เมื่อ `selected` เปลี่ยน ต้อง sync กับ `selectedIndex`
+    // เมื่อเลือกใหม่ ควรอัพเดท selectedIndex
     useEffect(() => {
       const index = provinceData.findIndex((item) => item.name === selected);
       setSelectedIndex(index !== -1 ? index : null);
@@ -144,12 +169,10 @@ const ProvinceChart = React.memo(
       setActiveIndex(selectedIndex ?? undefined);
     };
 
-    const onPieClick = (data: any, index: number) => {
+    const onPieClick = (_: any, index: number) => {
       const newIndex = index === selectedIndex ? null : index;
       setSelectedIndex(newIndex);
       setActiveIndex(newIndex ?? undefined);
-
-      // ✅ ส่งค่าชื่ออาชีพกลับไปให้ Parent Component
       onSelect(newIndex !== null ? provinceData[newIndex].name : null);
     };
 
@@ -157,23 +180,28 @@ const ProvinceChart = React.memo(
       <div className="w-full h-fit flex justify-center">
         <Card className="w-[600px]">
           <CardContent>
-            <ResponsiveContainer width="100%" height={400}>
+            <CardHeader>
+              <div className="w-full flex justify-center font-bold text-2xl">
+                ตำแหน่ง
+              </div>
+            </CardHeader>
+            <ResponsiveContainer width="100%" height={350}>
               <PieChart>
                 <Tooltip content={<CustomTooltip />} />
                 <Legend
                   layout="horizontal"
                   align="center"
                   verticalAlign="bottom"
-                  wrapperStyle={{ fontSize: "12px" }}
+                  wrapperStyle={{ fontSize: "12px", paddingTop: "30px" }}
                 />
                 <Pie
                   activeIndex={activeIndex}
-                  activeShape={renderActiveShape}
                   data={provinceData}
+                  activeShape={renderActiveShape}
                   cx="50%"
                   cy="50%"
-                  innerRadius={60}
-                  outerRadius={100}
+                  innerRadius={70}
+                  outerRadius={120}
                   paddingAngle={1}
                   fill="#8884d8"
                   dataKey="value"
@@ -184,9 +212,11 @@ const ProvinceChart = React.memo(
                   {provinceData.map((entry, index) => (
                     <Cell
                       key={`cell-${index}`}
-                      fill={COLORS[index % COLORS.length]}
+                      fill={entry.color}
                       opacity={
-                        selectedIndex === null || selectedIndex === index
+                        selectedIndex === null ||
+                        selectedIndex === index ||
+                        activeIndex === index
                           ? 1
                           : 0.6
                       }

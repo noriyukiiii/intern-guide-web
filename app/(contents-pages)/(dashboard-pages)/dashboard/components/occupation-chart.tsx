@@ -1,11 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { ChartData } from "@/lib/dashboardtype";
 import {
   PieChart,
@@ -13,10 +8,9 @@ import {
   Cell,
   ResponsiveContainer,
   Tooltip,
-  Sector,
   Legend,
+  Sector,
 } from "recharts";
-
 const renderActiveShape = (props: any) => {
   const RADIAN = Math.PI / 180;
   const {
@@ -45,7 +39,7 @@ const renderActiveShape = (props: any) => {
   return (
     <g>
       <text x={cx} y={cy} dy={8} textAnchor="middle">
-        สายการเรียน
+        {payload.name}
       </text>
       <Sector
         cx={cx}
@@ -89,11 +83,19 @@ const renderActiveShape = (props: any) => {
     </g>
   );
 };
+const occupationMapping: Record<string, string> = {
+  No_Info: "ไม่มีข้อมูล",
+  Network: "Network",
+  database: "Database",
+  both: "ทั้งสองสาย",
+};
 
-const CustomTooltip = ({ active, payload, label }: any) => {
+const occupationOrder = ["No_Info", "Network", "database", "both"];
+const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
+
+const CustomTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
-    const { name, value } = payload[0]; // ดึงข้อมูลจาก payload ที่ถูกส่งมา
-
+    const { name, value } = payload[0];
     return (
       <div className="custom-tooltip p-3 rounded-lg shadow-lg bg-white opacity-90 border border-gray-200">
         <p className="label text-sm font-semibold text-gray-700">
@@ -102,7 +104,6 @@ const CustomTooltip = ({ active, payload, label }: any) => {
       </div>
     );
   }
-
   return null;
 };
 
@@ -110,46 +111,56 @@ const OccupationChart = React.memo(
   ({
     allData,
     onSelect,
-    selected, // ✅ รับค่าที่ถูกเลือกจาก `ContentChart`
+    selected,
   }: {
     allData: ChartData;
     onSelect: (selected: string | null) => void;
-    selected: string | null; // ✅ เพิ่ม prop นี้
+    selected: string | null;
   }) => {
     const [activeIndex, setActiveIndex] = useState<number | undefined>(-1);
-    const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+    const [selectedIndex, setSelectedIndex] = useState<number | null>(
+      typeof window !== "undefined"
+        ? Number(localStorage.getItem("selectedIndex")) || null
+        : null
+    );
 
-    const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
-
-    // ✅ แปลงข้อมูลให้อยู่ในรูปที่ PieChart ใช้ได้
-    const occupationData = Object.keys(allData.occupation ?? {}).map((key) => ({
-      name: key,
+    const occupationData = occupationOrder.map((key) => ({
+      name: occupationMapping[key] || key,
       value: allData.occupation?.[key] ?? 0,
     }));
 
-    // ✅ เมื่อ `selected` เปลี่ยน ต้อง sync กับ `selectedIndex`
     useEffect(() => {
-      const index = occupationData.findIndex((item) => item.name === selected);
-      setSelectedIndex(index !== -1 ? index : null);
-      setActiveIndex(index !== -1 ? index : undefined);
+      if (selected) {
+        const index = occupationData.findIndex(
+          (item) => item.name === selected
+        );
+        setSelectedIndex(index !== -1 ? index : null);
+        setActiveIndex(index !== -1 ? index : undefined);
+      }
     }, [selected, occupationData]);
 
-    const onPieEnter = (_: any, index: any) => {
-      if (selectedIndex === null) {
-        setActiveIndex(index);
+    useEffect(() => {
+      if (typeof window !== "undefined") {
+        if (selectedIndex !== null) {
+          localStorage.setItem("selectedIndex", String(selectedIndex));
+        } else {
+          localStorage.removeItem("selectedIndex");
+        }
       }
+    }, [selectedIndex]);
+
+    const onPieEnter = (_: any, index: number) => {
+      if (selectedIndex === null) setActiveIndex(index);
     };
 
     const onPieLeave = () => {
       setActiveIndex(selectedIndex ?? undefined);
     };
 
-    const onPieClick = (data: any, index: number) => {
+    const onPieClick = (_: any, index: number) => {
       const newIndex = index === selectedIndex ? null : index;
       setSelectedIndex(newIndex);
       setActiveIndex(newIndex ?? undefined);
-
-      // ✅ ส่งค่าชื่ออาชีพกลับไปให้ Parent Component
       onSelect(newIndex !== null ? occupationData[newIndex].name : null);
     };
 
@@ -157,25 +168,29 @@ const OccupationChart = React.memo(
       <div className="w-full h-fit flex justify-center">
         <Card className="w-[600px]">
           <CardContent>
-            <ResponsiveContainer width="100%" height={400}>
+            <CardHeader>
+              <div className="w-full flex justify-center font-bold text-2xl">
+                สายการเรียน
+              </div>
+            </CardHeader>
+            <ResponsiveContainer width="100%" height={350}>
               <PieChart>
                 <Tooltip content={<CustomTooltip />} />
                 <Legend
                   layout="horizontal"
                   align="center"
                   verticalAlign="bottom"
-                  wrapperStyle={{ fontSize: "16px" }}
+                  wrapperStyle={{ fontSize: "14px", paddingTop: "30px" }}
                 />
                 <Pie
                   activeIndex={activeIndex}
-                  activeShape={renderActiveShape}
                   data={occupationData}
+                  activeShape={renderActiveShape}
                   cx="50%"
                   cy="50%"
-                  innerRadius={60}
-                  outerRadius={100}
+                  innerRadius={70}
+                  outerRadius={120}
                   paddingAngle={1}
-
                   fill="#8884d8"
                   dataKey="value"
                   onMouseEnter={onPieEnter}

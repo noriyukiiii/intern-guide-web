@@ -24,14 +24,14 @@ export interface Company {
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
-  prosition: [
-    id: string,
-    name: string,
-    companyId: string,
-    createdAt: string,
-    updatedAt: string,
-    deletedAt: string | null
-  ]
+  positions: Array<{
+    id: string;
+    name: string;
+    companyId: string;
+    createdAt: string;
+    updatedAt: string;
+    deletedAt: string | null;
+  }>;
 }
 
 export interface ChartData {

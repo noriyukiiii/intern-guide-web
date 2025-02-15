@@ -2,6 +2,7 @@ import { GeistSans } from "geist/font/sans";
 import "./globals.css";
 import { SessionProvider } from "@/components/providers/session-provider";
 import { cn } from "@/lib/utils";
+import PdpaConsent from "@/components/PdpaConsent"; // ✅ เพิ่ม Popup PDPA
 import "@uploadthing/react/styles.css";
 
 const defaultUrl = process.env.VERCEL_URL
@@ -27,7 +28,8 @@ export default function RootLayout({
     >
       <SessionProvider>
         <body className="bg-background text-foreground flex flex-col">
-          <div className="">{children}</div>
+          <PdpaConsent /> {/* ✅ เพิ่ม Popup PDPA */}
+          {children}
         </body>
       </SessionProvider>
     </html>

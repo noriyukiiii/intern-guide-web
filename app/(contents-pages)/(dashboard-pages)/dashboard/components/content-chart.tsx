@@ -40,34 +40,39 @@ export default function ContentChart() {
     }
 
     fetchData();
+    console.log(allData);
   }, [selectedOccupation, selectedPosition, selectedProvince, selectedBenefit]);
-
   if (!allData) return <p>Loading...</p>; // ✅ แสดง Loading ก่อนโหลดเสร็จ
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 h-full w-full pb-10">
-      <div className="mt-10 w-full flex justify-end">
+    <div className="grid grid-cols-1 lg:grid-cols-2 h-full w-full pb-10">
+      <div className="col-span-1 lg:col-span-2 ">
+        <div className="text-2xl font-semibold flex justify-center  ">
+          <h1 className="m-6 p-6 bg-white shadow-lg rounded-lg ">วิเคราะห์ข้อมูลสถานประกอบการตามความต้องการ</h1>
+        </div>
+      </div>
+      <div className="mt-6 w-full flex justify-end">
         <OccupationChart
           allData={allData}
           onSelect={setSelectedOccupation}
           selected={selectedOccupation}
         />
       </div>
-      <div className="mt-10 w-full flex justify-end">
+      <div className="mt-6 w-full flex justify-end">
         <PositionChart
           allData={allData}
           onSelect={setSelectedPosition}
           selected={selectedPosition}
         />
       </div>
-      <div className="mt-10 w-full flex justify-end">
+      <div className="mt-6 w-full flex justify-end">
         <ProvinceChart
           allData={allData}
           onSelect={setSelectedProvince}
           selected={selectedProvince}
         />
       </div>
-      <div className="mt-10 w-full flex justify-end ">
+      <div className="mt-6 w-full flex justify-end ">
         <BenefitChart
           allData={allData}
           onSelect={setSelectedBenefit}
