@@ -23,6 +23,7 @@ import { Ellipsis } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import AddAdminDialog from "./addDialog";
 import { ToastContainer } from "react-toastify";
+import EditUserDialog from "./editUser";
 interface UserProp {
   user: {
     id: string;
@@ -135,38 +136,16 @@ const UserTable = ({ user }: UserProp) => {
                   </div>
                 </TableCell>
                 <TableCell className="text-center">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <button className="px-2 py-1 bg-gray-200 text-white rounded-lg">
-                        <Ellipsis color="black" />
-                      </button>
-                    </DropdownMenuTrigger>
-
-                    <DropdownMenuContent>
-                      <DropdownMenuLabel>จัดการ</DropdownMenuLabel>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem>แก้ไข</DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() =>
-                          setConfirmModal({
-                            visible: true,
-                            userId: user.id,
-                            userName: `${user.firstName} ${user.lastName}`,
-                            userStudentid: `${user.studentId}`,
-                          })
-                        }
-                      >
-                        {page === "MEMBER"
-                          ? "เปลี่ยนเป็น Admin"
-                          : "เปลี่ยนเป็น Member"}
-                      </DropdownMenuItem>
-
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem onClick={() => alert("ลบ")}>
-                        ลบ
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                  <EditUserDialog
+                    user={{
+                      id: user.id,
+                      firstName: user.firstName,
+                      lastName: user.lastName,
+                      studentId: user.studentId,
+                      phone: user.phone,
+                      role: user.role,
+                    }}
+                  />
                 </TableCell>
               </TableRow>
             ))}

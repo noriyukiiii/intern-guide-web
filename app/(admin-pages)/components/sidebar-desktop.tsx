@@ -70,11 +70,11 @@ export function SidebarDesktop(props: SidebarDesktopProps) {
               </PopoverTrigger>
               <PopoverContent className="mb-2 w-56 p-3 rounded-[1rem]">
                 <div className="space-y-1">
-                  <Link href="/">
+                  {/* <Link href="/">
                     <SidebarButton size="sm" icon={Settings} className="w-full">
                       Account Settings
                     </SidebarButton>
-                  </Link>
+                  </Link> */}
                   <SidebarButton size="sm" icon={LogOut} className="w-full " onClick={handleLogout}>
                     Log Out
                   </SidebarButton>

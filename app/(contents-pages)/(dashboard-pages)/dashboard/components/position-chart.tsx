@@ -180,17 +180,17 @@ const PositionChart = React.memo(
           <CardContent>
             <CardHeader>
               <div className="w-full flex justify-center font-bold text-2xl">
-                จังหวัด
+                ตำแหน่ง
               </div>
             </CardHeader>
-            <ResponsiveContainer width="100%" height={350}>
+            <ResponsiveContainer width="100%" height={400}>
               <PieChart>
                 <Tooltip content={<CustomTooltip />} />
                 <Legend
                   layout="horizontal"
                   align="center"
                   verticalAlign="bottom"
-                  wrapperStyle={{ fontSize: "12px", paddingTop: "30px" }}
+                  wrapperStyle={{ fontSize: "12px", paddingTop: "10px" }}
                 />
                 <Pie
                   activeIndex={activeIndex}

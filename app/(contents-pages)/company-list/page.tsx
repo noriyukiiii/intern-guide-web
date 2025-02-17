@@ -1,6 +1,7 @@
 import { getCompany } from "@/actions/companyActions";
 import SearchFilter from "./components/searchFilter";
 import { getSession } from "@/lib/auth";
+import Footer from "@/components/home/components/footer";
 
 export const revalidate = 0;
 
@@ -22,6 +23,7 @@ export default async function Page() {
     return (
       <div>
         <SearchFilter companies={companies} />
+        <Footer />
       </div>
     );
   } catch (error) {

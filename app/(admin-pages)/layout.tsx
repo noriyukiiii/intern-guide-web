@@ -8,15 +8,15 @@ type AdminLayoutProp = {
   children: React.ReactNode; // ตรวจสอบให้ children เป็น ReactElement ที่สามารถรับ props user
 };
 
-const Authlayout = ({ children }: AdminLayoutProp) => {
+const Adminlayout = ({ children }: AdminLayoutProp) => {
   const { session } = useSession();
 
   return (
     <div className="">
       <Sidebar />
-      <main className="mx-5 mt-0 sm:ml-[300px] sm:mt-3">{children}</main>
+      <main className="mx-5 mt-0 sm:ml-[300px] sm:mt-3 font-Prompt">{children}</main>
     </div>
   );
 };
 
-export default Authlayout;
+export default Adminlayout;

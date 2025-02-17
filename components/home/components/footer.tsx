@@ -9,7 +9,7 @@ const Footer = () => {
     <footer>
       <div className="w-full bg-[#002379] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 py-12 px-6 lg:px-20 text-white font-semibold font-Sarabun mt-4">
         {/* Column 1 */}
-        <div>
+        <div >
           <h3 className="text-lg mb-4">
             สาขาวิชาเทคโนโลยีคอมพิวเตอร์ คณะวิทยาศาสตร์และเทคโนโลยี
           </h3>

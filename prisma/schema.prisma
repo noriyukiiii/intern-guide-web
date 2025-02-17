@@ -19,6 +19,12 @@ enum Status {
   InternSuccess
 }
 
+enum approvalStatus {
+  pending
+  approved
+  rejected
+}
+
 model User {
   id                   String    @id @default(cuid())
   email                String    @unique
@@ -99,21 +105,21 @@ model CompanyCreator {
 
   createdAt DateTime @default(now())
 
-  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade) // เพิ่ม onDelete: Cascade
-  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade) // เพิ่ม onDelete: Cascade
+  user    User    @relation(fields: [userId], references: [id])
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade) // 💥 ลบ Company จะลบ CompanyCreator ด้วย
 
   @@unique([userId, companyId]) // ห้าม user เดิมเพิ่มบริษัทเดิมซ้ำ
 }
 
 model Company_Student_Interned {
-  id           String  @id @default(cuid())
+  id           String         @id @default(cuid())
   companyId    String
   userId       String?
   student_name String?
-
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deletedAt DateTime?
+  status       approvalStatus @default(pending)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  deletedAt    DateTime?
 
   company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
   user    User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
@@ -172,7 +178,7 @@ model FavoriteCompanies {
   createdAt DateTime @default(now())
 
   user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  Company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
 }
 
 model Banner {

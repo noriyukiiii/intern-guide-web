@@ -1,15 +1,14 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import React from "react";
 import {
   FaEnvelope,
   FaPhone,
-  FaGlobe,
   FaLine,
   FaUser,
-  FaTools,
   FaMapMarkerAlt,
 } from "react-icons/fa";
-
+import { useRouter } from "next/navigation";
 interface CompanyDetailProps {
   company: {
     company_id: string;
@@ -35,25 +34,41 @@ interface CompanyDetailProps {
 }
 
 const CompDetail = ({ company }: CompanyDetailProps) => {
+  const router = useRouter();
+  const handleback = () => {
+    router.back();
+  };
   return (
-    <div className="max-w-5xl mx-auto p-8 bg-gray-200 rounded-lg shadow-md">
+    <div className="max-w-4xl mx-auto p-8 bg-white rounded-xl border border-gray-200">
       {/* Header Section */}
-      <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
+      <div className="flex items-center mb-6 relative">
+        {/* ปุ่มย้อนกลับที่ฝั่งซ้าย */}
+        <Button onClick={handleback} className="absolute left-0">
+          ย้อนกลับ
+        </Button>
+
+        {/* ข้อความ "รายละเอียดบริษัท" อยู่ตรงกลาง */}
+        <div className="text-2xl font-bold text-gray-800 text-center flex-1">
+          รายละเอียดบริษัท
+        </div>
+      </div>
+
+      <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
         {/* Company Logo */}
-        <div className="flex w-full md:w-1/3 items-center justify-center">
+        <div className="flex w-full md:w-1/3 justify-center">
           <img
             src={
               company.company_logo ||
               "https://static.vecteezy.com/system/resources/previews/022/059/000/non_2x/no-image-available-icon-vector.jpg"
             }
             alt="Company Logo"
-            className="max-w-full max-h-40 object-contain rounded-lg border border-gray-200"
+            className="max-w-full max-h-36 object-contain rounded-xl border border-gray-300"
           />
         </div>
 
         {/* Company Information */}
         <div className="flex-1">
-          <h1 className="text-4xl font-bold text-gray-800 mb-2">
+          <h1 className="text-2xl font-bold text-gray-800 mb-2">
             {company.company_name_en || "Unknown Company"}
           </h1>
           <h2 className="text-xl text-gray-600 mb-4">
@@ -64,15 +79,29 @@ const CompDetail = ({ company }: CompanyDetailProps) => {
             <p className="text-gray-700 mb-4">{company.company_description}</p>
           )}
 
-          {company.company_benefit && (
-            <div className="bg-blue-100 text-blue-800 p-4 rounded-lg mb-6">
-              <h3 className="text-lg font-semibold">สวัสดิการ</h3>
-              <p>{company.company_benefit}</p>
+          <div className="bg-blue-100 text-blue-800 p-4 rounded-xl mb-6">
+            <h3 className="text-lg font-semibold">สวัสดิการ</h3>
+            <p>{company.company_benefit || "- ไม่มีข้อมูล"}</p>
+          </div>
+          {/* Website */}
+          {/* Divider */}
+          <hr className="my-6" />
+          {company.company_website && (
+            <div className="bg-blue-100 text-blue-800 p-4 rounded-xl mb-6">
+              <h3 className="text-lg font-semibold">เว็บไซต์</h3>
+              <a
+                href={company.company_website}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 underline hover:text-blue-800"
+              >
+                {company.company_website}
+              </a>
             </div>
           )}
 
           {/* Location and Province */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
             <div className="flex items-center gap-2">
               <FaMapMarkerAlt className="text-gray-500" />
               <p>{company.company_location || "ไม่ระบุ"}</p>
@@ -128,86 +157,90 @@ const CompDetail = ({ company }: CompanyDetailProps) => {
 
       {/* Divider */}
       <hr className="my-6" />
-      <div>
-        <h3 className="text-2xl font-semibold text-gray-800 mb-4">
-          ตำแหน่งที่เปิดรับ
-        </h3>
-
+      <div className="max-w-5xl mx-auto p-8 bg-white rounded-lg ">
         {/* Occupation Section */}
-        {company.company_occupation && (
-          <div className="my-2">
-            <h4 className="text-lg font-medium text-gray-700">สายการเรียน</h4>
-            <p className="text-gray-600">{company.company_occupation}</p>
+        <div className="mb-8">
+          <h3 className="text-2xl font-semibold text-gray-800 mb-4">
+            ตำแหน่งที่เปิดรับ
+          </h3>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {/* สายการเรียน */}
+            <div className="bg-blue-50 p-4 rounded-lg shadow-sm">
+              <h4 className="text-lg font-medium text-blue-600">สายการเรียน</h4>
+              <p className="text-blue-700">
+                {company.company_occupation === "both"
+                  ? "ทั้งสองสาย"
+                  : company.company_occupation === "Network"
+                    ? "Network"
+                    : company.company_occupation === "database"
+                      ? "Database"
+                      : company.company_occupation === "No_Info"
+                        ? "ไม่มีข้อมูล"
+                        : company.company_occupation}
+              </p>
+            </div>
+
+            {/* ตำแหน่ง */}
+            <div className="bg-blue-50 p-4 rounded-lg shadow-sm">
+              <h4 className="text-lg font-medium text-blue-600">ตำแหน่ง</h4>
+              <p className="text-blue-700">
+                {company.position_names && company.position_names !== "Unknown"
+                  ? company.position_names
+                  : "ไม่มีข้อมูล"}
+              </p>
+            </div>
+
+            {/* ตำแหน่งงาน */}
+            <div className="bg-blue-50 p-4 rounded-lg shadow-sm">
+              <h4 className="text-lg font-medium text-blue-600">ตำแหน่งงาน</h4>
+              <p className="text-blue-700">
+                {company.position_descriptions &&
+                company.position_descriptions !== "Unknown"
+                  ? company.position_descriptions
+                  : "ไม่มีข้อมูล"}
+              </p>
+            </div>
           </div>
-        )}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <div>
-            <h4 className="text-lg font-medium text-gray-700">ตำแหน่ง</h4>
-            <p className="text-gray-600">
-              {company.position_names && company.position_names !== "Unknown"
-                ? company.position_names
-                : "ไม่ระบุ"}
-            </p>
-          </div>
-          <div>
-            <h4 className="text-lg font-medium text-gray-700">ตำแหน่งงาน</h4>
-            <p className="text-gray-600">
-              {company.position_descriptions &&
-              company.position_descriptions !== "Unknown"
-                ? company.position_descriptions
-                : "ไม่ระบุ"}
-            </p>
+        </div>
+
+        {/* Skills and Tools Section */}
+        <div className="mb-12">
+          <h3 className="text-2xl font-semibold text-gray-800 mb-4">
+            ทักษะและเครื่องมือ
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div className="bg-green-50 p-4 rounded-lg border">
+              <h4 className="text-lg font-medium text-green-600">
+                ทักษะที่ต้องการ
+              </h4>
+              <p className="text-green-700">
+                {company.skill_names
+                  ? company.skill_names
+                      .split(",")
+                      .filter((tool) => tool.trim() !== "Unknown")
+                      .join(", ") || "ไม่มีข้อมูล"
+                  : "ไม่มีข้อมูล"}
+              </p>
+            </div>
+            <div className="bg-green-50 p-4 rounded-lg shadow-sm">
+              <h4 className="text-lg font-medium text-green-600">เครื่องมือ</h4>
+              <p className="text-green-700">
+                {company.tools_names
+                  ? company.tools_names
+                      .split(",")
+                      .filter((tool) => tool.trim() !== "Unknown")
+                      .join(", ") || "ไม่มีข้อมูล"
+                  : "ไม่มีข้อมูล"}
+              </p>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Skills and Tools */}
-      <div>
-        <h3 className="text-2xl font-semibold text-gray-800 mb-4 mt-4">
-          ทักษะและเครื่องมือ
-        </h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <div>
-            <h4 className="text-lg font-medium text-gray-700">
-              ทักษะที่ต้องการ
-            </h4>
-            <p className="text-gray-600">
-              {company.skill_names && company.skill_names !== "Unknown"
-                ? company.skill_names
-                : "ไม่ระบุ"}
-            </p>
-          </div>
-          <div>
-            <h4 className="text-lg font-medium text-gray-700">เครื่องมือ</h4>
-            <p className="text-gray-600">
-              {company.tools_names && company.tools_names !== "Unknown"
-                ? company.tools_names
-                : "ไม่ระบุ"}
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Divider */}
-      <hr className="my-6" />
-
-      {/* Website */}
-      {company.company_website && (
-        <div className="mt-4">
-          <h3 className="text-lg font-semibold text-gray-800">เว็บไซต์</h3>
-          <a
-            href={company.company_website}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-600 underline hover:text-blue-800"
-          >
-            {company.company_website}
-          </a>
-        </div>
-      )}
-      <div>
-        <Button>
-          เลือกสถานประกอบการนี้เพื่อออกสหกิจ
+      <div className="mt-4">
+        <Button className="w-full py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 transition">
+          เลือกสถานประกอบการนี้
         </Button>
       </div>
     </div>

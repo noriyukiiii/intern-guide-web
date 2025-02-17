@@ -18,7 +18,18 @@ import { useMediaQuery } from "usehooks-ts";
 import { SidebarMobile } from "./sidebar-mobile";
 
 const sidebarItems: SidebarItems = {
-  links: [{ label: "วิเคราะห์สถานประกอบการ", href: "/dashboard", icon: LayoutDashboard }],
+  links: [
+    {
+      label: "วิเคราะห์สถานประกอบการ",
+      href: "/dashboard",
+      icon: LayoutDashboard,
+    },
+    {
+      label: "Portfolio",
+      href: "/portfolio",
+      icon: User,
+    },
+  ],
 };
 
 export function Sidebar() {

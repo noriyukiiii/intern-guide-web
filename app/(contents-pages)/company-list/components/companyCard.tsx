@@ -83,6 +83,7 @@ const CompanyCard = ({ companies }: CompanyCardProps) => {
   if (loading) {
     return <div>Loading...</div>; // แสดง "Loading..." ขณะโหลดข้อมูล
   }
+
   return (
     <div
       key={companies.company_id}
@@ -100,6 +101,7 @@ const CompanyCard = ({ companies }: CompanyCardProps) => {
         <h2 className="text-xl font-bold">{companies.company_name_th}</h2>
         <p className="text-gray-600">{companies.company_name_en}</p>
 
+        {/* Occupation */}
         <div className="grid grid-cols-5 gap-4 mt-2">
           <div className="col-span-1 flex justify-between font-bold">
             <p className="">สายการเรียน</p>
@@ -110,12 +112,13 @@ const CompanyCard = ({ companies }: CompanyCardProps) => {
               {companies.company_occuption === "No_info"
                 ? "ไม่ระบุ"
                 : companies.company_occuption === "both"
-                  ? "Network, Database"
-                  : companies.company_occuption}
+                ? "Network, Database"
+                : companies.company_occuption}
             </p>
           </div>
         </div>
 
+        {/* Location */}
         <div className="grid grid-cols-5 gap-4 mt-2">
           <div className="col-span-1 flex justify-between font-bold">
             <p className="">ที่ตั้ง</p>
@@ -126,6 +129,7 @@ const CompanyCard = ({ companies }: CompanyCardProps) => {
           </p>
         </div>
 
+        {/* Province */}
         <div className="grid grid-cols-5 gap-4 mt-2">
           <div className="col-span-1 flex justify-between font-bold">
             <p className="">จังหวัด</p>
@@ -134,7 +138,8 @@ const CompanyCard = ({ companies }: CompanyCardProps) => {
           <p className="col-span-4">{companies.company_province || "-"}</p>
         </div>
 
-        {companies.position_descriptions !== "Unknown" ? (
+        {/* Position Description */}
+        {companies.position_descriptions && companies.position_descriptions !== "Unknown" ? (
           <div className="grid grid-cols-5 gap-4 mt-2">
             <div className="col-span-1 flex justify-between font-bold">
               <p className="">ตำแหน่ง</p>
@@ -154,13 +159,17 @@ const CompanyCard = ({ companies }: CompanyCardProps) => {
           </div>
         )}
 
+        {/* Favorite Button */}
         <div className="flex justify-end items-end mt-auto gap-2">
           <Button
             onClick={handleToggleFavorite}
             className={`mt-2 ${isSelected ? "bg-green-500" : "bg-gray-500"}`}
+            aria-label={isSelected ? "Remove from favorites" : "Add to favorites"}
           >
-            {isSelected ? <Star color="#fafafa" /> : <Star color="#fafafa" />}
+            <Star color="#fafafa" />
           </Button>
+
+          {/* View Details Button */}
           <Link href={`/company-list/${companies.company_id}`}>
             <Button className="mt-4 bg-blue-500">ดูรายละเอียด</Button>
           </Link>

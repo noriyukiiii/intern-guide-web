@@ -18,7 +18,7 @@ const CompanyDetails = async ({ params }: PageProps) => {
   }
 
   return (
-    <div className="p-6">
+    <div className="p-6 bg-gray-50">
       <CompDetail company={company} />
     </div>
   );

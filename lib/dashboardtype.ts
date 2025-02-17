@@ -1,6 +1,3 @@
-export interface ChartMainData {
-  [key: string]: number; // รองรับค่าต่างๆ ที่มีจำนวน
-}
 export interface Company {
   id: string;
   companyNameTh: string;
@@ -24,6 +21,7 @@ export interface Company {
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
+  isFavorite: boolean;
   positions: Array<{
     id: string;
     name: string;
@@ -32,6 +30,9 @@ export interface Company {
     updatedAt: string;
     deletedAt: string | null;
   }>;
+}
+export interface ChartMainData {
+  [key: string]: number; // รองรับค่าต่างๆ ที่มีจำนวน
 }
 
 export interface ChartData {

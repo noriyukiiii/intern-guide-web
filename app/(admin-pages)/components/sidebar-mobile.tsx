@@ -86,11 +86,11 @@ export function SidebarMobile(props: SidebarMobileProps) {
               </DrawerTrigger>
               <DrawerContent className="mb-2 p-2">
                 <div className="flex flex-col space-y-2 mt-2">
-                  <Link href="/">
+                  {/* <Link href="/">
                     <SidebarButton size="sm" icon={Settings} className="w-full">
                       Account Settings
                     </SidebarButton>
-                  </Link>
+                  </Link> */}
                   <SidebarButton size="sm" icon={LogOut} className="w-full">
                     Log Out
                   </SidebarButton>

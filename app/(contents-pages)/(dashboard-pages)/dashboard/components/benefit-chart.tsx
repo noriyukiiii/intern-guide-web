@@ -171,14 +171,14 @@ const BenefitChart = React.memo(
                 สวัสดิการ
               </div>
             </CardHeader>
-            <ResponsiveContainer width="100%" height={350}>
+            <ResponsiveContainer width="100%" height={400}>
               <PieChart>
                 <Tooltip content={<CustomTooltip />} />
                 <Legend
                   layout="horizontal"
                   align="center"
                   verticalAlign="bottom"
-                  wrapperStyle={{ fontSize: "14px", paddingTop: "30px" }}
+                  wrapperStyle={{ fontSize: "14px", paddingTop: "10px" }}
                 />
                 <Pie
                   activeIndex={activeIndex}

@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, ShieldCheck, X } from "lucide-react";
-
 const PdpaConsent = () => {
   const [open, setOpen] = useState(false);
 

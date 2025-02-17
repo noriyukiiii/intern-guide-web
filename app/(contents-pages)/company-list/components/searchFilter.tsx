@@ -340,7 +340,7 @@ const SearchFilter = ({ companies }: CompanyCardProps) => {
             onClick={handleFavoriteToggle}
             className="m-4 p-4 py-2 bg-blue-500 text-white rounded"
           >
-            {currentFavoritePage ? "แสดงบริษัททั้งหมด" : "แสดงเฉพาะที่เป็น Favorite"}
+            {currentFavoritePage ? "แสดงบริษัททั้งหมด" : "แสดงบริษัทที่สนใจ"}
           </button>
           <Link href="/company-list/insert-company">
             <Button className="bg-green-400 text-white">

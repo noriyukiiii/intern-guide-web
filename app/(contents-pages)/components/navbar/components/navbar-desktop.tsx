@@ -88,7 +88,11 @@ const NavbarDesktop = () => {
           <>
             <p>
               {session.user?.status === "No_Intern" ? (
-                <span> สถานะ : ยังไม่ออกสหกิจ</span>
+                <span> สถานะ : ยังไม่เลือกสถานประกอบการ</span>
+              ) : session.user?.status === "Interning" ? (
+                <span> สถานะ : กำลังดำเนินการเลือกสถานประกอบการ</span>
+              ) : session.user?.status === "InternSuccess" ? (
+                <span> สถานะ : เลือกสถานประกอบการแล้ว</span>
               ) : null}
             </p>
             {session?.user ? (

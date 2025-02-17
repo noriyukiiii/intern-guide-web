@@ -13,26 +13,28 @@ export async function sendVerificationEmail(email: string, token: string) {
   const verificationUrl = `${url}/user/verify?token=${token}`;
 
   const emailTemplate = `
-    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
-      <h2 style="text-align: center; color: #333;">Verify Your Email</h2>
-      <p style="font-size: 16px; color: #555;">
-        Hello,
-      </p>
-      <p style="font-size: 16px; color: #555;">
-        Thank you for registering with our service. Please click the button below to verify your email address and complete your registration.
-      </p>
-      <div style="text-align: center; margin: 20px 0;">
-        <a href="${verificationUrl}" style="background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Verify Email</a>
-      </div>
-      <p style="font-size: 16px; color: #555;">
-        If you did not create an account, no further action is required.
-      </p>
-      <p style="font-size: 16px; color: #555;">
-        Best regards,<br/>
-        The MyApp Team
-      </p>
+  <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; background-color: #f4f4f4;">
+    <h2 style="text-align: center; color: #4CAF50;">Verify Your Email</h2>
+    <p style="font-size: 16px; color: #555;">
+      Hello,
+    </p>
+    <p style="font-size: 16px; color: #555;">
+      Thank you for registering with our service. Please click the button below to verify your email address and complete your registration.
+    </p>
+    <div style="text-align: center; margin: 20px 0;">
+      <a href="${verificationUrl}" style="background-color: #4CAF50; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-size: 16px;">
+        Verify Email
+      </a>
     </div>
-  `;
+    <p style="font-size: 16px; color: #555;">
+      If you did not create an account, no further action is required.
+    </p>
+    <p style="font-size: 16px; color: #555;">
+      Best regards,<br/>
+      The MyApp Team
+    </p>
+  </div>
+`;
 
   try {
     await transporter.sendMail({

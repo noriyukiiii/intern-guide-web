@@ -19,11 +19,12 @@ import { SidebarMobile } from './sidebar-mobile';
 
 const sidebarItems: SidebarItems = {
   links: [
-    { label: 'Home', href: '/', icon: Home },
-    { label: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
-    { label: 'Company', href: '/admin/company-list', icon: Table },
-    { label: 'User', href: '/admin/user-list', icon: Table },
-    { label: 'Banner', href: '/admin/banner', icon: Table },
+    { label: 'หน้าหลัก', href: '/', icon: Home },
+    { label: 'แดชบอร์ด', href: '/admin/dashboard', icon: LayoutDashboard },
+    { label: 'บริษัท', href: '/admin/company-list', icon: Table },
+    { label: 'ผู้ใช้', href: '/admin/user-list', icon: Table },
+    { label: 'แบนเนอร์', href: '/admin/banner', icon: Table },
+    // { label: 'ประกาศ', href: '/admin/banner', icon: Table },
     { label: 'คำขอสร้างบริษัท', href: '/admin/approvecompany', icon: Table },
   ],
   extras: (

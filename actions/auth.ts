@@ -109,7 +109,7 @@ export async function signInActions(values: SignInSchema): Promise<{
 
     let redirectTo = "/";
     if (user.role === "ADMIN") {
-      redirectTo = "/admin/company-list";
+      redirectTo = "/admin/dashboard";
     } else if (user.role === "MEMBER") {
       redirectTo = "/";
     }
