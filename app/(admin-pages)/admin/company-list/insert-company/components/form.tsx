@@ -597,6 +597,9 @@ export function InsertForm({ optionData }: { optionData: Option }) {
         </div>
 
         <div className="col-span-1 md:col-span-2">
+          <div className="w-full justify-center">
+            <div className="text-center">อัพโหลดโลโก้บริษัท</div>
+          </div>
           {uploadedImageUrl && (
             <div className="mt-4 flex justify-center items-center">
               <img

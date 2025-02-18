@@ -15,6 +15,7 @@ import CompanyPieChart from "./components/CompanyPieChart";
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState<AdminDashboardType | null>(null);
+
   const companyData = [
     { name: "MOU", value: stats?.totalCompanies.mou || 0 },
     { name: "Non-MOU", value: stats?.totalCompanies.nonMou || 0 },
@@ -49,8 +50,8 @@ const AdminDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
-      <h1 className="text-4xl font-bold text-center mb-6 text-blue-600">
-        📊 Admin Dashboard
+      <h1 className="text-4xl font-bold text-center mb-6 text-blue-600 p-6 border w-fit mx-auto rounded-xl bg-white shadow-sm">
+         Admin Dashboard
       </h1>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* สถิติหลัก */}
@@ -69,11 +70,30 @@ const AdminDashboard = () => {
           value={stats.pendingCompanies}
           icon={<CheckCircle size={28} className="text-yellow-500" />}
         />
+        <StatCard
+          title="ตำแหน่งงานทั้งหมด"
+          value={stats.totalPositions}
+          icon={<Briefcase size={28} className="text-purple-500" />}
+        />
+        <StatCard
+          title="นักศึกษาที่สนใจบริษัท"
+          value={stats.interning}
+          icon={<Briefcase size={28} className="text-orange-500" />}
+        />
+        <StatCard
+          title="นักศึกษาฝึกงานสำเร็จ"
+          value={stats.successfulInterns}
+          icon={<CheckCircle size={28} className="text-green-500" />}
+        />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
         <CompanyPieChart companyData={companyData} />
         <CompanyBarChart companyData={companyData} />
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+        {/* สถิติการฝึกงาน */}
       </div>
     </div>
   );

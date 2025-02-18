@@ -407,6 +407,7 @@ export function InsertForm({ optionData }: { optionData: Option }) {
             <p className="text-red-500 text-sm">{errors.description.message}</p>
           )}
         </div>
+
         <div className="col-span-1">
           <Label>จังหวัด</Label>
           <Controller
@@ -432,6 +433,7 @@ export function InsertForm({ optionData }: { optionData: Option }) {
             )}
           />
         </div>
+
         <div className="col-span-1 md:col-span-2">
           <Label>ที่อยู่บริษัท</Label>
           <Input
@@ -475,6 +477,7 @@ export function InsertForm({ optionData }: { optionData: Option }) {
             className="w-full"
           />
         </div>
+
         <div className="col-span-1">
           <Label>ช่องทางการติดต่อ Line</Label>
           <Input
@@ -485,6 +488,7 @@ export function InsertForm({ optionData }: { optionData: Option }) {
             className="w-full"
           />
         </div>
+
         <div className="col-span-1">
           <Label>ช่องทางการติดต่อ (ลิงก์ Facebook)</Label>
           <Input
@@ -495,6 +499,7 @@ export function InsertForm({ optionData }: { optionData: Option }) {
             className="w-full"
           />
         </div>
+
         <div className="col-span-1">
           <Label>สังกัดหน่วยงาน</Label>
           <Controller
@@ -520,6 +525,7 @@ export function InsertForm({ optionData }: { optionData: Option }) {
             )}
           />
         </div>
+
         <div className="col-span-1">
           <Label>สายการเรียน</Label>
           <Controller
@@ -546,6 +552,7 @@ export function InsertForm({ optionData }: { optionData: Option }) {
             )}
           />
         </div>
+
         <div className="col-span-1">
           <Label>อยู่ใน MOU</Label>
           <Controller
@@ -601,6 +608,9 @@ export function InsertForm({ optionData }: { optionData: Option }) {
         </div>
 
         <div className="col-span-1 md:col-span-2">
+          <div className="w-full justify-center">
+            <div className="text-center">อัพโหลดโลโก้บริษัท</div>
+          </div>
           {uploadedImageUrl && (
             <div className="mt-4 flex justify-center items-center">
               <img
