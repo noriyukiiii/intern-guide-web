@@ -16,12 +16,14 @@ import { ArrowDown, ArrowUp, Pencil, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import EditBannerDialog from "./editbanner";
 import { useSession } from "@/hooks/use-session";
+import Link from "next/link";
 
 interface Banner {
   id: string;
   title: string;
   image: string;
   order: number;
+  linkUrl: string;
   isActive: boolean;
   userId: string;
   updatedAt: string;
@@ -33,12 +35,6 @@ interface Banner {
 
 export default function TableComponent({ data }: { data: Banner[] }) {
   const router = useRouter();
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5; // จำนวนรายการต่อหน้า
-
-  const totalPages = Math.ceil(data.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-
   const { session } = useSession();
   const [activeStates, setActiveStates] = useState<Record<string, boolean>>(
     data.reduce(
@@ -52,12 +48,11 @@ export default function TableComponent({ data }: { data: Banner[] }) {
 
   const [openDialog, setOpenDialog] = useState<string | null>(null); // สถานะสำหรับควบคุม dialog
   const [banners, setBanners] = useState<Banner[]>(data); // สถานะสำหรับเก็บข้อมูลแบนเนอร์ที่จัดลำดับใหม่แล้ว
-  const paginatedData = banners.slice(startIndex, startIndex + itemsPerPage);
 
   const handleChange = async (bannerId: string) => {
     try {
       await axios.patch(
-        `http://localhost:5555/banner/update_isActive/${bannerId}`
+        `http://localhost:5555/newsbanner/update_isActive/${bannerId}`
       );
 
       setActiveStates((prevState) => ({
@@ -76,7 +71,7 @@ export default function TableComponent({ data }: { data: Banner[] }) {
   const handleDelete = async (bannerId: string) => {
     try {
       await axios.delete(
-        `http://localhost:5555/banner/deleteBanner/${bannerId}`
+        `http://localhost:5555/newsbanner/deleteBanner/${bannerId}`
       );
       toast.success("ลบแบนเนอร์สำเร็จ", {
         position: "top-center",
@@ -107,7 +102,7 @@ export default function TableComponent({ data }: { data: Banner[] }) {
       }));
 
       try {
-        await axios.patch("http://localhost:5555/banner/update_order", {
+        await axios.patch("http://localhost:5555/newsbanner/update_order", {
           banners: orderData,
         });
         toast.success("ลำดับแบนเนอร์ถูกบันทึก");
@@ -134,11 +129,9 @@ export default function TableComponent({ data }: { data: Banner[] }) {
       }));
 
       try {
-        await axios.patch("http://localhost:5555/banner/update_order", {
+        await axios.patch("http://localhost:5555/newsbanner/update_order", {
           banners: orderData,
         });
-        toast.success("ลำดับแบนเนอร์ถูกบันทึก");
-
       } catch (error) {
         toast.error("เกิดข้อผิดพลาดในการบันทึกลำดับแบนเนอร์");
         console.error("Error saving banner order:", error);
@@ -173,108 +166,94 @@ export default function TableComponent({ data }: { data: Banner[] }) {
 
   return (
     <div className="w-full overflow-x-auto relative font-Prompt">
-      <div className="h-[600px] flex flex-col">
-        {/* ✅ หัวตาราง (ไม่เลื่อน) */}
-        <Table className="w-full flex-1">
-          <TableHeader className="sticky top-0 bg-white z-10">
-            <TableRow>
-              {/* <TableHead>ลำดับ</TableHead> */}
-              <TableHead className="text-center">รูปภาพ</TableHead>
-              <TableHead>คำอธิบาย</TableHead>
-              <TableHead>สถานะ</TableHead>
-              <TableHead>ผู้แก้ไข</TableHead>
-              <TableHead className="text-center">จัดลำดับ</TableHead>
-              <TableHead className="text-center">Actions</TableHead>
+      <Table className="table-auto  w-full max-h-[600px]">
+        <TableHeader className="sticky top-0 bg-white z-10 border box-border">
+          <TableRow>
+            {/* <TableHead>ลำดับ</TableHead> */}
+            <TableHead>ลำดับ</TableHead>
+            <TableHead>รูปภาพ</TableHead>
+            <TableHead>คำอธิบาย</TableHead>
+            <TableHead>เว็บไซต์</TableHead>
+            <TableHead>สถานะ</TableHead>
+            <TableHead>ผู้แก้ไข</TableHead>
+            <TableHead className="text-center">จัดลำดับ</TableHead>
+            <TableHead className="text-center">Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+
+        <TableBody className="overflow-y-auto max-h-[400px] border">
+          {banners.map((item) => (
+            <TableRow key={item.id}>
+              <TableCell>{item.order}</TableCell>
+              <TableCell className="max-w-[300px]">
+                <img
+                  src={item.image}
+                  alt={item.title}
+                  className="cursor-pointer max-w-[150px] h-auto rounded-md shadow-lg"
+                  onClick={() => handleOpenDialog(item.id)} // เปิด dialog เมื่อคลิกที่รูปภาพ
+                />
+              </TableCell>
+              <TableCell>{item.title}</TableCell>
+              <TableCell>
+                <Link
+                  href={item.linkUrl}
+                  className="text-blue-500 hover:text-blue-700"
+                  passHref
+                >
+                  เว็บไซต์
+                </Link>
+              </TableCell>
+              <TableCell>
+                <Switch
+                  checked={activeStates[item.id]}
+                  onCheckedChange={() => handleChange(item.id)}
+                />
+              </TableCell>
+              <TableCell>
+                <div>
+                  {item.user?.firstName} {item.user?.lastName}
+                </div>
+                <div>{formatDateToThaiTime(item.updatedAt)}</div>
+              </TableCell>
+              <TableCell>
+                <div className="flex justify-center items-center space-x-2">
+                  <Button
+                    variant="ghost"
+                    onClick={() => moveBannerUp(item.id)}
+                    className="hover:bg-gray-200"
+                  >
+                    <ArrowUp />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    onClick={() => moveBannerDown(item.id)}
+                    className="hover:bg-gray-200"
+                  >
+                    <ArrowDown />
+                  </Button>
+                </div>
+              </TableCell>
+              <TableCell>
+                <div className="flex justify-center items-center space-x-2">
+                  {session.user?.id && (
+                    <EditBannerDialog
+                      banner={item}
+                      user={{ id: session.user.id }}
+                    />
+                  )}
+                  <Button
+                    variant="ghost"
+                    className="hover:bg-rose-500 text-red-500"
+                    onClick={() => handleDelete(item.id)}
+                  >
+                    <Trash2 />
+                  </Button>
+                </div>
+              </TableCell>
             </TableRow>
-          </TableHeader>
-
-          {/* ✅ เนื้อหาตาราง (เลื่อนได้) */}
-          <TableBody className="overflow-y-auto max-h-[400px] border">
-            {paginatedData.map((item) => (
-              <TableRow key={item.id}>
-                {/* <TableCell>{item.order}</TableCell> */}
-                <TableCell className="max-h-[300px] justify-center flex">
-                  <img
-                    src={item.image}
-                    alt={item.title}
-                    className="cursor-pointer max-w-[150px] h-auto rounded-md shadow-lg"
-                    onClick={() => handleOpenDialog(item.id)} // เปิด dialog เมื่อคลิกที่รูปภาพ
-                  />
-                </TableCell>
-                <TableCell>{item.title}</TableCell>
-                <TableCell>
-                  <Switch
-                    checked={activeStates[item.id]}
-                    onCheckedChange={() => handleChange(item.id)}
-                  />
-                </TableCell>
-                <TableCell>
-                  <div>
-                    {item.user?.firstName} {item.user?.lastName}
-                  </div>
-                  <div>{formatDateToThaiTime(item.updatedAt)}</div>
-                </TableCell>
-                <TableCell>
-                  <div className="flex justify-center items-center space-x-2">
-                    <Button
-                      variant="ghost"
-                      onClick={() => moveBannerUp(item.id)}
-                      className="hover:bg-gray-200"
-                    >
-                      <ArrowUp />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      onClick={() => moveBannerDown(item.id)}
-                      className="hover:bg-gray-200"
-                    >
-                      <ArrowDown />
-                    </Button>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="flex justify-center items-center space-x-2">
-                    {session.user?.id && (
-                      <EditBannerDialog
-                        banner={item}
-                        user={{ id: session.user.id }}
-                      />
-                    )}
-                    <Button
-                      variant="ghost"
-                      className="hover:bg-rose-500 text-red-500"
-                      onClick={() => handleDelete(item.id)}
-                    >
-                      <Trash2 />
-                    </Button>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-
-      {/* ✅ Pagination แยกออกมา (ไม่เลื่อนตาม) */}
-      <div className="sticky bottom-0 bg-white p-2 flex justify-center space-x-2 border-t">
-        <Button
-          variant="outline"
-          disabled={currentPage === 1}
-          onClick={() => setCurrentPage((prev) => prev - 1)}
-        >
-          Prev
-        </Button>
-        <span className="px-3 py-1">
-          {currentPage} / {totalPages}
-        </span>
-        <Button
-          variant="outline"
-          disabled={currentPage === totalPages}
-          onClick={() => setCurrentPage((prev) => prev + 1)}
-        >
-          Next
-        </Button>
-      </div>
+          ))}
+        </TableBody>
+      </Table>
 
       {/* ใช้ BannerDialog ในการแสดงผล Dialog */}
       {openDialog && (

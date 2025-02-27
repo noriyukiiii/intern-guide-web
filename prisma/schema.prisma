@@ -50,6 +50,7 @@ model User {
   companyStudentInterned Company_Student_Interned[]
   FavoriteCompanies      FavoriteCompanies[]
   banners                Banner[] // ความสัมพันธ์กับตาราง Banner
+  newsBanners            NewsBanner[] // ความสัมพันธ์กับตาราง NewsBanner
 }
 
 model Session {
@@ -185,6 +186,20 @@ model Banner {
   id        String   @id @default(cuid())
   title     String
   image     String
+  order     Int
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model NewsBanner {
+  id        String   @id @default(cuid())
+  title     String
+  image     String
+  linkUrl   String
   order     Int
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())

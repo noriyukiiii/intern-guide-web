@@ -24,7 +24,7 @@ const sidebarItems: SidebarItems = {
     { label: 'บริษัท', href: '/admin/company-list', icon: Table },
     { label: 'ผู้ใช้', href: '/admin/user-list', icon: Table },
     { label: 'แบนเนอร์', href: '/admin/banner', icon: Table },
-    // { label: 'ประกาศ', href: '/admin/banner', icon: Table },
+    { label: 'ประกาศ', href: '/admin/newsbanner', icon: Table },
     { label: 'คำขอสร้างบริษัท', href: '/admin/approvecompany', icon: Table },
   ],
   extras: (
