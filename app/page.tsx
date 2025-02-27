@@ -5,10 +5,10 @@ import { NavbarMain } from "./(contents-pages)/components/navbar/components/navb
 
 const Page = () => {
   return (
-    <>
+    <div className="">
       <NavbarMain />
       <Homepage />
-    </>
+    </div>
   );
 };
 

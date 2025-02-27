@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Company } from "@/lib/dashboardtype";
 import { ChevronUp, ChevronDown, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 interface CompanyTableProps {
   allData: Company[];
@@ -217,8 +218,10 @@ export default function CompanyTable({ allData, user }: CompanyTableProps) {
                 <td className="p-3 border-b truncate max-w-[50px] text-center">
                   {index + 1}
                 </td>
-                <td className="p-3 border-b truncate max-w-[150px]">
-                  {company.companyNameTh}
+                <td className="p-3 border-b truncate max-w-[150px] hover:text-blue-500">
+                  <Link href={`/company-list/${company.id}`}>
+                    {company.companyNameTh}
+                  </Link>
                 </td>
                 <td className="p-3 border-b truncate max-w-[150px]">
                   {company.occupation === "No_Info"

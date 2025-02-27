@@ -27,7 +27,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <SessionProvider>
-        <body className="bg-background text-foreground flex flex-col">
+        <body className="bg-background text-foreground flex flex-col overflow-x-hidden">
           <PdpaConsent /> {/* ✅ เพิ่ม Popup PDPA */}
           {children}
         </body>
