@@ -16,11 +16,11 @@ const BannerPage = ({ banners }: { banners: any }) => {
 
   return (
     <div className="h-full w-full flex flex-col items-center justify-center gap-2">
-      <h1 className="text-2xl font-bold">Banner</h1>
+      <h1 className="text-2xl font-bold">ประกาศ</h1>
       <div className="flex justify-start w-full">
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
-            <Button variant="outline" className="">Create Banner</Button>
+            <Button variant="outline" className="">สร้างประกาศ</Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>

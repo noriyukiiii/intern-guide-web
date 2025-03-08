@@ -210,7 +210,7 @@ const CompDetail = ({ company }: CompanyDetailProps) => {
             ทักษะและเครื่องมือ
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <div className="bg-green-50 p-4 rounded-lg border">
+            <div className="bg-green-50 p-4 rounded-lg">
               <h4 className="text-lg font-medium text-green-600">
                 ทักษะที่ต้องการ
               </h4>

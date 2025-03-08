@@ -13,12 +13,20 @@ import { Pencil } from "lucide-react";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { UploadButton } from "@/utils/uploadthing";
+import { link } from "fs";
+import { Label } from "@/components/ui/label";
 
 export default function EditBannerDialog({
   banner,
   user, // รับ user มาเป็น props
 }: {
-  banner: { id: string; title: string; image: string; isActive: boolean };
+  banner: {
+    id: string;
+    title: string;
+    image: string;
+    linkUrl: string;
+    isActive: boolean;
+  };
   user: { id: string }; // ระบุ type สำหรับ user
 }) {
   const [open, setOpen] = useState(false);
@@ -26,6 +34,7 @@ export default function EditBannerDialog({
   const [formData, setFormData] = useState({
     id: banner.id,
     title: banner.title,
+    linkUrl: banner.linkUrl,
     image: banner.image,
     isActive: banner.isActive,
     userId: user.id, // แก้เป็น user id จริง
@@ -38,6 +47,7 @@ export default function EditBannerDialog({
         id: banner.id,
         title: banner.title,
         image: banner.image,
+        linkUrl: banner.linkUrl,
         isActive: banner.isActive,
         userId: user.id,
       });
@@ -73,7 +83,7 @@ export default function EditBannerDialog({
       }
 
       const response = await axios.patch(
-        `http://localhost:5555/banner/update_banner`,
+        `http://localhost:5555/newsbanner/update_banner`,
         {
           ...formData,
           image: uploadedImageUrl || formData.image, // ใช้ภาพใหม่หรือภาพเก่า
@@ -139,10 +149,19 @@ export default function EditBannerDialog({
           </DialogHeader>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            <Label>ชื่อหัวข้อ</Label>
             <Input
               name="title"
               placeholder="Title"
               value={formData.title}
+              onChange={handleChange}
+              required
+            />
+            <Label>ลิ้งค์เว็บไซต์</Label>
+            <Input
+              name="linkUrl"
+              placeholder="Link URL"
+              value={formData.linkUrl}
               onChange={handleChange}
               required
             />

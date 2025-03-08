@@ -3,10 +3,18 @@ import Link from "next/link";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { CalendarDays } from "lucide-react";
 
 const Banner = () => {
   const [newsBanners, setNewsBanners] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+    return date.toLocaleDateString('th-TH', options); // แปลงเป็นวันที่ในรูปแบบไทย
+  };
+
 
   useEffect(() => {
     const fetchNewsBanners = async () => {
@@ -38,7 +46,7 @@ const Banner = () => {
           {loading ? (
             <p>กำลังโหลด...</p>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-4 w-full justify-center">
               {newsBanners.map((banner, index) => (
                 <div key={index} className="w-full max-w-sm mx-auto">
                   <Link
@@ -58,8 +66,8 @@ const Banner = () => {
                     {/* หัวข้อ */}
                     <h2 className="text-lg text-black mt-4">{banner.title}</h2>
                     {/* วันที่ */}
-                    <p className="text-gray-500 text-sm flex items-center mt-2">
-                      {/* {banner.date} */}
+                    <p className="text-gray-500 text-sm flex items-center mt-2 gap-2">
+                      <CalendarDays size={18}/> {formatDate(banner.updatedAt)}
                     </p>
                     {/* ปุ่ม "อ่านต่อ" */}
                     <div className="flex justify-end mt-4">

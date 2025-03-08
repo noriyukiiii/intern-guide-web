@@ -40,11 +40,13 @@ const CreateBannerForm = ({ onSuccess }: { onSuccess: () => void }) => {
         ...formData,
         image: uploadedImageUrl,
       });
-      router.refresh(); // รีเฟรชข้อมูล
       toast.success("สร้าง Banner สำเร็จ", {
         position: "top-center",
         autoClose: 1000,
       });
+      setTimeout(() => {
+        router.push("/admin/newsbanner");
+      }, 1000);
       onSuccess(); // ✅ เรียกฟังก์ชันปิด Dialog
     } catch (error) {
       console.error("Error creating banner:", error);

@@ -184,7 +184,7 @@ export default function TableComponent({ data }: { data: Banner[] }) {
               <TableHead>สถานะ</TableHead>
               <TableHead>ผู้แก้ไข</TableHead>
               <TableHead className="text-center">จัดลำดับ</TableHead>
-              <TableHead className="text-center">Actions</TableHead>
+              <TableHead className="text-center">จัดการ</TableHead>
             </TableRow>
           </TableHeader>
 
@@ -210,7 +210,7 @@ export default function TableComponent({ data }: { data: Banner[] }) {
                 </TableCell>
                 <TableCell>
                   <div>
-                    {item.user?.firstName} {item.user?.lastName}
+                    {item.user?.firstName} {item.user?.lastName} 
                   </div>
                   <div>{formatDateToThaiTime(item.updatedAt)}</div>
                 </TableCell>

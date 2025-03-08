@@ -1,3 +1,4 @@
+
 import { getCompany } from "@/actions/companyActions";
 import SearchFilter from "./components/searchFilter";
 import { getSession } from "@/lib/auth";

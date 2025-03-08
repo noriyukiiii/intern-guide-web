@@ -177,7 +177,7 @@ export default function TableComponent({ data }: { data: Banner[] }) {
             <TableHead>สถานะ</TableHead>
             <TableHead>ผู้แก้ไข</TableHead>
             <TableHead className="text-center">จัดลำดับ</TableHead>
-            <TableHead className="text-center">Actions</TableHead>
+            <TableHead className="text-center">จัดการ</TableHead>
           </TableRow>
         </TableHeader>
 
@@ -200,7 +200,7 @@ export default function TableComponent({ data }: { data: Banner[] }) {
                   className="text-blue-500 hover:text-blue-700"
                   passHref
                 >
-                  เว็บไซต์
+                  เว็บไซต์ 
                 </Link>
               </TableCell>
               <TableCell>

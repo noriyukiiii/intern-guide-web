@@ -51,6 +51,7 @@ model User {
   FavoriteCompanies      FavoriteCompanies[]
   banners                Banner[] // ความสัมพันธ์กับตาราง Banner
   newsBanners            NewsBanner[] // ความสัมพันธ์กับตาราง NewsBanner
+  Comment                Comment[]
 }
 
 model Session {
@@ -94,6 +95,7 @@ model Company {
   deletedAt DateTime?
 
   positions              positions[]
+  comments               Comment[] // ความสัมพันธ์กับตาราง Comment
   companyCreators        CompanyCreator[]
   companyStudentInterned Company_Student_Interned[]
   FavoriteCompanies      FavoriteCompanies[]
@@ -207,4 +209,17 @@ model NewsBanner {
   userId    String
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Comment {
+  id        String    @id @default(cuid())
+  userId    String
+  companyId String
+  content   String // เนื้อหาของความคิดเห็น
+  createdAt DateTime  @default(now()) // วันที่และเวลาที่สร้างความคิดเห็น
+  updatedAt DateTime  @updatedAt // วันที่และเวลาที่อัปเดตความคิดเห็น
+  deletedAt DateTime? // วันที่และเวลาที่ลบความคิดเห็น (ถ้าต้องการ)
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
 }
