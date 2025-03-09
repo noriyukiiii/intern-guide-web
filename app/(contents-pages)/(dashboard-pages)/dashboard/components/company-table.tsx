@@ -28,7 +28,7 @@ export default function CompanyTable({ allData, user }: CompanyTableProps) {
 
     try {
       // เรียก API เพื่ออัปเดตสถานะ favorite
-      const res = await fetch("http://localhost:5555/update-favorite", {
+      const res = await fetch("intern-server-noriyukiiii-noriyukiiiis-projects.vercel.app/update-favorite", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

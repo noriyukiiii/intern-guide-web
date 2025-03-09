@@ -21,7 +21,7 @@ export default function Homepage() {
     const fetchBanners = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5555/banner/getActiveBanner"
+          "intern-server-noriyukiiii-noriyukiiiis-projects.vercel.app/banner/getActiveBanner"
         ); // ดึงข้อมูลแบนเนอร์จาก API
         setBanners(response.data); // ตั้งค่าข้อมูลแบนเนอร์ที่ได้รับจาก API
         setLoading(false); // เปลี่ยนค่า loading เป็น false เมื่อการดึงข้อมูลเสร็จสิ้น

@@ -36,7 +36,7 @@ const CreateBannerForm = ({ onSuccess }: { onSuccess: () => void }) => {
     }
 
     try {
-      await axios.post("http://localhost:5555/newsbanner/createBanner", {
+      await axios.post("intern-server-noriyukiiii-noriyukiiiis-projects.vercel.app/newsbanner/createBanner", {
         ...formData,
         image: uploadedImageUrl,
       });
@@ -57,7 +57,7 @@ const CreateBannerForm = ({ onSuccess }: { onSuccess: () => void }) => {
     try {
       const fileName = oldImageUrl.split("/").pop();
       if (fileName) {
-        const deleteUrl = `http://localhost:5555/uploadthing/delete/${fileName}`;
+        const deleteUrl = `intern-server-noriyukiiii-noriyukiiiis-projects.vercel.app/uploadthing/delete/${fileName}`;
         await fetch(deleteUrl, { method: "DELETE" });
         toast.success("ลบรูปภาพเก่าเรียบร้อยแล้ว", {
           position: "top-center",

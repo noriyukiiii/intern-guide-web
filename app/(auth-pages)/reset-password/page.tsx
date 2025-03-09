@@ -12,7 +12,7 @@ const ResetPassword = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const response = await fetch("http://localhost:5555/auth/reset-password", {
+    const response = await fetch("intern-server-noriyukiiii-noriyukiiiis-projects.vercel.app/auth/reset-password", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ token, newPassword }),

@@ -21,7 +21,7 @@ export default function CompanyTable() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:5555/compCreater");
+        const response = await axios.get("intern-server-noriyukiiii-noriyukiiiis-projects.vercel.app/compCreater");
         setCompanyData(response.data);
       } catch (err) {
         setError("Error fetching data");
@@ -36,7 +36,7 @@ export default function CompanyTable() {
   const handleApprove = async (companyId: string) => {
     try {
       console.log("test approved");
-      await axios.patch(`http://localhost:5555/company/approve/${companyId}`);
+      await axios.patch(`intern-server-noriyukiiii-noriyukiiiis-projects.vercel.app/company/approve/${companyId}`);
       alert("อนุมัติสถานประกอบการเรียบร้อย!");
       setCompanyData((prev) =>
         prev.map((item) =>

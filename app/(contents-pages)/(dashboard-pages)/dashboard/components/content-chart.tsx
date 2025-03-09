@@ -1,4 +1,5 @@
 "use client";
+import { Suspense } from "react";
 import { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import OccupationChart from "./occupation-chart";
@@ -11,7 +12,15 @@ import CompanyTable from "./company-table";
 import { useSession } from "@/hooks/use-session";
 import "./content.css";
 
-export default function ContentChart() {
+export default function ContentChartPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ContentChart />
+    </Suspense>
+  );
+}
+
+function ContentChart() {
   const { session } = useSession();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -59,9 +68,7 @@ export default function ContentChart() {
           userId: session.user?.id || "",
         }).toString();
 
-        const res = await API.get(
-          `http://localhost:5555/company/get_chart?${query}`
-        );
+        const res = await API.get(`/company/get_chart?${query}`);
         setAllData(res.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -70,7 +77,13 @@ export default function ContentChart() {
       }
     }
     fetchData();
-  }, [selectedOccupation, selectedPosition, selectedProvince, selectedBenefit, session.user?.id]);
+  }, [
+    selectedOccupation,
+    selectedPosition,
+    selectedProvince,
+    selectedBenefit,
+    session.user?.id,
+  ]);
 
   if (!session.user?.id)
     return (

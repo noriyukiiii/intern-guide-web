@@ -85,7 +85,7 @@ const FavoriteCard = ({
   const handleSelectCompany = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:5555/company/selectCompany",
+        "intern-server-noriyukiiii-noriyukiiiis-projects.vercel.app/company/selectCompany",
         {
           userId: id,
           companyId: company.id,
@@ -106,7 +106,7 @@ const FavoriteCard = ({
   const handleRemoveFavorite = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:5555/update-favorite",
+        "intern-server-noriyukiiii-noriyukiiiis-projects.vercel.app/update-favorite",
         {
           userId: id,
           companyId: company.id,

@@ -9,7 +9,7 @@ export async function sendVerificationEmail(email: string, token: string) {
     },
   });
 
-  const url = "http://localhost:5555";
+  const url = "intern-server-noriyukiiii-noriyukiiiis-projects.vercel.app";
   const verificationUrl = `${url}/user/verify?token=${token}`;
 
   const emailTemplate = `

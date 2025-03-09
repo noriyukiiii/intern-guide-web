@@ -78,12 +78,12 @@ export default function EditBannerDialog({
       // ถ้ามีการเปลี่ยนแปลงรูปภาพ (uploadedImageUrl หรือ formData.image)
       if (uploadedImageUrl && formData.image !== banner.image) {
         const fileName = banner.image.split("/").pop(); // หาชื่อไฟล์เก่า
-        const deleteUrl = `http://localhost:5555/uploadthing/delete/${fileName}`;
+        const deleteUrl = `intern-server-noriyukiiii-noriyukiiiis-projects.vercel.app/uploadthing/delete/${fileName}`;
         await axios.delete(deleteUrl); // ลบรูปเก่า
       }
 
       const response = await axios.patch(
-        `http://localhost:5555/newsbanner/update_banner`,
+        `intern-server-noriyukiiii-noriyukiiiis-projects.vercel.app/newsbanner/update_banner`,
         {
           ...formData,
           image: uploadedImageUrl || formData.image, // ใช้ภาพใหม่หรือภาพเก่า
@@ -112,7 +112,7 @@ export default function EditBannerDialog({
     try {
       const fileName = oldImageUrl.split("/").pop();
       if (fileName) {
-        const deleteUrl = `http://localhost:5555/uploadthing/delete/${fileName}`;
+        const deleteUrl = `intern-server-noriyukiiii-noriyukiiiis-projects.vercel.app/uploadthing/delete/${fileName}`;
         await fetch(deleteUrl, { method: "DELETE" });
         toast.success("ลบรูปภาพเก่าเรียบร้อยแล้ว", {
           position: "top-center",

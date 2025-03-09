@@ -20,7 +20,7 @@ const Banner = () => {
     const fetchNewsBanners = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5555/newsbanner/getActiveBanner"
+          "intern-server-noriyukiiii-noriyukiiiis-projects.vercel.app/newsbanner/getActiveBanner"
         );
         setNewsBanners(response.data);
       } catch (error) {

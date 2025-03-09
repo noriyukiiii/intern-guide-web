@@ -313,7 +313,7 @@ export function InsertForm({ optionData }: { optionData: Option }) {
     console.log("Form Submitted with values:", requestData);
 
     axios
-      .post("http://localhost:5555/company/createCompany", requestData)
+      .post("intern-server-noriyukiiii-noriyukiiiis-projects.vercel.app/company/createCompany", requestData)
       .then((response) => {
         console.log(response);
         toast.success("เพิ่มสถานประกอบการสำเร็จ \nกำลังกลับสู่หน้าหลัก", {
@@ -340,7 +340,7 @@ export function InsertForm({ optionData }: { optionData: Option }) {
       const fileName = oldImageUrl.split("/").pop(); // ใช้ .split() เพื่อดึงแค่ชื่อไฟล์จาก URL
 
       if (fileName) {
-        const deleteUrl = `http://localhost:5555/uploadthing/delete/${fileName}`;
+        const deleteUrl = `intern-server-noriyukiiii-noriyukiiiis-projects.vercel.app/uploadthing/delete/${fileName}`;
         await fetch(deleteUrl, { method: "DELETE" });
         toast.success("ลบรูปภาพเก่าเรียบร้อยแล้ว", {
           position: "top-center",
