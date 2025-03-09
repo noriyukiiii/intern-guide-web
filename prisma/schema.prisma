@@ -108,7 +108,7 @@ model CompanyCreator {
 
   createdAt DateTime @default(now())
 
-  user    User    @relation(fields: [userId], references: [id])
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade) // 💥 ลบ User จะลบ CompanyCreator ด้วย
   company Company @relation(fields: [companyId], references: [id], onDelete: Cascade) // 💥 ลบ Company จะลบ CompanyCreator ด้วย
 
   @@unique([userId, companyId]) // ห้าม user เดิมเพิ่มบริษัทเดิมซ้ำ
