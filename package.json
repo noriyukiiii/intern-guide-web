@@ -3,7 +3,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "postinstall": "npx prisma generate"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
