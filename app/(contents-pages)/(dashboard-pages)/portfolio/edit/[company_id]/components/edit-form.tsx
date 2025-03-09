@@ -149,7 +149,7 @@ const EditForm = ({
     console.log("Updated Data:", updatedData);
 
     try {
-      const response = await fetch("intern-server-noriyukiiii-noriyukiiiis-projects.vercel.app/company/update_company", {
+      const response = await fetch("https://api-sigma-azure-86.vercel.app/company/update_company", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -83,7 +83,7 @@ const Page = () => {
       if (!session?.user?.id) return;
       try {
         const response = await axios.get(
-          `intern-server-noriyukiiii-noriyukiiiis-projects.vercel.app/company/getFavoriteCompany/${session.user.id}`
+          `https://api-sigma-azure-86.vercel.app/company/getFavoriteCompany/${session.user.id}`
         );
         setFavoriteComp(response.data);
       } catch (error) {
@@ -99,7 +99,7 @@ const Page = () => {
       if (!session?.user?.id) return;
       try {
         const response = await axios.get(
-          `intern-server-noriyukiiii-noriyukiiiis-projects.vercel.app/company/getInternedCompany/${session.user.id}`
+          `https://api-sigma-azure-86.vercel.app/company/getInternedCompany/${session.user.id}`
         );
         setSelectedComp(response.data);
       } catch (error) {

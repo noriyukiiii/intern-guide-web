@@ -57,7 +57,7 @@ export default function TableComponent({ data }: { data: Banner[] }) {
   const handleChange = async (bannerId: string) => {
     try {
       await axios.patch(
-        `intern-server-noriyukiiii-noriyukiiiis-projects.vercel.app/banner/update_isActive/${bannerId}`
+        `https://api-sigma-azure-86.vercel.app/banner/update_isActive/${bannerId}`
       );
 
       setActiveStates((prevState) => ({
@@ -76,7 +76,7 @@ export default function TableComponent({ data }: { data: Banner[] }) {
   const handleDelete = async (bannerId: string) => {
     try {
       await axios.delete(
-        `intern-server-noriyukiiii-noriyukiiiis-projects.vercel.app/banner/deleteBanner/${bannerId}`
+        `https://api-sigma-azure-86.vercel.app/banner/deleteBanner/${bannerId}`
       );
       toast.success("ลบแบนเนอร์สำเร็จ", {
         position: "top-center",
@@ -107,7 +107,7 @@ export default function TableComponent({ data }: { data: Banner[] }) {
       }));
 
       try {
-        await axios.patch("intern-server-noriyukiiii-noriyukiiiis-projects.vercel.app/banner/update_order", {
+        await axios.patch("https://api-sigma-azure-86.vercel.app/banner/update_order", {
           banners: orderData,
         });
         toast.success("ลำดับแบนเนอร์ถูกบันทึก");
@@ -134,7 +134,7 @@ export default function TableComponent({ data }: { data: Banner[] }) {
       }));
 
       try {
-        await axios.patch("intern-server-noriyukiiii-noriyukiiiis-projects.vercel.app/banner/update_order", {
+        await axios.patch("https://api-sigma-azure-86.vercel.app/banner/update_order", {
           banners: orderData,
         });
         toast.success("ลำดับแบนเนอร์ถูกบันทึก");

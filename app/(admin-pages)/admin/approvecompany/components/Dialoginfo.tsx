@@ -27,7 +27,7 @@ const DialogInfo: React.FC<DialogInfoProps> = ({ companyCreator }) => {
     try {
       // เริ่มต้นการส่งคำขอ API
       const response = await axios.patch(
-        `intern-server-noriyukiiii-noriyukiiiis-projects.vercel.app/admin/approve/${compId}`
+        `https://api-sigma-azure-86.vercel.app/admin/approve/${compId}`
       );
 
       // ตรวจสอบว่าการตอบกลับสำเร็จ
@@ -59,7 +59,7 @@ const DialogInfo: React.FC<DialogInfoProps> = ({ companyCreator }) => {
     try {
       // เริ่มต้นการส่งคำขอ API
       const response = await axios.delete(
-        `intern-server-noriyukiiii-noriyukiiiis-projects.vercel.app/admin/reject/${compId}`
+        `https://api-sigma-azure-86.vercel.app/admin/reject/${compId}`
       );
 
       // ตรวจสอบว่าการตอบกลับสำเร็จ

@@ -69,7 +69,7 @@ export default function EditUserDialog({
 
     try {
       const response = await axios.patch(
-        `intern-server-noriyukiiii-noriyukiiiis-projects.vercel.app/user/update`,
+        `https://api-sigma-azure-86.vercel.app/user/update`,
         formData // ส่งข้อมูลที่แก้ไขทั้งหมดไปยัง API
       );
 
@@ -92,7 +92,7 @@ export default function EditUserDialog({
   const handleDelete = async () => {
     try {
       const response = await axios.delete(
-        `intern-server-noriyukiiii-noriyukiiiis-projects.vercel.app/user/delete/${user.id}`
+        `https://api-sigma-azure-86.vercel.app/user/delete/${user.id}`
       );
       toast.success("ลบผู้ใช้สำเร็จ", {
         position: "top-center",

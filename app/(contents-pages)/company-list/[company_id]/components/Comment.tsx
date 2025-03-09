@@ -27,7 +27,7 @@ const Comment = ({ companyId }: { companyId: string }) => {
   // ฟังก์ชันดึงคอมเมนต์จาก API
   const fetchComments = async () => {
     try {
-      const res = await axios.get("intern-server-noriyukiiii-noriyukiiiis-projects.vercel.app/comment/getComments", {
+      const res = await axios.get("https://api-sigma-azure-86.vercel.app/comment/getComments", {
         params: { compId: companyId }, // ส่ง ID บริษัทใน query string
       });
       setComments(res.data); // อัปเดตคอมเมนต์
@@ -54,7 +54,7 @@ const Comment = ({ companyId }: { companyId: string }) => {
 
     try {
       const res = await axios.post(
-        "intern-server-noriyukiiii-noriyukiiiis-projects.vercel.app/comment/CreateComment",
+        "https://api-sigma-azure-86.vercel.app/comment/CreateComment",
         commentData
       );
 
@@ -72,7 +72,7 @@ const Comment = ({ companyId }: { companyId: string }) => {
   const handleDeleteComment = async (compId: string) => {
     try {
       const res = await axios.delete(
-        "intern-server-noriyukiiii-noriyukiiiis-projects.vercel.app/comment/deleteComment",
+        "https://api-sigma-azure-86.vercel.app/comment/deleteComment",
         {
           data: { commentId: compId },
         }

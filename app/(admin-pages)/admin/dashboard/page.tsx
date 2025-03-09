@@ -24,7 +24,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const res = await fetch("intern-server-noriyukiiii-noriyukiiiis-projects.vercel.app/admin/dashboard");
+        const res = await fetch("https://api-sigma-azure-86.vercel.app/admin/dashboard");
         const data: AdminDashboardType = await res.json();
         setStats(data);
       } catch (error) {
