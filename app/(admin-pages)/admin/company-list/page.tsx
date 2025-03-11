@@ -1,6 +1,6 @@
 import { getCompany } from "@/actions/admincompanyActions";
 import SearchFilter from "./components/searchfilter";
-
+export const revalidate = 0;
 export default async function Page() {
   const companies = await getCompany();
 
@@ -10,4 +10,3 @@ export default async function Page() {
     </div>
   );
 }
-
