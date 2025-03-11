@@ -4,11 +4,5 @@
 import { NavbarMain } from "./components/navbar-main";
 
 export default function Navbar() {
-
-
-  return (
-    <>
-      <NavbarMain />
-    </>
-  );
+  return <NavbarMain />;
 }

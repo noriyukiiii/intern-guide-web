@@ -85,7 +85,7 @@ const FavoriteCard = ({
   const handleSelectCompany = async () => {
     try {
       const response = await axios.post(
-        "https://api-sigma-azure-86.vercel.app/company/selectCompany",
+        `${process.env.NEXT_PUBLIC_BASE_RES_API}/company/selectCompany`,
         {
           userId: id,
           companyId: company.id,
@@ -106,7 +106,7 @@ const FavoriteCard = ({
   const handleRemoveFavorite = async () => {
     try {
       const response = await axios.post(
-        "https://api-sigma-azure-86.vercel.app/update-favorite",
+        `${process.env.NEXT_PUBLIC_BASE_RES_API}/update-favorite`,
         {
           userId: id,
           companyId: company.id,

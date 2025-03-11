@@ -9,6 +9,7 @@ import {
   FaMapMarkerAlt,
 } from "react-icons/fa";
 import { useRouter } from "next/navigation";
+import { ChevronLeftIcon } from "lucide-react";
 interface CompanyDetailProps {
   company: {
     company_id: string;
@@ -39,12 +40,18 @@ const CompDetail = ({ company }: CompanyDetailProps) => {
     router.back();
   };
   return (
-    <div className="max-w-4xl mx-auto p-8 bg-white rounded-xl border border-gray-200">
+    <div className="max-w-4xl mx-auto p-8 bg-white rounded-xl border border-gray-200 font-Prompt">
       {/* Header Section */}
       <div className="flex items-center mb-6 relative">
         {/* ปุ่มย้อนกลับที่ฝั่งซ้าย */}
-        <Button onClick={handleback} className="absolute left-0">
-          ย้อนกลับ
+        <Button
+          onClick={handleback}
+          className="absolute left-0 bg-transparent text-blue-800 text-[20px] hover:bg-gray-200"
+        >
+          <div className="flex flex-row items-center gap-2 ">
+            <ChevronLeftIcon className="w-64 h-64 !important"  /> {/* ปรับขนาดไอคอน */}
+            <p>ย้อนกลับ</p>
+          </div>
         </Button>
 
         {/* ข้อความ "รายละเอียดบริษัท" อยู่ตรงกลาง */}

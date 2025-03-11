@@ -9,7 +9,7 @@ export async function sendVerificationEmail(email: string, token: string) {
     },
   });
 
-  const url = "https://api-sigma-azure-86.vercel.app";
+  const url = `${process.env.NEXT_PUBLIC_BASE_RES_API}`;
   const verificationUrl = `${url}/user/verify?token=${token}`;
 
   const emailTemplate = `

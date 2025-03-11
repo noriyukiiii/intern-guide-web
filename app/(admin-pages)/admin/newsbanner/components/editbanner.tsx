@@ -78,12 +78,12 @@ export default function EditBannerDialog({
       // ถ้ามีการเปลี่ยนแปลงรูปภาพ (uploadedImageUrl หรือ formData.image)
       if (uploadedImageUrl && formData.image !== banner.image) {
         const fileName = banner.image.split("/").pop(); // หาชื่อไฟล์เก่า
-        const deleteUrl = `https://api-sigma-azure-86.vercel.app/uploadthing/delete/${fileName}`;
+        const deleteUrl = `${process.env.NEXT_PUBLIC_BASE_RES_API}/uploadthing/delete/${fileName}`;
         await axios.delete(deleteUrl); // ลบรูปเก่า
       }
 
       const response = await axios.patch(
-        `https://api-sigma-azure-86.vercel.app/newsbanner/update_banner`,
+        `${process.env.NEXT_PUBLIC_BASE_RES_API}/newsbanner/update_banner`,
         {
           ...formData,
           image: uploadedImageUrl || formData.image, // ใช้ภาพใหม่หรือภาพเก่า
@@ -112,7 +112,7 @@ export default function EditBannerDialog({
     try {
       const fileName = oldImageUrl.split("/").pop();
       if (fileName) {
-        const deleteUrl = `https://api-sigma-azure-86.vercel.app/uploadthing/delete/${fileName}`;
+        const deleteUrl = `${process.env.NEXT_PUBLIC_BASE_RES_API}/uploadthing/delete/${fileName}`;
         await fetch(deleteUrl, { method: "DELETE" });
         toast.success("ลบรูปภาพเก่าเรียบร้อยแล้ว", {
           position: "top-center",

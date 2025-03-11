@@ -41,7 +41,11 @@ export function NavbarMain() {
   };
 
   if (isDesktop) {
-    return <NavbarDesktop />;
+    return (
+      <div className="mb-[85px]">
+        <NavbarDesktop />
+      </div>
+    );
   }
 
   return <NavbarMobile sidebarItems={sidebarItems} sessionInfo={sessionInfo} />;

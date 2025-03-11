@@ -20,7 +20,6 @@ import {
 import { toast } from "react-toastify";
 import axios from "axios";
 import { Ellipsis } from "lucide-react";
-
 export default function EditUserDialog({
   user, // รับ user มาเป็น props
 }: {
@@ -69,7 +68,7 @@ export default function EditUserDialog({
 
     try {
       const response = await axios.patch(
-        `https://api-sigma-azure-86.vercel.app/user/update`,
+        `${process.env.NEXT_PUBLIC_BASE_RES_API}/user/update`,
         formData // ส่งข้อมูลที่แก้ไขทั้งหมดไปยัง API
       );
 
@@ -92,7 +91,7 @@ export default function EditUserDialog({
   const handleDelete = async () => {
     try {
       const response = await axios.delete(
-        `https://api-sigma-azure-86.vercel.app/user/delete/${user.id}`
+        `${process.env.NEXT_PUBLIC_BASE_RES_API}/user/delete/${user.id}`
       );
       toast.success("ลบผู้ใช้สำเร็จ", {
         position: "top-center",

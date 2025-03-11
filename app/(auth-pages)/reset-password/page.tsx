@@ -12,7 +12,7 @@ const ResetPassword = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const response = await fetch("https://api-sigma-azure-86.vercel.app/auth/reset-password", {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_RES_API}/auth/reset-password`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ token, newPassword }),

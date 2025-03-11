@@ -20,7 +20,7 @@ const Banner = () => {
     const fetchNewsBanners = async () => {
       try {
         const response = await axios.get(
-          "https://api-sigma-azure-86.vercel.app/newsbanner/getActiveBanner"
+          `${process.env.NEXT_PUBLIC_BASE_RES_API}/newsbanner/getActiveBanner`
         );
         setNewsBanners(response.data);
       } catch (error) {

@@ -52,7 +52,7 @@ export default function TableComponent({ data }: { data: Banner[] }) {
   const handleChange = async (bannerId: string) => {
     try {
       await axios.patch(
-        `https://api-sigma-azure-86.vercel.app/newsbanner/update_isActive/${bannerId}`
+        `${process.env.NEXT_PUBLIC_BASE_RES_API}/newsbanner/update_isActive/${bannerId}`
       );
 
       setActiveStates((prevState) => ({
@@ -71,7 +71,7 @@ export default function TableComponent({ data }: { data: Banner[] }) {
   const handleDelete = async (bannerId: string) => {
     try {
       await axios.delete(
-        `https://api-sigma-azure-86.vercel.app/newsbanner/deleteBanner/${bannerId}`
+        `${process.env.NEXT_PUBLIC_BASE_RES_API}/newsbanner/deleteBanner/${bannerId}`
       );
       toast.success("ลบแบนเนอร์สำเร็จ", {
         position: "top-center",
@@ -102,7 +102,7 @@ export default function TableComponent({ data }: { data: Banner[] }) {
       }));
 
       try {
-        await axios.patch("https://api-sigma-azure-86.vercel.app/newsbanner/update_order", {
+        await axios.patch(`${process.env.NEXT_PUBLIC_BASE_RES_API}/newsbanner/update_order`, {
           banners: orderData,
         });
         toast.success("ลำดับแบนเนอร์ถูกบันทึก");
@@ -129,7 +129,7 @@ export default function TableComponent({ data }: { data: Banner[] }) {
       }));
 
       try {
-        await axios.patch("https://api-sigma-azure-86.vercel.app/newsbanner/update_order", {
+        await axios.patch(`${process.env.NEXT_PUBLIC_BASE_RES_API}/newsbanner/update_order`, {
           banners: orderData,
         });
       } catch (error) {

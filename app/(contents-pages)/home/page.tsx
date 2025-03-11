@@ -21,7 +21,7 @@ export default function Homepage() {
     const fetchBanners = async () => {
       try {
         const response = await axios.get(
-          "https://api-sigma-azure-86.vercel.app/banner/getActiveBanner"
+          `${process.env.NEXT_PUBLIC_BASE_RES_API}/banner/getActiveBanner`
         ); // ดึงข้อมูลแบนเนอร์จาก API
         setBanners(response.data); // ตั้งค่าข้อมูลแบนเนอร์ที่ได้รับจาก API
         setLoading(false); // เปลี่ยนค่า loading เป็น false เมื่อการดึงข้อมูลเสร็จสิ้น

@@ -36,7 +36,7 @@ const CreateBannerForm = ({ onSuccess }: { onSuccess: () => void }) => {
     }
 
     try {
-      await axios.post("https://api-sigma-azure-86.vercel.app/newsbanner/createBanner", {
+      await axios.post(`${process.env.NEXT_PUBLIC_BASE_RES_API}/newsbanner/createBanner`, {
         ...formData,
         image: uploadedImageUrl,
       });
@@ -57,7 +57,7 @@ const CreateBannerForm = ({ onSuccess }: { onSuccess: () => void }) => {
     try {
       const fileName = oldImageUrl.split("/").pop();
       if (fileName) {
-        const deleteUrl = `https://api-sigma-azure-86.vercel.app/uploadthing/delete/${fileName}`;
+        const deleteUrl = `${process.env.NEXT_PUBLIC_BASE_RES_API}/uploadthing/delete/${fileName}`;
         await fetch(deleteUrl, { method: "DELETE" });
         toast.success("ลบรูปภาพเก่าเรียบร้อยแล้ว", {
           position: "top-center",

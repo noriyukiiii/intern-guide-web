@@ -55,7 +55,7 @@ const CompanyCard = ({ companies }: CompanyCardProps) => {
     setIsSelected(newStatus);
 
     try {
-      const res = await fetch("https://api-sigma-azure-86.vercel.app/update-favorite", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_RES_API}/update-favorite`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

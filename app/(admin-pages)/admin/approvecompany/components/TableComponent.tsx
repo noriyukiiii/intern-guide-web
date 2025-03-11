@@ -21,7 +21,10 @@ export default function CompanyTable() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("https://api-sigma-azure-86.vercel.app/compCreater");
+        console.log("API BASE URL:", process.env.NEXT_PUBLIC_BASE_RES_API);
+
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_RES_API}/compCreater`);
+
         setCompanyData(response.data);
       } catch (err) {
         setError("Error fetching data");
@@ -36,7 +39,7 @@ export default function CompanyTable() {
   const handleApprove = async (companyId: string) => {
     try {
       console.log("test approved");
-      await axios.patch(`https://api-sigma-azure-86.vercel.app/company/approve/${companyId}`);
+      await axios.patch(`${process.env.NEXT_PUBLIC_BASE_RES_API}/company/approve/${companyId}`);
       alert("อนุมัติสถานประกอบการเรียบร้อย!");
       setCompanyData((prev) =>
         prev.map((item) =>

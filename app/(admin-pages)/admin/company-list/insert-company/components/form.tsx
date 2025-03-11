@@ -313,7 +313,7 @@ export function InsertForm({ optionData }: { optionData: Option }) {
     console.log("Form Submitted with values:", requestData);
 
     axios
-      .post("https://api-sigma-azure-86.vercel.app/company/createCompany", requestData)
+      .post(`${process.env.NEXT_PUBLIC_BASE_RES_API}/company/createCompany`, requestData)
       .then((response) => {
         console.log(response);
         toast.success("เพิ่มสถานประกอบการสำเร็จ \nกำลังกลับสู่หน้าหลัก", {
@@ -340,7 +340,7 @@ export function InsertForm({ optionData }: { optionData: Option }) {
       const fileName = oldImageUrl.split("/").pop(); // ใช้ .split() เพื่อดึงแค่ชื่อไฟล์จาก URL
 
       if (fileName) {
-        const deleteUrl = `https://api-sigma-azure-86.vercel.app/uploadthing/delete/${fileName}`;
+        const deleteUrl = `${process.env.NEXT_PUBLIC_BASE_RES_API}/uploadthing/delete/${fileName}`;
         await fetch(deleteUrl, { method: "DELETE" });
         toast.success("ลบรูปภาพเก่าเรียบร้อยแล้ว", {
           position: "top-center",

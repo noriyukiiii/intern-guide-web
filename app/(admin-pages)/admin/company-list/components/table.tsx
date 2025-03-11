@@ -48,7 +48,7 @@ export default function Page({ companies }: CompanyTableProps) {
     try {
       // ตัวอย่างการเรียก API เพื่อทำ soft delete โดยการตั้งค่า deletedAt
       const response = await fetch(
-        `https://api-sigma-azure-86.vercel.app/company/softdeleteCompany/${companyId}`,
+        `${process.env.NEXT_PUBLIC_BASE_RES_API}/company/softdeleteCompany/${companyId}`,
         {
           method: "PATCH", // ใช้ PATCH แทน DELETE เพื่อทำการอัปเดตฟิลด์ deletedAt
         }
@@ -73,7 +73,7 @@ export default function Page({ companies }: CompanyTableProps) {
     try {
       // ตัวอย่างการเรียก API เพื่อทำ soft delete โดยการตั้งค่า deletedAt
       const response = await fetch(
-        `https://api-sigma-azure-86.vercel.app/company/deleteCompany/${companyId}`,
+        `${process.env.NEXT_PUBLIC_BASE_RES_API}/company/deleteCompany/${companyId}`,
         {
           method: "DELETE", // ใช้ PATCH แทน DELETE เพื่อทำการอัปเดตฟิลด์ deletedAt
         }

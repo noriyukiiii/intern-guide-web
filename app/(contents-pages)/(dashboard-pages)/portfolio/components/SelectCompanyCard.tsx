@@ -53,7 +53,7 @@ const SelectCompanyCard = ({
   const handleCancleCompany = async () => {
     try {
       const response = await axios.patch(
-        `https://api-sigma-azure-86.vercel.app/company/cancelCompany`,
+        `${process.env.NEXT_PUBLIC_BASE_RES_API}/company/cancelCompany`,
         {
           userId: userid, // ส่ง userId ไปยัง API
           companyId: company.id, // ส่ง companyId ไปยัง API

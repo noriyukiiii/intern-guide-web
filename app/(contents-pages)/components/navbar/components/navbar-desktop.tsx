@@ -33,7 +33,7 @@ const NavbarDesktop = () => {
   };
 
   return (
-    <nav className="bg-[#ffffff] w-full h-[85px] py-4 px-6 md:px-10 font-Prompt flex justify-between items-center shadow-md shadow-gray-400 sticky top-0 z-20">
+    <nav className="bg-[#ffffff] w-full h-[85px] py-4 px-6 md:px-10 font-Prompt flex justify-between items-center shadow-md shadow-gray-400 fixed top-0 z-20">
       {/* โลโก้ */}
       <div className="flex items-center space-x-4">
         <Link href="/">

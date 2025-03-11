@@ -14,7 +14,7 @@ export const dynamic = 'force-dynamic';
 
 const Page = async () => {
   try {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api-sigma-azure-86.vercel.app';
+    const apiUrl = process.env.NEXT_PUBLIC_BASE_RES_API || `${process.env.NEXT_PUBLIC_BASE_RES_API}`;
     const res = await axios.get(`${apiUrl}/banner`);
     const data_format = res.data;
 
