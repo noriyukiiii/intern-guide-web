@@ -1,7 +1,7 @@
 datasource db {
   provider = "postgresql"
-  // url      = env("DATABASE_URL")
-  url =   "postgresql://database_owner:postgres@localhost:5432/intern_guide_database"
+  url      = env("DATABASE_URL")
+  // url =   "postgresql://database_owner:postgres@localhost:5432/intern_guide_database"
 }
 
 generator client {
