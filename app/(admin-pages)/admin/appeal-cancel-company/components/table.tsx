@@ -9,23 +9,22 @@ import {
 } from "@/components/ui/table";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import type { CompanyCreator } from "@/lib/types";
-import DialogInfo from "./Dialoginfo";
+import { Appeal } from "@/lib/typecancel";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-export default function CompanyTable() {
-  const [companyData, setCompanyData] = useState<CompanyCreator[]>([]);
+export default function CancelTable() {
+  const [companyData, setCompanyData] = useState<Appeal[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-
+  console.log(companyData);
   useEffect(() => {
     const fetchData = async () => {
       try {
         console.log("API BASE URL:", process.env.NEXT_PUBLIC_BASE_RES_API);
 
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_BASE_RES_API}/compCreater`
+          `${process.env.NEXT_PUBLIC_BASE_RES_API}/compCreater/cancel`
         );
         setCompanyData(response.data);
       } catch (err) {
@@ -38,16 +37,30 @@ export default function CompanyTable() {
     fetchData();
   }, []);
 
-  const handleApprove = async (companyId: string) => {
+  const handleApprove = async (
+    companyId: string,
+    UserId: string,
+    appealId: string
+  ) => {
     try {
+    console.log("CompanyID ", companyId);
+    console.log("UserID ", UserId);
+    console.log("AppealID ", appealId);
       // เริ่มต้นการส่งคำขอ API
-      const response = await axios.patch(
-        `${process.env.NEXT_PUBLIC_BASE_RES_API}/admin/approve/${companyId}`
+      const response = await axios.delete(
+        `${process.env.NEXT_PUBLIC_BASE_RES_API}/compCreater/approve`,
+        {
+          params: {
+            id: appealId, // ไอดีของ company_Student_Interned ที่จะลบ
+            compId: companyId, // ไอดีของบริษัท
+            userId: UserId, // ไอดีของผู้ใช้
+          },
+        }
       );
 
       // ตรวจสอบว่าการตอบกลับสำเร็จ
       if (response.status === 200) {
-        toast.success("อนุมัติสถานประกอบการเรียบร้อย!", {
+        toast.success("คำขอยกเลิกดำเนินการเสร็จสิ้น!", {
           autoClose: 2000,
         });
         setTimeout(() => {
@@ -55,7 +68,7 @@ export default function CompanyTable() {
         }, 2000);
       } else {
         // กรณีที่ไม่ใช่สถานะ 200
-        toast.error("เกิดข้อผิดพลาดในการอนุมัติ", {
+        toast.error("เกิดข้อผิดพลาดในคำขอยกเลิก", {
           autoClose: 2000,
         });
       }
@@ -71,13 +84,22 @@ export default function CompanyTable() {
     }
   };
 
-  const handleReject = async (companyId: string) => {
+  const handleReject = async (
+    companyId: string,
+    UserId: string,
+    appealId: string
+  ) => {
     try {
-      // เริ่มต้นการส่งคำขอ API
-      const response = await axios.delete(
-        `${process.env.NEXT_PUBLIC_BASE_RES_API}/admin/reject/${companyId}`
+      // ส่งค่าผ่าน body ด้วย axios
+      const response = await axios.patch(
+        `${process.env.NEXT_PUBLIC_BASE_RES_API}/compCreater/reject`,
+        {
+          id: appealId,   // ไอดีของ company_Student_Interned ที่จะลบ
+          compId: companyId,  // ไอดีของบริษัท
+          userId: UserId,  // ไอดีของผู้ใช้
+        }
       );
-
+  
       // ตรวจสอบว่าการตอบกลับสำเร็จ
       if (response.status === 200) {
         toast.success("ปฏิเสธคำขอเรียบร้อย!", {
@@ -88,7 +110,7 @@ export default function CompanyTable() {
         }, 2000);
       } else {
         // กรณีที่ไม่ใช่สถานะ 200
-        toast.error("เกิดข้อผิดพลาดในการอนุมัติ", {
+        toast.error("เกิดข้อผิดพลาดในการปฏิเสธ", {
           autoClose: 2000,
         });
       }
@@ -99,7 +121,7 @@ export default function CompanyTable() {
           `เกิดข้อผิดพลาด: ${error.response?.data?.message || "ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้"}`
         );
       } else {
-        toast.error("เกิดข้อผิดพลาดในการอนุมัติ");
+        toast.error("เกิดข้อผิดพลาดในการปฏิเสธ");
       }
     }
   };
@@ -109,7 +131,7 @@ export default function CompanyTable() {
   if (error) return <div className="text-red-500 text-center">{error}</div>;
 
   return (
-    <div className="w-full  mx-auto p-6 bg-white shadow-lg rounded-lg">
+    <div className="w-full  mx-auto p-6 bg-white shadow-lg rounded-lg ">
       <ToastContainer />
       <h2 className="text-xl font-semibold text-gray-800 mb-4">
         รายการคำร้องขอของบริษัท
@@ -121,10 +143,8 @@ export default function CompanyTable() {
             <TableRow>
               <TableHead className="py-3 px-4">ผู้ยื่นคำขอ</TableHead>
               <TableHead className="py-3 px-4">Company Name</TableHead>
+              <TableHead className="py-3 px-4">คำขอ</TableHead>
               <TableHead className="py-3 px-4">Approval Status</TableHead>
-              <TableHead className="py-3 px-4 text-center">
-                ข้อมูลบริษัท
-              </TableHead>
               <TableHead className="py-3 px-4 text-center">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -142,35 +162,43 @@ export default function CompanyTable() {
                     {comp.company.companyNameTh}
                   </TableCell>
                   <TableCell className="py-3 px-4">
+                    ยกเลิกการเลือกบริษัท
+                  </TableCell>
+                  <TableCell className="py-3 px-4">
                     <span
                       className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                        comp.company.approvalStatus === "approved"
+                        comp.status === "approved"
                           ? "bg-green-100 text-green-600"
-                          : comp.company.approvalStatus === "rejected"
+                          : comp.status === "rejected"
                             ? "bg-red-100 text-red-600"
                             : "bg-yellow-100 text-yellow-600"
                       }`}
                     >
-                      {comp.company.approvalStatus}
+                      {comp.status}
                     </span>
                   </TableCell>
                   <TableCell className="py-3 px-4 text-center">
-                    <DialogInfo companyCreator={comp} />
-                  </TableCell>
-                  <TableCell className="py-3 px-4 text-center">
-                    {comp.company.approvalStatus === "pending" && (
+                    {comp.status === "pending" && (
                       <div className="flex gap-2 justify-center">
                         <button
-                          onClick={() => handleApprove(comp.company.id)}
+                          onClick={() =>
+                            handleApprove(
+                              comp.company.id,
+                              comp.user.id,
+                              comp.id
+                            )
+                          }
                           className="px-4 py-2 text-sm bg-green-500 text-white rounded-md hover:bg-green-600"
                         >
-                          Approve
+                          ยืนยัน
                         </button>
                         <button
-                          onClick={() => handleReject(comp.company.id)}
+                          onClick={() =>
+                            handleReject(comp.company.id, comp.user.id, comp.id)
+                          }
                           className="px-4 py-2 text-sm bg-red-500 text-white rounded-md hover:bg-red-600"
                         >
-                          Reject
+                          ปฏิเสธ
                         </button>
                       </div>
                     )}

@@ -37,6 +37,24 @@ const renderActiveShape = (props: any) => {
   const ey = my;
   const textAnchor = cos >= 0 ? "start" : "end";
 
+  // 👉 กำหนดความยาวสูงสุดของแต่ละบรรทัด
+  const maxLineLength = 11;
+
+  // 🔹 แบ่งข้อความตามคำ (เว้นวรรค) และจัดกลุ่มให้เหมาะสม
+  const words = payload.name.split(" ");
+  const lines: string[] = [];
+  let currentLine = "";
+
+  words.forEach((word: any) => {
+    if ((currentLine + " " + word).trim().length <= maxLineLength) {
+      currentLine += (currentLine ? " " : "") + word;
+    } else {
+      lines.push(currentLine);
+      currentLine = word;
+    }
+  });
+  if (currentLine) lines.push(currentLine);
+
   return (
     <g>
       <text x={cx} y={cy} dy={8} textAnchor="middle">
@@ -66,22 +84,33 @@ const renderActiveShape = (props: any) => {
         fill="none"
       />
       <circle cx={ex} cy={ey} r={2} fill={fill} stroke="none" />
+
+      {/* 🔹 ใช้ <tspan> เพื่อให้ขึ้นบรรทัดใหม่ตามการตัดคำ */}
       <text
         x={ex + (cos >= 0 ? 1 : -1) * 12}
         y={ey}
         textAnchor={textAnchor}
         fill="#333"
       >
-        {`${payload.name}`}
+        {lines.map((line, index) => (
+          <tspan
+            key={index}
+            x={ex + (cos >= 0 ? 1 : -1) * 12}
+            dy={index === 0 ? 0 : 18}
+          >
+            {line}
+          </tspan>
+        ))}
       </text>
+
       <text
         x={ex + (cos >= 0 ? 1 : -1) * 12}
         y={ey}
-        dy={18}
+        dy={lines.length * 18 + 6} // ปรับให้ % อยู่ถัดจากข้อความสุดท้าย
         textAnchor={textAnchor}
         fill="#999"
       >
-        {` ${(percent * 100).toFixed(2)}%`}
+        {`${(percent * 100).toFixed(2)}%`}
       </text>
     </g>
   );
@@ -119,30 +148,26 @@ const PositionChart = React.memo(
 
     // กำหนดสีเริ่มต้นสำหรับแต่ละชื่อของ position
     useEffect(() => {
-      // กำหนดสีเริ่มต้นสำหรับแต่ละ position หาก colorsRef ยังไม่มีการตั้งค่า
-      if (colorsRef.current.size === 0) {
-        const defaultColors = [
-          "#0088FE",
-          "#00C49F",
-          "#FFBB28",
-          "#FF8042",
-          "#A28BFF",
-          "#FF6384",
-          "#36A2EB",
-          "#FFCE56",
-          "#4BC0C0",
-          "#9966FF",
-        ];
-
-        Object.keys(allData.position ?? {}).forEach((key, index) => {
-          colorsRef.current.set(
-            key,
-            defaultColors[index % defaultColors.length]
-          );
-        });
-      }
-    }, [allData]);
-
+      const defaultColors = [
+        "#0088FE",
+        "#00C49F",
+        "#FFBB28",
+        "#FF8042",
+        "#A28BFF",
+        "#FF6384",
+        "#36A2EB",
+        "#FFCE56",
+        "#4BC0C0",
+        "#9966FF",
+      ];
+    
+      Object.keys(allData.position ?? {}).forEach((key, index) => {
+        // ✅ อย่าทับค่าถ้ามีอยู่แล้ว (รักษาค่าสีเดิม)
+        if (!colorsRef.current.has(key)) {
+          colorsRef.current.set(key, defaultColors[index % defaultColors.length]);
+        }
+      });
+    }, [allData.position]); // 🔹 ใช้ allData.position เท่านั้นเป็น dependency
     // กำหนด positionData โดยใช้สีที่เก็บไว้ใน colorsRef
     const positionData = Object.keys(allData.position ?? {}).map((key) => ({
       name: key,
@@ -190,7 +215,7 @@ const PositionChart = React.memo(
                   layout="horizontal"
                   align="center"
                   verticalAlign="bottom"
-                  wrapperStyle={{ fontSize: "12px", paddingTop: "10px" }}
+                  wrapperStyle={{ fontSize: "12px", paddingTop: "0px" }}
                 />
                 <Pie
                   activeIndex={activeIndex}

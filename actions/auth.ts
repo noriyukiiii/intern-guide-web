@@ -90,10 +90,10 @@ export async function signInActions(values: SignInSchema): Promise<{
 
     const user = await db.user.findUnique({ where: { email } });
 
-    if (!user || !compareSync(password, user.password ?? "")) {
+    if (!user) {
       return {
         success: false,
-        message: "Invalid email or password",
+        message: "ไม่มีผู้ใช้งานนี้ในระบบ",
       };
     }
 
@@ -102,6 +102,13 @@ export async function signInActions(values: SignInSchema): Promise<{
       return {
         success: false,
         message: "กรุณายืนยันอีเมลก่อน",
+      };
+    }
+
+    if (!user || !compareSync(password, user.password ?? "")) {
+      return {
+        success: false,
+        message: "อีเมลหรือรหัสผ่านไม่ถูกต้อง",
       };
     }
 
@@ -118,7 +125,7 @@ export async function signInActions(values: SignInSchema): Promise<{
 
     return {
       success: true,
-      message: "Login successfully",
+      message: "เข้าสู่ระบบสำเร็จ",
       redirectTo,
     };
   } catch (error) {
@@ -131,11 +138,14 @@ export async function signInActions(values: SignInSchema): Promise<{
 
 export const resetPasswordActions = async ({ email }: { email: string }) => {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_RES_API}/auth/forgot-password`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email }),
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_RES_API}/auth/forgot-password`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      }
+    );
 
     const data = await res.json();
     return data;

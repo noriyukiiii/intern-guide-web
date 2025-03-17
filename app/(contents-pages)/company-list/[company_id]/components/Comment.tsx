@@ -13,12 +13,6 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuPortal,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
@@ -65,14 +59,14 @@ const Comment = ({ companyId }: { companyId: string }) => {
   }, []);
 
   const handleAddComment = async () => {
-    if (newComment.trim() === "") return;
-
+    const trimmedComment = newComment.trim();
+    if (trimmedComment === "") return;
+  
     const commentData = {
-      comment: newComment,
+      comment: trimmedComment, // Trim ก่อนส่งค่า
       userId,
       compId: companyId,
     };
-
     try {
       const res = await axios.post(
         `${process.env.NEXT_PUBLIC_BASE_RES_API}/comment/CreateComment`,
@@ -109,11 +103,12 @@ const Comment = ({ companyId }: { companyId: string }) => {
   };
 
   const handleUpdateComment = async () => {
+    const trimmedComment = editedComment.trim();
     if (editedComment.trim() === "") return;
 
     const commentData = {
       commentId: editingCommentId,
-      comment: editedComment,
+      comment: trimmedComment,
     };
 
     try {
@@ -177,9 +172,9 @@ const Comment = ({ companyId }: { companyId: string }) => {
             placeholder="แสดงความคิดเห็น..."
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey) handleAddComment();
-            }}
+            // onKeyDown={(e) => {
+            //   if (e.key === "Enter" && !e.shiftKey) handleAddComment();
+            // }}
             className="flex-1 p-2 border rounded-lg resize-none"
             rows={4}
           />

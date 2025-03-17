@@ -5,7 +5,6 @@ import { SidebarItems } from "@/lib/types";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-
 interface SidebarDesktopProps {
   sidebarItems: SidebarItems;
 }
@@ -33,6 +32,7 @@ export function SidebarDesktop(props: SidebarDesktopProps) {
               </Link>
             ))}
             {props.sidebarItems.extras}
+
           </div>
         </div>
       </div>

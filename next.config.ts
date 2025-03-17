@@ -2,7 +2,7 @@
 const nextConfig = {
   experimental: {},
   images: {
-    domains: ["utfs.io"], // ✅ เพิ่ม utfs.io เข้าไปที่นี่
+    domains: ["utfs.io", "ui-avatars.com"], // ✅ เพิ่ม utfs.io เข้าไปที่นี่
   },
 };
 

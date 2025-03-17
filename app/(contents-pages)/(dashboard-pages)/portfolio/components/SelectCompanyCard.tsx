@@ -133,7 +133,7 @@ const SelectCompanyCard = ({
               <div>ที่ตั้ง : {company.location} </div>
             </div>
           </div>
-          <div className="flex flex-row justify-start items-center gap-2 mt-6">
+          <div className="flex flex-col force-row justify-start items-center gap-2 mt-6">
             <Button
               className={`${
                 company.status === "pending"

@@ -1,7 +1,7 @@
 "use client";
 import { Suspense } from "react";
 import { useEffect, useState } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import OccupationChart from "./occupation-chart";
 import PositionChart from "./position-chart";
 import BenefitChart from "./benefit-chart";
@@ -24,33 +24,34 @@ function ContentChart() {
   const { session } = useSession();
   const searchParams = useSearchParams();
   const router = useRouter();
+  const pathname = usePathname();
 
-  // อ่านค่าเริ่มต้นจาก URL params
-  const [selectedOccupation, setSelectedOccupation] = useState<string | null>(
-    searchParams.get("occupation")
-  );
-  const [selectedPosition, setSelectedPosition] = useState<string | null>(
-    searchParams.get("position")
-  );
-  const [selectedProvince, setSelectedProvince] = useState<string | null>(
-    searchParams.get("province")
-  );
-  const [selectedBenefit, setSelectedBenefit] = useState<string | null>(
-    searchParams.get("benefit")
-  );
-
+  // ค่าที่เลือก (อัปเดตตาม URL params)
+  const [selectedOccupation, setSelectedOccupation] = useState<string | null>(null);
+  const [selectedPosition, setSelectedPosition] = useState<string | null>(null);
+  const [selectedProvince, setSelectedProvince] = useState<string | null>(null);
+  const [selectedBenefit, setSelectedBenefit] = useState<string | null>(null);
   const [allData, setAllData] = useState<ChartData | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  // ฟังก์ชันอัปเดต URL parameter
+  // ดึงค่าจาก URL params ทุกครั้งที่เปลี่ยน
+  useEffect(() => {
+    setSelectedOccupation(searchParams.get("occupation"));
+    setSelectedPosition(searchParams.get("position"));
+    setSelectedProvince(searchParams.get("province"));
+    setSelectedBenefit(searchParams.get("benefit"));
+  }, [searchParams]); // ✅ URL เปลี่ยน ค่าจะอัปเดตอัตโนมัติ
+
   const updateSearchParams = (key: string, value: string | null) => {
-    const params = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams(searchParams.toString());
+
     if (value) {
       params.set(key, value);
     } else {
       params.delete(key);
     }
-    router.push(`?${params.toString()}`, { scroll: false });
+
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
   // Fetch data
@@ -91,6 +92,7 @@ function ContentChart() {
         <div className="spinner"></div>
       </div>
     );
+
   if (isLoading)
     return (
       <div className="flex justify-center items-center min-h-screen">
@@ -119,40 +121,28 @@ function ContentChart() {
       <div className="mt-6 w-full flex justify-end">
         <OccupationChart
           allData={safeAllData}
-          onSelect={(value) => {
-            setSelectedOccupation(value);
-            updateSearchParams("occupation", value);
-          }}
+          onSelect={(value) => updateSearchParams("occupation", value)}
           selected={selectedOccupation}
         />
       </div>
       <div className="mt-6 w-full flex justify-end">
         <PositionChart
           allData={safeAllData}
-          onSelect={(value) => {
-            setSelectedPosition(value);
-            updateSearchParams("position", value);
-          }}
+          onSelect={(value) => updateSearchParams("position", value)}
           selected={selectedPosition}
         />
       </div>
       <div className="mt-6 w-full flex justify-end">
         <ProvinceChart
           allData={safeAllData}
-          onSelect={(value) => {
-            setSelectedProvince(value);
-            updateSearchParams("province", value);
-          }}
+          onSelect={(value) => updateSearchParams("province", value)}
           selected={selectedProvince}
         />
       </div>
       <div className="mt-6 w-full flex justify-end">
         <BenefitChart
           allData={safeAllData}
-          onSelect={(value) => {
-            setSelectedBenefit(value);
-            updateSearchParams("benefit", value);
-          }}
+          onSelect={(value) => updateSearchParams("benefit", value)}
           selected={selectedBenefit}
         />
       </div>

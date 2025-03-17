@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useTransition } from "react";
+import React, { useState, useTransition } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -13,10 +13,12 @@ import { Input } from "@/components/ui/inputtest";
 import { Label } from "@/components/ui/label";
 import { signInActions } from "@/actions/auth";
 import { toast, ToastContainer } from "react-toastify";
+import { Eye, EyeOff } from "lucide-react";
+import { button } from "@nextui-org/theme";
 
 const Page = () => {
   const [isPending, startTransition] = useTransition();
-  const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
 
   const {
     register,
@@ -76,9 +78,17 @@ const Page = () => {
             <Input
               {...register("password")}
               placeholder="Password"
-              type="password"
+              type={showPassword ? "text" : "password"} // 👁️ เปลี่ยน type
               disabled={isPending}
-              className="w-full"
+              className="w-full pr-10"
+              endContent={
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              }
             />
             {errors.password && (
               <p className="text-red-500 text-sm">{errors.password.message}</p>

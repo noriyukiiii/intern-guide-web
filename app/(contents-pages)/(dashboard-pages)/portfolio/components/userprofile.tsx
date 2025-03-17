@@ -32,13 +32,13 @@ const UserProfile = ({ data }: UserProfileProps) => {
   return (
     <div>
       {data.session ? (
-        <Card className="mx-auto md:w-1/2">
+        <Card className="mx-auto ">
           <CardContent>
             <CardHeader>
               <CardTitle className="text-center">ข้อมูลผู้ใช้</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex flex-row items-center justify-center gap-12">
+              <div className="flex flex-col force-row items-center justify-center gap-12">
                 <div className="border h-24 w-24 rounded-full overflow-hidden flex items-center justify-center bg-gray-300">
                   <img
                     src={`https://ui-avatars.com/api/?name=${data.session.user?.firstName}+${data.session.user?.lastName}&background=random&color=fff&length=1&bold=true&font-size=0.40&font=Roboto&format=svg`}

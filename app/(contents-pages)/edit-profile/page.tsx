@@ -86,8 +86,11 @@ export default function Page() {
       if (result.success) {
         toast.success("User updated successfully!");
         setTimeout(() => {
-          router.push("/"); 
-        }, 2000); // หน่วงเวลา 2 วินาที
+          router.push("/");
+          setTimeout(() => {
+            window.location.reload();
+          }, 500); // รอให้ push ทำงานก่อน
+        }, 2000);
       } else {
         toast.error(result.message || "Failed to update user.");
       }
@@ -102,8 +105,8 @@ export default function Page() {
       <div className="m-10 p-10 flex items-center justify-center">
         <h1 className="text-4xl font-bold">แก้ไขโปรไฟล์</h1>
       </div>
-      <div className="grid grid-cols-1 lg:grid-cols-2 bg-[#FFFAE6] h-full p-4 bg-opacity-50 items-center w-full">
-        <div className="flex flex-col items-center">
+      <div className="grid grid-cols-1  bg-[#FFFAE6] h-full p-4 bg-opacity-50 items-center w-full mx-auto">
+        {/* <div className="flex flex-col items-center">
           <ToastContainer />
           <div className="grid grid-cols-3 gap-4 bg-white p-20 rounded-3xl">
             {avatarOptions.map((avatar, index) => (
@@ -127,22 +130,22 @@ export default function Page() {
             ))}
           </div>
           <p className="mt-2 text-sm text-gray-600">Select your avatar</p>
-        </div>
-        <Form {...form} >
-          <form 
+        </div> */}
+        <Form {...form}>
+          <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="w-full p-8 lg:w-2/3 lg:p-8 space-y-6 bg-white h-fit rounded-3xl"
+            className="w-full max-w-2xl p-6 mx-auto space-y-6 bg-white rounded-xl shadow-md"
           >
             <FormField
               control={form.control}
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <div className="grid grid-cols-5 items-center justify-center">
-                    <FormLabel className="col-span-1">Email  </FormLabel>
+                  <div className="grid grid-cols-5 items-center">
+                    <FormLabel className="col-span-2">Email</FormLabel>
                     <FormControl>
                       <Input
-                        className="col-span-4 bg-gray-200"
+                        className="col-span-3 bg-gray-200 w-full"
                         disabled
                         placeholder="Email"
                         {...field}
@@ -158,11 +161,11 @@ export default function Page() {
               name="firstname"
               render={({ field }) => (
                 <FormItem>
-                  <div className="grid grid-cols-5 items-center justify-center">
-                    <FormLabel className="col-span-1">ชื่อจริง</FormLabel>
+                  <div className="grid grid-cols-5 items-center">
+                    <FormLabel className="col-span-2">ชื่อจริง</FormLabel>
                     <FormControl>
                       <Input
-                        className="col-span-4 focus:bg-gray-100"
+                        className="col-span-3 w-full focus:bg-gray-100"
                         placeholder="Firstname"
                         {...field}
                       />
@@ -177,11 +180,11 @@ export default function Page() {
               name="lastname"
               render={({ field }) => (
                 <FormItem>
-                  <div className="grid grid-cols-5 items-center justify-center">
-                    <FormLabel className="col-span-1">นามสกุล</FormLabel>
+                  <div className="grid grid-cols-5 items-center">
+                    <FormLabel className="col-span-2">นามสกุล</FormLabel>
                     <FormControl>
                       <Input
-                        className="col-span-4 focus:bg-gray-100"
+                        className="col-span-3 w-full focus:bg-gray-100"
                         placeholder="Lastname"
                         {...field}
                       />
@@ -196,11 +199,11 @@ export default function Page() {
               name="phone"
               render={({ field }) => (
                 <FormItem>
-                  <div className="grid grid-cols-5 items-center justify-center">
-                    <FormLabel className="col-span-1">โทรศัพท์</FormLabel>
+                  <div className="grid grid-cols-5 items-center">
+                    <FormLabel className="col-span-2">โทรศัพท์</FormLabel>
                     <FormControl>
                       <Input
-                        className="col-span-4 focus:bg-gray-100"
+                        className="col-span-3 w-full focus:bg-gray-100"
                         placeholder="Phone"
                         {...field}
                       />
@@ -215,11 +218,11 @@ export default function Page() {
               name="studentId"
               render={({ field }) => (
                 <FormItem>
-                  <div className="grid grid-cols-5 items-center justify-center">
-                    <FormLabel className="col-span-1">รหัสนักศึกษา</FormLabel>
+                  <div className="grid grid-cols-5 items-center">
+                    <FormLabel className="col-span-2">รหัสนักศึกษา</FormLabel>
                     <FormControl>
                       <Input
-                        className="col-span-4 focus:bg-gray-100"
+                        className="col-span-3 w-full focus:bg-gray-100"
                         placeholder="Student ID"
                         {...field}
                       />
@@ -230,8 +233,11 @@ export default function Page() {
               )}
             />
             <div className="flex justify-center">
-              <Button type="submit" className="bg-green-700">
-                แก้ไขข้อมูล
+              <Button
+                type="submit"
+                className="bg-green-700 px-6 py-2 rounded-lg text-white"
+              >
+                บันทึก
               </Button>
             </div>
           </form>

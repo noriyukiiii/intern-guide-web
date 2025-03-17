@@ -46,16 +46,17 @@ export default function Homepage() {
     <>
       <div className="flex flex-col h-screen w-screen">
         {/* Carousel สำหรับแสดงแบนเนอร์ */}
-        <div className="flex justify-center items-center ">
-          <Carousel className="w-full max-w-[1700px] h-[720px]">
+        <div className="flex justify-center items-center w-full">
+          <Carousel className="w-full max-w-[1500px] sm:max-w-full lg:max-h-[500px] md:max-h-[400px] sm:max-h-[350px] max-h-[300px] overflow-hidden">
             <CarouselContent>
               {banners.map((banner, index) => (
-                <CarouselItem key={index} className="h-[720px]">
-                  <div className="p-1 h-full">
+                <CarouselItem key={index} className="flex min-h-0">
+                  <div className="p-1 w-full h-full">
                     <img
                       src={banner.image}
                       alt={banner.title}
-                      className="w-full h-full object-cover rounded-lg"
+                      className="w-auto h-full object-cover rounded-lg aspect-[16/9]"
+                      loading="lazy"
                     />
                   </div>
                 </CarouselItem>
@@ -65,6 +66,7 @@ export default function Homepage() {
             <CarouselNext className="absolute right-3" />
           </Carousel>
         </div>
+
         <Banner />
         <Footer />
       </div>

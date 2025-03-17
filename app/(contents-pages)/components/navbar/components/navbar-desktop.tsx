@@ -101,12 +101,17 @@ const NavbarDesktop = () => {
                   <Button variant="light">
                     <div className="flex items-center gap-2">
                       <div className="h-8 w-8 rounded-full overflow-hidden border-1 border-gray-400">
-                        <Image
-                          src={`${session?.user?.image || "s.png"}`}
+                        {/* <Image
+                          src={`https://ui-avatars.com/api/?name=${session.user?.firstName}+${session.user?.lastName}&background=random&color=fff&length=1&bold=true&font-size=0.40&font=Roboto&format=svg`}
                           alt="user image"
                           height={50}
                           width={50}
                           className="object-cover"
+                        /> */}
+                        <img
+                          src={`https://ui-avatars.com/api/?name=${session.user?.firstName}+${session.user?.lastName}&background=random&color=fff&length=1&bold=true&font-size=0.40&font=Roboto&format=svg`}
+                          alt="user image"
+                          className="w-full h-full object-cover"
                         />
                       </div>
                       <div className="sm:hidden lg:flex flex-col">
@@ -120,10 +125,10 @@ const NavbarDesktop = () => {
                 <DropdownMenu aria-label="User Menu">
                   <DropdownItem
                     key="profile"
-                    onPress={() => router.push("/user-profile")}
+                    onPress={() => router.push("/portfolio")}
                   >
                     <div className="flex gap-2 items-center">
-                      <User size={16} /> User Profile
+                      <User size={16} /> ข้อมูลผู้ใช้
                     </div>
                   </DropdownItem>
                   <DropdownItem
@@ -131,7 +136,15 @@ const NavbarDesktop = () => {
                     onPress={() => router.push("/edit-profile")}
                   >
                     <div className="flex gap-2 items-center">
-                      <UserPen size={16} /> Edit Profile
+                      <UserPen size={16} /> แก้ไขข้อมูลส่วนตัว
+                    </div>
+                  </DropdownItem>
+                  <DropdownItem
+                    key="edit2"
+                    onPress={() => router.push("/appeal")}
+                  >
+                    <div className="flex gap-2 items-center">
+                      <UserPen size={16} /> คำร้องขอ
                     </div>
                   </DropdownItem>
                   <DropdownItem
@@ -140,7 +153,7 @@ const NavbarDesktop = () => {
                     onPress={handleLogout}
                   >
                     <div className="flex gap-2 items-center">
-                      <LogOut size={16} /> Log out
+                      <LogOut size={16} /> ออกจากระบบ
                     </div>
                   </DropdownItem>
                 </DropdownMenu>

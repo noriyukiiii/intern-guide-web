@@ -110,7 +110,7 @@ const CompanyCard = ({ companies }: CompanyCardProps) => {
           <div className="col-span-4">
             <p>
               {companies.company_occuption === "No_info"
-                ? "ไม่ระบุ"
+                ? "ไม่มีข้อมูล"
                 : companies.company_occuption === "both"
                 ? "Network, Database"
                 : companies.company_occuption}
@@ -125,7 +125,7 @@ const CompanyCard = ({ companies }: CompanyCardProps) => {
             <p className="">:</p>
           </div>
           <p className="col-span-4">
-            {companies.company_location || "ไม่ระบุ"}
+            {companies.company_location || "ไม่มีข้อมูล"}
           </p>
         </div>
 
@@ -146,7 +146,7 @@ const CompanyCard = ({ companies }: CompanyCardProps) => {
               <p className="">:</p>
             </div>
             <p className="col-span-4">
-              {companies.position_descriptions || "ไม่ระบุ"}
+              {companies.position_descriptions || "ไม่มีข้อมูล"}
             </p>
           </div>
         ) : (
@@ -155,7 +155,7 @@ const CompanyCard = ({ companies }: CompanyCardProps) => {
               <p className="">ตำแหน่ง</p>
               <p className="">:</p>
             </div>
-            <p className="col-span-4">ไม่ระบุ</p>
+            <p className="col-span-4">ไม่มีข้อมูล</p>
           </div>
         )}
 

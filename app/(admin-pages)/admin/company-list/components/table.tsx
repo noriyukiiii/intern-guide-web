@@ -314,12 +314,12 @@ export default function Page({ companies }: CompanyTableProps) {
                     >
                       ลบ
                     </button>
-                    <button
+                    {/* <button
                       className="px-4 py-2 bg-red-500 text-white rounded"
                       onClick={() => softdeleteCompany(company.company_id)} // Pass the company id here
                     >
                       ลบ (soft)
-                    </button>
+                    </button> */}
                   </div>
                 </TableCell>
               </TableRow>

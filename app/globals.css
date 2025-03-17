@@ -97,6 +97,11 @@
   
 }
 
+@screen md {
+  .force-row {
+    @apply flex-row !important;
+  }
+}
 .recharts-layer {
   outline: none !important;
 }

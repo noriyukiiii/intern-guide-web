@@ -14,6 +14,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import Link from "next/link";
 import { signUpActions } from "@/actions/auth";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function page() {
   const [isPending, startTransition] = useTransition();
@@ -170,7 +171,7 @@ export default function page() {
                       {/* ช่องให้พิมพ์ตัวเลข */}
                       <Input
                         // {...register("email")}
-                        placeholder="กรอกหมายเลข"
+                        placeholder="กรอกรหัสนักศึกษา"
                         disabled={isPending}
                         className="w-full p-2 border border-gray-300 rounded-lg outline-none"
                         onChange={(e) => {
@@ -233,7 +234,7 @@ export default function page() {
                         type="button"
                         onClick={() => togglePasswordVisibility("password")}
                       >
-                        {showPassword.password ? "Hide" : "Show"}
+                        {showPassword.password ? <EyeOff /> : <Eye />}
                       </button>
                     }
                   />
@@ -275,7 +276,7 @@ export default function page() {
                           togglePasswordVisibility("confirmPassword")
                         }
                       >
-                        {showPassword.confirmPassword ? "Hide" : "Show"}
+                        {showPassword.confirmPassword ? <EyeOff /> : <Eye />}
                       </button>
                     }
                   />
@@ -295,7 +296,7 @@ export default function page() {
             {currentStep === 2 && (
               <>
                 <div className="w-full">
-                  <Label htmlFor="firstname">First Name</Label>
+                  <Label htmlFor="firstname">ชื่อจริง</Label>
                   <Input
                     {...register("firstname")}
                     placeholder="First Name"
@@ -305,7 +306,7 @@ export default function page() {
                   />
                 </div>
                 <div className="w-full">
-                  <Label htmlFor="lastname">Last Name</Label>
+                  <Label htmlFor="lastname">นามสกุล</Label>
                   <Input
                     {...register("lastname")}
                     placeholder="Last Name"
@@ -315,7 +316,7 @@ export default function page() {
                   />
                 </div>
                 <div className="w-full">
-                  <Label htmlFor="telephone">Telephone</Label>
+                  <Label htmlFor="telephone">โทรศัพท์</Label>
                   <Input
                     {...register("telephone")}
                     placeholder="Telephone"
@@ -325,7 +326,7 @@ export default function page() {
                   />
                 </div>
                 <div className="w-full">
-                  <Label htmlFor="student_id">Student ID</Label>
+                  <Label htmlFor="student_id">รหัสนักศึกษา</Label>
                   <Input
                     {...register("student_id")}
                     placeholder="Student ID"

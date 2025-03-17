@@ -8,8 +8,11 @@ import {
   FaUser,
   FaMapMarkerAlt,
 } from "react-icons/fa";
+import { useSession } from "@/hooks/use-session";
 import { useRouter } from "next/navigation";
 import { ChevronLeftIcon } from "lucide-react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 interface CompanyDetailProps {
   company: {
     company_id: string;
@@ -35,10 +38,80 @@ interface CompanyDetailProps {
 }
 
 const CompDetail = ({ company }: CompanyDetailProps) => {
+  const { session } = useSession();
+  const [isFavorite, setIsFavorite] = useState<boolean | null>(null);
   const router = useRouter();
+  useEffect(() => {
+    if (session?.user?.id && company.company_id) {
+      fetchFavoriteStatus();
+    }
+  }, [session?.user?.id, company.company_id]);
+
+  useEffect(() => {
+    console.log(isFavorite);
+  }, [isFavorite]);
+
+  const fetchFavoriteStatus = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_RES_API}/company/getCompanyFavoite`,
+        {
+          params: {
+            userId: session?.user?.id,
+            companyId: company.company_id,
+          },
+        }
+      );
+      console.log({ userid: session?.user?.id, companyId: company.company_id });
+      console.log(response.data.isFavorite); // ลองดูว่า API คืนค่าอะไรมา
+
+      setIsFavorite(response.data.isFavorite); // <-- จุดสำคัญ
+    } catch (error) {
+      console.error("Error fetching favorite status:", error);
+      setIsFavorite(false);
+    }
+  };
+
+  const handleToggleFavorite = async () => {
+    if (!session?.user?.id) return;
+
+    // เปลี่ยนสถานะจาก true เป็น false หรือจาก false เป็น true
+    const newStatus = !isFavorite;
+    setIsFavorite(newStatus);
+
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_RES_API}/update-favorite`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: session.user.id,
+            companyId: company.company_id,
+            isSelected: newStatus,
+          }),
+        }
+      );
+
+      const responseData = await res.json();
+
+      if (responseData.success) {
+        console.log("Favorite updated successfully");
+      } else {
+        console.error("Failed to update favorite status");
+      }
+    } catch (error) {
+      console.error("Error updating favorite status:", error);
+    }
+  };
+
   const handleback = () => {
+    // ใช้ router.back() เพื่อกลับไปหน้าก่อนหน้า
     router.back();
   };
+
   return (
     <div className="max-w-4xl mx-auto p-8 bg-white rounded-xl border border-gray-200 font-Prompt">
       {/* Header Section */}
@@ -49,7 +122,8 @@ const CompDetail = ({ company }: CompanyDetailProps) => {
           className="absolute left-0 bg-transparent text-blue-800 text-[20px] hover:bg-gray-200"
         >
           <div className="flex flex-row items-center gap-2 ">
-            <ChevronLeftIcon className="w-64 h-64 !important"  /> {/* ปรับขนาดไอคอน */}
+            <ChevronLeftIcon className="w-64 h-64 !important" />{" "}
+            {/* ปรับขนาดไอคอน */}
             <p>ย้อนกลับ</p>
           </div>
         </Button>
@@ -111,11 +185,11 @@ const CompDetail = ({ company }: CompanyDetailProps) => {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
             <div className="flex items-center gap-2">
               <FaMapMarkerAlt className="text-gray-500" />
-              <p>{company.company_location || "ไม่ระบุ"}</p>
+              <p>{company.company_location || "ไม่มีข้อมูล"}</p>
             </div>
             <div className="flex items-center gap-2">
               <FaMapMarkerAlt className="text-gray-500" />
-              <p>{company.company_province || "ไม่ระบุ"}</p>
+              <p>{company.company_province || "ไม่มีข้อมูล"}</p>
             </div>
           </div>
         </div>
@@ -246,8 +320,15 @@ const CompDetail = ({ company }: CompanyDetailProps) => {
       </div>
 
       <div className="mt-4">
-        <Button className="w-full py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 transition">
-          เลือกสถานประกอบการนี้
+        <Button
+          className={`w-full py-3 rounded-xl transition ${
+            isFavorite
+              ? "bg-red-600 hover:bg-red-700"
+              : "bg-green-600 hover:bg-green-700"
+          } text-white`}
+          onClick={handleToggleFavorite}
+        >
+          {isFavorite ? "ลบออกจากรายการโปรด" : "เพิ่มรายการโปรด"}
         </Button>
       </div>
     </div>

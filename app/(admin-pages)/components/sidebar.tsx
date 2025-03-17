@@ -26,6 +26,8 @@ const sidebarItems: SidebarItems = {
     { label: 'แบนเนอร์', href: '/admin/banner', icon: Table },
     { label: 'ประกาศ', href: '/admin/newsbanner', icon: Table },
     { label: 'คำขอสร้างบริษัท', href: '/admin/approvecompany', icon: Table },
+    { label: 'คำขอแก้ไขบริษัท', href: '/admin/appeal-edit-company', icon: Table },
+    { label: 'คำขอยกเลิกบริษัท', href: '/admin/appeal-cancel-company', icon: Table },
   ],
   extras: (
     <div className='flex flex-col gap-2'>

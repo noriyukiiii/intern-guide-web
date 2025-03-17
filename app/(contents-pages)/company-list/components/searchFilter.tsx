@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CompanyCard from "./companyCard";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 interface CompanyCardProps {
   companies: {
@@ -32,6 +33,8 @@ interface CompanyCardProps {
   }[];
 }
 const SearchFilter = ({ companies }: CompanyCardProps) => {
+  const router = useRouter();
+
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedPosition, setSelectedPosition] = useState<string>(""); // ตำแหน่ง
   const [selectedSkill, setSelectedSkill] = useState<string>(""); // ทักษะ
@@ -41,7 +44,7 @@ const SearchFilter = ({ companies }: CompanyCardProps) => {
   const [selectedOccuption, setSelectedOccuption] = useState<string>(""); // ฟิลเตอร์อาชีพ
   const [selectedEstablished, setSelectedEstablished] = useState<string>(""); // ฟิลเตอร์ปีที่ก่อตั้ง
   const [selectedIsMou, setSelectedIsMou] = useState<string>(""); // ฟิลเตอร์บริษัทใน MOU
-  const [itemsPerPage, setItemsPerPage] = useState<number>(10); // จำนวนรายการต่อหน้า
+  const [itemsPerPage, setItemsPerPage] = useState<number>(9); // จำนวนรายการต่อหน้า
   const [currentPage, setCurrentPage] = useState<number>(1); // หน้าปัจจุบัน
   const [currentFavoritePage, setCurrentFavoritePage] =
     useState<boolean>(false); // ตรวจสอบหน้าที่กรอง is_favorite
@@ -52,10 +55,12 @@ const SearchFilter = ({ companies }: CompanyCardProps) => {
 
   const handleFavoriteToggle = () => {
     // เปลี่ยนสถานะการกรอง favorite
-    setCurrentPage(1)
+    setCurrentPage(1);
     setCurrentFavoritePage((prev) => !prev);
+    setTimeout(() => {
+      router.refresh()
+    }, 500);
   };
-
 
   const uniquePositions = Array.from(
     new Set(
@@ -96,7 +101,6 @@ const SearchFilter = ({ companies }: CompanyCardProps) => {
     const normalizedSearch = normalize(searchTerm); // Normalize คำค้นหา
 
     const isFavoritePage = currentFavoritePage === true;
-
 
     return (
       (normalize(company.company_name_th).includes(normalizedSearch) ||
@@ -316,8 +320,8 @@ const SearchFilter = ({ companies }: CompanyCardProps) => {
       </div>
 
       {/* Select Items Per Page */}
-      <div className="grid grid-cols-2">
-        <div className="m-4 w-24 flex flex-col ">
+      <div className="grid grid-cols-1">
+        {/* <div className="m-4 w-24 flex flex-col ">
           <label
             htmlFor="itemsPerPage"
             className="block text-sm font-medium text-gray-700"
@@ -334,14 +338,14 @@ const SearchFilter = ({ companies }: CompanyCardProps) => {
             <option value={25}>25</option>
             <option value={100}>100</option>
           </select>
-        </div>
-        <div className="flex justify-end items-center ">
-          <button
+        </div> */}
+        <div className="flex flex-col force-row justify-end items-center ">
+          <Button
             onClick={handleFavoriteToggle}
             className="m-4 p-4 py-2 bg-blue-500 text-white rounded"
           >
             {currentFavoritePage ? "แสดงบริษัททั้งหมด" : "แสดงบริษัทที่สนใจ"}
-          </button>
+          </Button>
           <Link href="/company-list/insert-company">
             <Button className="bg-green-400 text-white">
               เพื่มสถานประกอบการ
@@ -359,7 +363,10 @@ const SearchFilter = ({ companies }: CompanyCardProps) => {
       <div className="mt-6 flex justify-center items-center space-x-4">
         <button
           disabled={currentPage === 1}
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          onClick={() => {
+            setCurrentPage((prev) => Math.max(prev - 1, 1));
+            window.scrollTo(0, 0); // ⬆️ เลื่อนขึ้นไปบนสุด
+          }}
           className={`px-4 py-2 rounded-lg ${
             currentPage === 1 ? "bg-gray-300" : "bg-blue-500 text-white"
           }`}
@@ -371,9 +378,10 @@ const SearchFilter = ({ companies }: CompanyCardProps) => {
         </span>
         <button
           disabled={currentPage === totalPages}
-          onClick={() =>
-            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-          }
+          onClick={() => {
+            setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+            window.scrollTo(0, 0); // ⬆️ เลื่อนขึ้นไปบนสุด
+          }}
           className={`px-4 py-2 rounded-lg ${
             currentPage === totalPages
               ? "bg-gray-300"

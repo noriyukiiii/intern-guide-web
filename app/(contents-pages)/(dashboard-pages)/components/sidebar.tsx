@@ -25,8 +25,13 @@ const sidebarItems: SidebarItems = {
       icon: LayoutDashboard,
     },
     {
-      label: "Portfolio",
+      label: "ข้อมูลผู้ใช้",
       href: "/portfolio",
+      icon: User,
+    },
+    {
+      label: "คำร้องขอ",
+      href: "/appeal",
       icon: User,
     },
   ],
