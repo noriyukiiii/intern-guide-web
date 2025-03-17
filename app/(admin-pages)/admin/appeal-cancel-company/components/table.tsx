@@ -153,9 +153,9 @@ export default function CancelTable() {
               companyData.map((comp) => (
                 <TableRow key={comp.id} className="border-b hover:bg-gray-50">
                   <TableCell className="py-3 px-4">
-                    {comp.user.firstName} {comp.user.lastName} <br />
-                    <span className="text-gray-500 text-sm">
-                      {comp.user.studentId}
+                  {comp.user?.firstName ?? "ไม่ระบุ"} {comp.user?.lastName ?? ""}
+                  <span className="text-gray-500 text-sm">
+                    {comp.user?.studentId ?? "-"}
                     </span>
                   </TableCell>
                   <TableCell className="py-3 px-4">

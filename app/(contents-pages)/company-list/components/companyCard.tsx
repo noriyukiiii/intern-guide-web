@@ -109,7 +109,7 @@ const CompanyCard = ({ companies }: CompanyCardProps) => {
           </div>
           <div className="col-span-4">
             <p>
-              {companies.company_occuption === "No_info"
+              {companies.company_occuption === "No_Info"
                 ? "ไม่มีข้อมูล"
                 : companies.company_occuption === "both"
                 ? "Network, Database"
