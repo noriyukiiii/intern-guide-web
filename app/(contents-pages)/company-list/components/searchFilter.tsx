@@ -58,7 +58,7 @@ const SearchFilter = ({ companies }: CompanyCardProps) => {
     setCurrentPage(1);
     setCurrentFavoritePage((prev) => !prev);
     setTimeout(() => {
-      router.refresh()
+      router.refresh();
     }, 500);
   };
 
@@ -344,53 +344,63 @@ const SearchFilter = ({ companies }: CompanyCardProps) => {
             onClick={handleFavoriteToggle}
             className="m-4 p-4 py-2 bg-blue-500 text-white rounded"
           >
-            {currentFavoritePage ? "แสดงบริษัททั้งหมด" : "แสดงบริษัทที่สนใจ"}
+            {currentFavoritePage ? "แสดงบริษัททั้งหมด" : "แสดงรายการโปรด"}
           </Button>
           <Link href="/company-list/insert-company">
             <Button className="bg-green-400 text-white">
-              เพื่มสถานประกอบการ
+              เพิ่มสถานประกอบการ
             </Button>
           </Link>
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {paginatedCompanies.map((company) => (
-          <CompanyCard key={company.company_id} companies={company} />
-        ))}
+        {paginatedCompanies.length === 0 ? (
+          <div className="col-span-3 text-center text-xl text-gray-500 h-[250px] flex items-center justify-center">
+            ไม่พบสถานประกอบการ
+          </div>
+        ) : (
+          paginatedCompanies.map((company) => (
+            <CompanyCard key={company.company_id} companies={company} />
+          ))
+        )}
       </div>
       {/* Pagination Controls */}
-      <div className="mt-6 flex justify-center items-center space-x-4">
-        <button
-          disabled={currentPage === 1}
-          onClick={() => {
-            setCurrentPage((prev) => Math.max(prev - 1, 1));
-            window.scrollTo(0, 0); // ⬆️ เลื่อนขึ้นไปบนสุด
-          }}
-          className={`px-4 py-2 rounded-lg ${
-            currentPage === 1 ? "bg-gray-300" : "bg-blue-500 text-white"
-          }`}
-        >
-          ก่อนหน้า
-        </button>
-        <span>
-          หน้า {currentPage} / {totalPages}
-        </span>
-        <button
-          disabled={currentPage === totalPages}
-          onClick={() => {
-            setCurrentPage((prev) => Math.min(prev + 1, totalPages));
-            window.scrollTo(0, 0); // ⬆️ เลื่อนขึ้นไปบนสุด
-          }}
-          className={`px-4 py-2 rounded-lg ${
-            currentPage === totalPages
-              ? "bg-gray-300"
-              : "bg-blue-500 text-white"
-          }`}
-        >
-          ถัดไป
-        </button>
-      </div>
+      {paginatedCompanies.length === 0 ? (
+        <></>
+      ) : (
+        <div className="mt-6 flex justify-center items-center space-x-4">
+          <button
+            disabled={currentPage === 1}
+            onClick={() => {
+              setCurrentPage((prev) => Math.max(prev - 1, 1));
+              window.scrollTo(0, 0); // ⬆️ เลื่อนขึ้นไปบนสุด
+            }}
+            className={`px-4 py-2 rounded-lg ${
+              currentPage === 1 ? "bg-gray-300" : "bg-blue-500 text-white"
+            }`}
+          >
+            ก่อนหน้า
+          </button>
+          <span>
+            หน้า {currentPage} / {totalPages}
+          </span>
+          <button
+            disabled={currentPage === totalPages}
+            onClick={() => {
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+              window.scrollTo(0, 0); // ⬆️ เลื่อนขึ้นไปบนสุด
+            }}
+            className={`px-4 py-2 rounded-lg ${
+              currentPage === totalPages
+                ? "bg-gray-300"
+                : "bg-blue-500 text-white"
+            }`}
+          >
+            ถัดไป
+          </button>
+        </div>
+      )}
     </div>
   );
 };

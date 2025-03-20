@@ -852,7 +852,7 @@ export function InsertForm({ optionData }: { optionData: Option }) {
             onClick={onSubmit}
             className="p-2 bg-red-400 md:w-[200px] rounded-md border-2 border-gray-400 hover:bg-red-600 transition"
           >
-            <div className="text-center text-white">เพื่มสถานประกอบการ</div>
+            <div className="text-center text-white">เพิ่มสถานประกอบการ</div>
           </button>
         </div>
       </div>

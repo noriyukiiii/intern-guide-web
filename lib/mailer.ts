@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer";
 
-export async function sendVerificationEmail(email: string, token: string) {
+export async function sendVerificationEmail(email: string, token: string, firstname: string, lastname: string) {
   const transporter = nodemailer.createTransport({
     service: "Gmail",
     auth: {
@@ -13,38 +13,32 @@ export async function sendVerificationEmail(email: string, token: string) {
   const verificationUrl = `${url}/user/verify?token=${token}`;
 
   const emailTemplate = `
-  <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; background-color: #f4f4f4;">
-    <h2 style="text-align: center; color: #4CAF50;">Verify Your Email</h2>
-    <p style="font-size: 16px; color: #555;">
-      Hello,
-    </p>
-    <p style="font-size: 16px; color: #555;">
-      Thank you for registering with our service. Please click the button below to verify your email address and complete your registration.
+  <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 12px; background: linear-gradient(to bottom right, #ffffff, #f3f4f6); box-shadow: 4px 4px 10px rgba(0,0,0,0.1);">
+    <h2 style="text-align: center; color: #ff6600; font-size: 24px;">👋 Hello, ${firstname} ${lastname}!</h2>
+    <p style="font-size: 16px; color: #555; text-align: center;">
+      Thank you for registering! If you submitted this request, please click the button below to complete the verification process.
     </p>
     <div style="text-align: center; margin: 20px 0;">
-      <a href="${verificationUrl}" style="background-color: #4CAF50; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-size: 16px;">
-        Verify Email
+      <a href="${verificationUrl}" style="background-color: #ff6600; color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-size: 18px; font-weight: bold; box-shadow: 2px 2px 5px rgba(0,0,0,0.2); display: inline-block;">
+        ✅ Verify Email
       </a>
     </div>
-    <p style="font-size: 16px; color: #555;">
-      If you did not create an account, no further action is required.
-    </p>
-    <p style="font-size: 16px; color: #555;">
-      Best regards,<br/>
-      The MyApp Team
+    <p style="font-size: 16px; color: #555; text-align: center;">
+      Sincerely,<br/>
+      <strong style="color: #333;">Information Technology, RMUTT</strong>
     </p>
   </div>
 `;
 
   try {
     await transporter.sendMail({
-      from: `"MyApp" <no-reply@myapp.com>`,
+      from: `"No-Reply RMUTT" <no-reply@rmutt.ac.th>`,
       to: email,
-      subject: "Verify Your Email",
+      subject: "Verify Your Email - RMUTT",
       html: emailTemplate,
     });
-    console.log(`Sending verification email to: ${email}`);
+    console.log(`✅ Verification email sent to: ${email}`);
   } catch (error) {
-    console.error("Error sending verification email:", error);
+    console.error("❌ Error sending verification email:", error);
   }
 }

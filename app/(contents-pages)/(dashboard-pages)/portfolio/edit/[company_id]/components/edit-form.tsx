@@ -6,9 +6,10 @@ import Select from "react-select";
 import { SingleValue } from "react-select";
 import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { Button } from "@nextui-org/react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Button } from "@/components/ui/button";
+import { useSession } from "@/hooks/use-session";
 
 interface Company {
   id: string;
@@ -77,93 +78,55 @@ const EditForm = ({
   const [formData, setFormData] = useState<Company | null>(null);
   const [positions, setPositions] = useState<Position[]>([]);
   const router = useRouter();
-
+  const { session } = useSession();
+  if (!session) {
+    return <>Loading</>;
+  }
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const datauserid = session?.user?.id; // รับค่า userId จาก session
+    const companyId = company.id; // รับค่า companyId จากตัวแปร company
+    if (!datauserid || !companyId) {
+      // ตรวจสอบว่ามีข้อมูลที่จำเป็นครบหรือไม่
+      alert("userId and companyId are required");
+      return;
+    }
 
     // Clone the data to avoid mutating the original object
     const updatedData = JSON.parse(JSON.stringify(formData));
 
-    // Recursive function to process positions
-    function processPositions(positions: any) {
-      return positions.map((position: any) => {
-        if (position.isDelete) {
-          delete position.name; // Remove the name field if isDelete is true
-        }
-
-        if (position.position_description) {
-          position.position_description = processDescriptions(
-            position.position_description
-          );
-        }
-
-        return position;
-      });
-    }
-
-    // Recursive function to process position descriptions
-    function processDescriptions(descriptions: any) {
-      return descriptions.map((description: any) => {
-        if (description.isDelete) {
-          delete description.description; // Remove positionId if isDelete is true
-        }
-
-        if (description.skills) {
-          description.skills = processSkills(description.skills);
-        }
-
-        return description;
-      });
-    }
-
-    // Recursive function to process skills
-    function processSkills(skills: any) {
-      return skills.map((skill: any) => {
-        if (skill.isDelete) {
-          delete skill.name; // Remove skill name if isDelete is true
-        }
-
-        if (skill.tools) {
-          skill.tools = processTools(skill.tools);
-        }
-
-        return skill;
-      });
-    }
-
-    // Recursive function to process tools
-    function processTools(tools: any) {
-      return tools.map((tool: any) => {
-        if (tool.isDelete) {
-          delete tool.name; // Remove tool name if isDelete is true
-        }
-        return tool;
-      });
-    }
-
-    // Process positions in the form data
-    if (updatedData.positions) {
-      updatedData.positions = processPositions(updatedData.positions);
-    }
-
-    console.log("Updated Data:", updatedData);
+    console.log(
+      "Updated Data:",
+      updatedData,
+      "UserId : ",
+      datauserid,
+      "CompId : ",
+      companyId
+    );
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_RES_API}/company/update_company`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updatedData), // แปลงข้อมูลเป็น JSON
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_RES_API}/company/userUpdateCompany`, // URL ของ API
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: datauserid, // ส่ง userId
+            companyId: companyId, // ส่ง companyId
+            Data: updatedData, // ส่งข้อมูลที่แก้ไข
+          }),
+        }
+      );
 
       if (response.ok) {
         const result = await response.json();
         console.log("Response from server:", result);
         // แสดง toast เมื่ออัปเดตข้อมูลสำเร็จ
-        toast.success("Data updated successfully!", {
-          position: "top-center", // ใช้ตำแหน่งเป็น string
-          autoClose: 3000, // ปิดเองภายใน 3 วินาที
+        toast.success("คำขอแก้ไขข้อมูลบริษัทได้ถูกส่งแล้ว", {
+          position: "top-center",
+          autoClose: 3000,
         });
 
         // รอ 2 วินาทีก่อนที่จะทำการ push
@@ -172,11 +135,11 @@ const EditForm = ({
         }, 2000);
       } else {
         console.error("Failed to update data. Status:", response.status);
-        alert("Failed to update data.");
+        toast.error("เซิฟเวอร์มีปัญหา กรุณาลองใหม่อีกครั้ง");
       }
     } catch (error) {
       console.error("Error occurred while updating data:", error);
-      alert("An error occurred. Please try again.");
+      toast.error("เซิฟเวอร์มีปัญหา กรุณาลองใหม่อีกครั้ง");
     }
   };
 
@@ -317,60 +280,27 @@ const EditForm = ({
   };
 
   const deletePosition = (positionId: string) => {
-    const updatedPositions = [...positions];
-    const positionIndex = updatedPositions.findIndex(
-      (position) => position.id === positionId
+    setPositions((prevPositions) =>
+      prevPositions.filter((position) => position.id !== positionId)
     );
-
-    if (positionIndex !== -1) {
-      const position = updatedPositions[positionIndex];
-
-      if (position.id.startsWith("new")) {
-        // ถ้าเป็นตำแหน่งใหม่ (ที่ยังไม่ได้บันทึกในฐานข้อมูล)
-        updatedPositions.splice(positionIndex, 1);
-      } else {
-        // ถ้าเป็นตำแหน่งเก่า (ที่มีในฐานข้อมูล)
-        updatedPositions[positionIndex] = {
-          ...position,
-          isDelete: true, // ตั้งค่าเป็นถูกลบ
-        };
-      }
-
-      setPositions(updatedPositions);
-    }
   };
 
   const deletePositionDescription = (
     positionId: string,
     descriptionId: string
   ) => {
-    const updatedPositions = [...positions];
-    const positionIndex = updatedPositions.findIndex(
-      (position) => position.id === positionId
+    setPositions((prevPositions) =>
+      prevPositions.map((position) =>
+        position.id === positionId
+          ? {
+              ...position,
+              position_description: position.position_description.filter(
+                (desc) => desc.id !== descriptionId
+              ),
+            }
+          : position
+      )
     );
-
-    if (positionIndex !== -1) {
-      const position = updatedPositions[positionIndex];
-      const descriptionIndex = position.position_description.findIndex(
-        (description) => description.id === descriptionId
-      );
-
-      if (descriptionIndex !== -1) {
-        const description = position.position_description[descriptionIndex];
-
-        if (description.id.startsWith("new")) {
-          position.position_description.splice(descriptionIndex, 1);
-        } else {
-          const deletedDescription = {
-            ...description,
-            isDelete: true,
-          };
-          position.position_description[descriptionIndex] = deletedDescription;
-        }
-
-        setPositions(updatedPositions);
-      }
-    }
   };
 
   const deleteSkill = (
@@ -378,40 +308,25 @@ const EditForm = ({
     descriptionId: string,
     skillId: string
   ) => {
-    const updatedPositions = [...positions];
-    const positionIndex = updatedPositions.findIndex(
-      (position) => position.id === positionId
+    setPositions((prevPositions) =>
+      prevPositions.map((position) =>
+        position.id === positionId
+          ? {
+              ...position,
+              position_description: position.position_description.map((desc) =>
+                desc.id === descriptionId
+                  ? {
+                      ...desc,
+                      skills: desc.skills.filter(
+                        (skill) => skill.id !== skillId
+                      ),
+                    }
+                  : desc
+              ),
+            }
+          : position
+      )
     );
-
-    if (positionIndex !== -1) {
-      const position = updatedPositions[positionIndex];
-      const descriptionIndex = position.position_description.findIndex(
-        (description) => description.id === descriptionId
-      );
-
-      if (descriptionIndex !== -1) {
-        const description = position.position_description[descriptionIndex];
-        const skillIndex = description.skills.findIndex(
-          (skill) => skill.id === skillId
-        );
-
-        if (skillIndex !== -1) {
-          const skill = description.skills[skillIndex];
-
-          if (skill.id.startsWith("new")) {
-            description.skills.splice(skillIndex, 1);
-          } else {
-            const deletedSkill = {
-              ...skill,
-              isDelete: true,
-            };
-            description.skills[skillIndex] = deletedSkill;
-          }
-
-          setPositions(updatedPositions);
-        }
-      }
-    }
   };
 
   const deleteTool = (
@@ -420,45 +335,32 @@ const EditForm = ({
     skillId: string,
     toolId: string
   ) => {
-    const updatedPositions = [...positions];
-    const positionIndex = updatedPositions.findIndex(
-      (position) => position.id === positionId
-    );
-
-    if (positionIndex !== -1) {
-      const position = updatedPositions[positionIndex];
-      const descriptionIndex = position.position_description.findIndex(
-        (description) => description.id === descriptionId
-      );
-
-      if (descriptionIndex !== -1) {
-        const description = position.position_description[descriptionIndex];
-        const skillIndex = description.skills.findIndex(
-          (skill) => skill.id === skillId
-        );
-
-        if (skillIndex !== -1) {
-          const skill = description.skills[skillIndex];
-          const toolIndex = skill.tools.findIndex((tool) => tool.id === toolId);
-
-          if (toolIndex !== -1) {
-            const tool = skill.tools[toolIndex];
-
-            if (tool.id.startsWith("new")) {
-              skill.tools.splice(toolIndex, 1);
-            } else {
-              const deletedTool = {
-                ...tool,
-                isDelete: true,
-              };
-              skill.tools[toolIndex] = deletedTool;
+    setPositions((prevPositions) =>
+      prevPositions.map((position) =>
+        position.id === positionId
+          ? {
+              ...position,
+              position_description: position.position_description.map((desc) =>
+                desc.id === descriptionId
+                  ? {
+                      ...desc,
+                      skills: desc.skills.map((skill) =>
+                        skill.id === skillId
+                          ? {
+                              ...skill,
+                              tools: skill.tools.filter(
+                                (tool) => tool.id !== toolId
+                              ),
+                            }
+                          : skill
+                      ),
+                    }
+                  : desc
+              ),
             }
-
-            setPositions(updatedPositions);
-          }
-        }
-      }
-    }
+          : position
+      )
+    );
   };
 
   const handleChange = (
@@ -493,7 +395,7 @@ const EditForm = ({
   const handleNavigation = () => {
     router.push("/portfolio"); // นำไปยังหน้าที่ต้องการ
   };
-  
+
   const handleChangePosition = (newValue: any, positionId: string) => {
     if (newValue && newValue.value) {
       const updatedPositions = [...positions];
@@ -821,224 +723,222 @@ const EditForm = ({
 
         {/* Render Positions */}
         <div className="col-span-8">
-          {positions
-            ?.filter((position) => !position.isDelete) // กรองเฉพาะตำแหน่งที่ไม่ได้ถูกลบ
-            .map((position, positionIndex) => (
-              <div key={position.id} className="mb-4">
-                <label htmlFor={`position-${positionIndex}`}>
-                  ตำแหน่งที่ {positionIndex + 1}
-                </label>
-                <div className="col-span-4">
-                  <div className="flex items-center gap-4">
-                    <CreatableSelect
-                      id={`position-${positionIndex}`}
-                      name={`position-${positionIndex}`}
-                      value={
-                        position.name
-                          ? { label: position.name, value: position.name }
-                          : null
-                      }
-                      onChange={(newValue) =>
-                        handleChangePosition(newValue, position.id)
-                      }
-                      options={transformedOptions.position}
-                      placeholder="Select or type to add"
-                      isClearable
-                      className="flex-1" // ให้ Select ใช้พื้นที่ที่เหลือ
-                    />
-                    <button
-                      type="button"
-                      onClick={() => deletePosition(position.id)}
-                      className="p-2 bg-red-500 text-white rounded"
-                    >
-                      <X size={20} />
-                    </button>
-                    {/* Delete Position */}
-                  </div>
+          {positions?.map((position, positionIndex) => (
+            <div key={position.id} className="mb-4">
+              <label htmlFor={`position-${positionIndex}`}>
+                ตำแหน่งที่ {positionIndex + 1}
+              </label>
+              <div className="col-span-4">
+                <div className="flex items-center gap-4">
+                  <CreatableSelect
+                    id={`position-${positionIndex}`}
+                    name={`position-${positionIndex}`}
+                    value={
+                      position.name
+                        ? { label: position.name, value: position.name }
+                        : null
+                    }
+                    onChange={(newValue) =>
+                      handleChangePosition(newValue, position.id)
+                    }
+                    options={transformedOptions.position}
+                    placeholder="Select or type to add"
+                    isClearable
+                    className="flex-1" // ให้ Select ใช้พื้นที่ที่เหลือ
+                  />
+                  <button
+                    type="button"
+                    onClick={() => deletePosition(position.id)}
+                    className="p-2 bg-red-500 text-white rounded"
+                  >
+                    <X size={20} />
+                  </button>
+                  {/* Delete Position */}
                 </div>
-                {/* Render Position Descriptions */}
-                {position.position_description
-                  ?.filter((description) => !description.isDelete) // กรองคำอธิบายที่ไม่ได้ถูกลบ
-                  .map((description, descIndex) => (
-                    <div key={description.id} className="pl-10 mt-2">
-                      <label htmlFor={`description-${descIndex}`}>
-                        ตำแหน่งงาน {descIndex + 1}
-                      </label>
-                      <div className="col-span-4">
-                        <div className="flex items-center gap-4">
-                          <CreatableSelect
-                            id={`description-${descIndex}`}
-                            name={`description-${descIndex}`}
-                            value={
-                              description.description
-                                ? {
-                                    label: description.description,
-                                    value: description.description,
-                                  }
-                                : null
-                            }
-                            onChange={(newValue) =>
-                              handleChangePositionDescription(
-                                newValue,
-                                position.id,
-                                description.id
-                              )
-                            }
-                            options={transformedOptions.positiondescription}
-                            placeholder="Select or type to add"
-                            className="flex-1"
-                            isClearable
-                          />
-                          {/* Delete Position Description */}
+              </div>
+              {/* Render Position Descriptions */}
+              {position.position_description
+                ?.filter((description) => !description.isDelete) // กรองคำอธิบายที่ไม่ได้ถูกลบ
+                .map((description, descIndex) => (
+                  <div key={description.id} className="pl-10 mt-2">
+                    <label htmlFor={`description-${descIndex}`}>
+                      ตำแหน่งงาน {descIndex + 1}
+                    </label>
+                    <div className="col-span-4">
+                      <div className="flex items-center gap-4">
+                        <CreatableSelect
+                          id={`description-${descIndex}`}
+                          name={`description-${descIndex}`}
+                          value={
+                            description.description
+                              ? {
+                                  label: description.description,
+                                  value: description.description,
+                                }
+                              : null
+                          }
+                          onChange={(newValue) =>
+                            handleChangePositionDescription(
+                              newValue,
+                              position.id,
+                              description.id
+                            )
+                          }
+                          options={transformedOptions.positiondescription}
+                          placeholder="Select or type to add"
+                          className="flex-1"
+                          isClearable
+                        />
+                        {/* Delete Position Description */}
+
+                        <button
+                          type="button"
+                          onClick={() =>
+                            deletePositionDescription(
+                              position.id,
+                              description.id
+                            )
+                          }
+                          className="p-2 bg-red-500 text-white rounded "
+                        >
+                          <X size={20} />
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Render Skills and Tools */}
+                    {description.skills
+                      ?.filter((skill) => !skill.isDelete) // กรองทักษะที่ไม่ได้ถูกลบ
+                      .map((skill, skillIndex) => (
+                        <div key={skill.id} className="pl-10">
+                          <label htmlFor={`skill-${descIndex}`}>
+                            ทักษะ {skillIndex + 1}
+                          </label>
+                          <div className="col-span-4">
+                            <div className="flex items-center gap-4">
+                              <CreatableSelect
+                                id={`skill-${descIndex}`}
+                                name={`skill-${descIndex}`}
+                                value={
+                                  skill.name
+                                    ? { label: skill.name, value: skill.name }
+                                    : null
+                                }
+                                onChange={(newValue) =>
+                                  handleChangeSkill(
+                                    newValue,
+                                    position.id,
+                                    description.id,
+                                    skill.id
+                                  )
+                                }
+                                options={transformedOptions.skill}
+                                placeholder="Select or type to add"
+                                className="flex-1"
+                                isClearable
+                              />
+                              {/* Delete Skill */}
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  deleteSkill(
+                                    position.id,
+                                    description.id,
+                                    skill.id
+                                  )
+                                }
+                                className=" p-2 bg-red-500 text-white rounded"
+                              >
+                                <X size={20} />
+                              </button>
+                            </div>
+                          </div>
+                          {/* Render Tools */}
+                          {skill.tools
+                            ?.filter((tool) => !tool.isDelete) // กรองเครื่องมือที่ไม่ได้ถูกลบ
+                            .map((tool, toolIndex) => (
+                              <div key={tool.id} className="pl-10">
+                                <label htmlFor={`tool-${descIndex}`}>
+                                  เครื่องมือ {toolIndex + 1}
+                                </label>
+                                <div className="col-span-4">
+                                  <div className="flex items-center gap-4">
+                                    <CreatableSelect
+                                      id={`tool-${descIndex}`}
+                                      name={`tool-${descIndex}`}
+                                      value={
+                                        tool.name
+                                          ? {
+                                              label: tool.name,
+                                              value: tool.name,
+                                            }
+                                          : null
+                                      }
+                                      onChange={(newValue) =>
+                                        handleChangeTool(
+                                          newValue,
+                                          position.id,
+                                          description.id,
+                                          skill.id,
+                                          tool.id
+                                        )
+                                      }
+                                      options={transformedOptions.tool}
+                                      placeholder="Select or type to add"
+                                      className="flex-1"
+                                      isClearable
+                                    />
+                                    {/* Delete Tool */}
+                                    <button
+                                      type="button"
+                                      onClick={() =>
+                                        deleteTool(
+                                          position.id,
+                                          description.id,
+                                          skill.id,
+                                          tool.id
+                                        )
+                                      }
+                                      className="p-2 bg-red-500 text-white rounded"
+                                    >
+                                      <X size={20} />
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
 
                           <button
                             type="button"
                             onClick={() =>
-                              deletePositionDescription(
-                                position.id,
-                                description.id
-                              )
-                            }
-                            className="p-2 bg-red-500 text-white rounded "
+                              addTool(position.id, description.id, skill.id)
+                            } // ส่ง positionId, descId, skillId
+                            className="mt-2 px-4 p-2 ml-10 bg-green-500 text-white rounded"
                           >
-                            <X size={20} />
+                            เพิ่มเครื่องมือ
                           </button>
                         </div>
-                      </div>
+                      ))}
 
-                      {/* Render Skills and Tools */}
-                      {description.skills
-                        ?.filter((skill) => !skill.isDelete) // กรองทักษะที่ไม่ได้ถูกลบ
-                        .map((skill, skillIndex) => (
-                          <div key={skill.id} className="pl-10">
-                            <label htmlFor={`skill-${descIndex}`}>
-                              ทักษะ {skillIndex + 1}
-                            </label>
-                            <div className="col-span-4">
-                              <div className="flex items-center gap-4">
-                                <CreatableSelect
-                                  id={`skill-${descIndex}`}
-                                  name={`skill-${descIndex}`}
-                                  value={
-                                    skill.name
-                                      ? { label: skill.name, value: skill.name }
-                                      : null
-                                  }
-                                  onChange={(newValue) =>
-                                    handleChangeSkill(
-                                      newValue,
-                                      position.id,
-                                      description.id,
-                                      skill.id
-                                    )
-                                  }
-                                  options={transformedOptions.skill}
-                                  placeholder="Select or type to add"
-                                  className="flex-1"
-                                  isClearable
-                                />
-                                {/* Delete Skill */}
-                                <button
-                                  type="button"
-                                  onClick={() =>
-                                    deleteSkill(
-                                      position.id,
-                                      description.id,
-                                      skill.id
-                                    )
-                                  }
-                                  className=" p-2 bg-red-500 text-white rounded"
-                                >
-                                  <X size={20} />
-                                </button>
-                              </div>
-                            </div>
-                            {/* Render Tools */}
-                            {skill.tools
-                              ?.filter((tool) => !tool.isDelete) // กรองเครื่องมือที่ไม่ได้ถูกลบ
-                              .map((tool, toolIndex) => (
-                                <div key={tool.id} className="pl-10">
-                                  <label htmlFor={`tool-${descIndex}`}>
-                                    เครื่องมือ {toolIndex + 1}
-                                  </label>
-                                  <div className="col-span-4">
-                                    <div className="flex items-center gap-4">
-                                      <CreatableSelect
-                                        id={`tool-${descIndex}`}
-                                        name={`tool-${descIndex}`}
-                                        value={
-                                          tool.name
-                                            ? {
-                                                label: tool.name,
-                                                value: tool.name,
-                                              }
-                                            : null
-                                        }
-                                        onChange={(newValue) =>
-                                          handleChangeTool(
-                                            newValue,
-                                            position.id,
-                                            description.id,
-                                            skill.id,
-                                            tool.id
-                                          )
-                                        }
-                                        options={transformedOptions.tool}
-                                        placeholder="Select or type to add"
-                                        className="flex-1"
-                                        isClearable
-                                      />
-                                      {/* Delete Tool */}
-                                      <button
-                                        type="button"
-                                        onClick={() =>
-                                          deleteTool(
-                                            position.id,
-                                            description.id,
-                                            skill.id,
-                                            tool.id
-                                          )
-                                        }
-                                        className="p-2 bg-red-500 text-white rounded"
-                                      >
-                                        <X size={20} />
-                                      </button>
-                                    </div>
-                                  </div>
-                                </div>
-                              ))}
+                    <button
+                      type="button"
+                      onClick={() => addSkill(position.id, description.id)} // ส่ง positionId และ descId
+                      className="mt-2 p-2 px-4 ml-10  bg-green-500 text-white rounded"
+                    >
+                      เพิ่มทักษะ
+                    </button>
+                  </div>
+                ))}
 
-                            <button
-                              type="button"
-                              onClick={() =>
-                                addTool(position.id, description.id, skill.id)
-                              } // ส่ง positionId, descId, skillId
-                              className="mt-2 px-4 p-2 ml-10 bg-green-500 text-white rounded"
-                            >
-                              เพิ่มเครื่องมือ
-                            </button>
-                          </div>
-                        ))}
-
-                      <button
-                        type="button"
-                        onClick={() => addSkill(position.id, description.id)} // ส่ง positionId และ descId
-                        className="mt-2 p-2 px-4 ml-10  bg-green-500 text-white rounded"
-                      >
-                        เพิ่มทักษะ
-                      </button>
-                    </div>
-                  ))}
-
-                <button
-                  type="button"
-                  onClick={() => addDescription(position.id)} // ส่ง positionId
-                  className="mt-2 ml-10 p-2 px-4 bg-green-500 text-white rounded"
-                >
-                  เพิ่มตำแหน่งงาน
-                </button>
-              </div>
-            ))}
+              <button
+                type="button"
+                onClick={() => addDescription(position.id)} // ส่ง positionId
+                className="mt-2 ml-10 p-2 px-4 bg-green-500 text-white rounded"
+              >
+                เพิ่มตำแหน่งงาน
+              </button>
+            </div>
+          ))}
 
           <button
             type="button"
@@ -1051,19 +951,20 @@ const EditForm = ({
 
         <div className="col-span-4 flex justify-end">
           <Button
-            className="p-2 bg-white w-[120px] rounded-md border-2 border-gray-400 hover:bg-gray-300 transition"
-            onPress={handleNavigation}
+            type="button"
+            className="p-2 bg-white w-[120px] text-black rounded-md border-2 border-gray-400 hover:bg-gray-300 transition"
+            onClick={handleNavigation}
           >
             <div className="text-center">ยกเลิก</div>
           </Button>
         </div>
         <div className="col-span-4 flex justify-start">
-          <button
-            className="p-2 bg-red-400 w-[120px] rounded-md border-2 border-gray-400 hover:bg-red-600 transition"
+          <Button
+            className="p-2 bg-green-500 w-[120px] rounded-md border-2 border-gray-400 hover:bg-green-600 transition"
             onClick={handleSubmit}
           >
             <div className="text-center text-white">ยืนยันการแก้ไข</div>
-          </button>
+          </Button>
         </div>
       </form>
     </div>

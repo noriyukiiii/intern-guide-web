@@ -102,7 +102,7 @@ const DialogInfo: React.FC<DialogInfoProps> = ({ companyCreator }) => {
           </DialogTitle>
         </DialogHeader>
         {/* ใช้ ScrollArea ครอบเนื้อหาทั้งหมด */}
-        <ScrollArea className="h-[60vh] border pr-4 p-4 rounded-lg bg-white shadow-sm">
+        <ScrollArea className="h-[75vh] border pr-4 p-4 rounded-lg bg-white shadow-sm">
           <div className="font-Prompt">
             {/* Logo */}
             <div className="flex justify-center w-full">
@@ -152,9 +152,9 @@ const DialogInfo: React.FC<DialogInfoProps> = ({ companyCreator }) => {
                 </p>
                 <p>Line : {company.contractSocial_line}</p>
               </div>
-              <div className="flex flex-row gap-2 col-span-2">
+              <div className="flex flex-col gap-2 col-span-2">
                 <p>คำอธิบาย : </p>
-                <div className="flex-1">{company.description}</div>
+                <div className="w-full break-words">{company.description}</div>
               </div>
             </div>
 

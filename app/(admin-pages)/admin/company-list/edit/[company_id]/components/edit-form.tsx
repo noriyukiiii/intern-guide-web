@@ -1045,7 +1045,7 @@ const EditForm = ({
             onClick={addPosition}
             className="mt-4 px-4 p-2 bg-blue-500 text-white rounded"
           >
-            เพื่มตำแหน่ง
+            เพิ่มตำแหน่ง
           </button>
         </div>
 

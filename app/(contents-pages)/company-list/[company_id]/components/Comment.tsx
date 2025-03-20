@@ -61,7 +61,7 @@ const Comment = ({ companyId }: { companyId: string }) => {
   const handleAddComment = async () => {
     const trimmedComment = newComment.trim();
     if (trimmedComment === "") return;
-  
+
     const commentData = {
       comment: trimmedComment, // Trim ก่อนส่งค่า
       userId,
@@ -147,7 +147,9 @@ const Comment = ({ companyId }: { companyId: string }) => {
   return (
     <div className="max-w-4xl w-full mx-auto p-8 bg-gray-100 rounded-xl border border-gray-300 font-Prompt">
       <div className="flex w-full justify-between items-center gap-2">
-        <h1 className="text-[24px] font-bold">ความคิดเห็น</h1>
+        <h1 className="text-[24px] font-bold">ความคิดเห็น
+          ({filteredComments.length})
+        </h1>
         {/* Dropdown เลือกปี */}
         <select
           className="border p-2 rounded-lg my-4"
@@ -200,20 +202,22 @@ const Comment = ({ companyId }: { companyId: string }) => {
             filteredComments.map((comment) => {
               const formattedDate = new Date(comment.createdAt);
               const date = formattedDate.toLocaleDateString("th-TH");
-
               return (
                 <div
                   key={comment.id}
-                  className="flex items-start gap-4 border p-2 rounded-xl bg-white"
+                  className="relative flex items-start gap-4 border p-4 rounded-xl bg-white"
                 >
-                  <Image
-                    src={comment.user.image || "/userimage/boy.png"}
-                    alt="user image"
-                    width={40}
-                    height={40}
-                    className="border rounded-full"
-                  />
-                  <div className="flex flex-col gap-1 w-full">
+                  {/* รูปโปรไฟล์ */}
+                  <div className="absolute top-3 left-3 h-10 w-10 rounded-full overflow-hidden border bg-gray-300 shadow-md">
+                    <img
+                      src={`https://ui-avatars.com/api/?name=${comment.user.firstName}+${comment.user.lastName}&background=random&color=fff&length=1&bold=true&font-size=0.40&font=Roboto&format=svg`}
+                      alt="user image"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+
+                  {/* คอนเทนต์ของ Comment */}
+                  <div className="flex flex-col gap-1 w-full ml-12">
                     <div className="flex flex-row justify-between">
                       <h3 className="font-bold text-blue-600 text-md">
                         {comment.user.firstName} {comment.user.lastName}

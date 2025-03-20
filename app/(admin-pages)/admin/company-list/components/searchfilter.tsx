@@ -315,7 +315,7 @@ const SearchFilter = ({ companies }: CompanyTableProps) => {
       </div>
       <div className="flex flex-row justify-end items-center mt-4">
         <Button onClick={HandleInsertButton}>
-              เพื่มสถานประกอบการ
+              เพิ่มสถานประกอบการ
         </Button>
       </div>
       <div className="">

@@ -54,7 +54,7 @@ export async function signUpActions(values: SignUpSchema): Promise<{
     });
 
     // ส่งอีเมลยืนยัน
-    await sendVerificationEmail(email, verificationToken);
+    await sendVerificationEmail(email, verificationToken, firstname, lastname);
 
     revalidatePath("/");
 

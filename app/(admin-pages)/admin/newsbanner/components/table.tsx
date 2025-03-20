@@ -102,9 +102,12 @@ export default function TableComponent({ data }: { data: Banner[] }) {
       }));
 
       try {
-        await axios.patch(`${process.env.NEXT_PUBLIC_BASE_RES_API}/newsbanner/update_order`, {
-          banners: orderData,
-        });
+        await axios.patch(
+          `${process.env.NEXT_PUBLIC_BASE_RES_API}/newsbanner/update_order`,
+          {
+            banners: orderData,
+          }
+        );
         toast.success("ลำดับแบนเนอร์ถูกบันทึก");
       } catch (error) {
         toast.error("เกิดข้อผิดพลาดในการบันทึกลำดับแบนเนอร์");
@@ -129,9 +132,12 @@ export default function TableComponent({ data }: { data: Banner[] }) {
       }));
 
       try {
-        await axios.patch(`${process.env.NEXT_PUBLIC_BASE_RES_API}/newsbanner/update_order`, {
-          banners: orderData,
-        });
+        await axios.patch(
+          `${process.env.NEXT_PUBLIC_BASE_RES_API}/newsbanner/update_order`,
+          {
+            banners: orderData,
+          }
+        );
       } catch (error) {
         toast.error("เกิดข้อผิดพลาดในการบันทึกลำดับแบนเนอร์");
         console.error("Error saving banner order:", error);
@@ -200,7 +206,7 @@ export default function TableComponent({ data }: { data: Banner[] }) {
                   className="text-blue-500 hover:text-blue-700"
                   passHref
                 >
-                  เว็บไซต์ 
+                  เว็บไซต์
                 </Link>
               </TableCell>
               <TableCell>

@@ -18,6 +18,7 @@ import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 
 import { UploadButton } from "@/utils/uploadthing";
+import { Textarea } from "@/components/ui/textarea";
 
 interface Tool {
   id: string;
@@ -313,7 +314,10 @@ export function InsertForm({ optionData }: { optionData: Option }) {
     console.log("Form Submitted with values:", requestData);
 
     axios
-      .post(`${process.env.NEXT_PUBLIC_BASE_RES_API}/company/createCompany`, requestData)
+      .post(
+        `${process.env.NEXT_PUBLIC_BASE_RES_API}/company/createCompany`,
+        requestData
+      )
       .then((response) => {
         console.log(response);
         toast.success("เพิ่มสถานประกอบการสำเร็จ \nกำลังกลับสู่หน้าหลัก", {
@@ -596,7 +600,7 @@ export function InsertForm({ optionData }: { optionData: Option }) {
           />
         </div>
 
-        <div className="col-span-1 md:col-span-2">
+        {/* <div className="col-span-1 md:col-span-2">
           <Label>สวัสดิการบริษัท</Label>
           <Input
             {...register("benefit")}
@@ -605,6 +609,37 @@ export function InsertForm({ optionData }: { optionData: Option }) {
             disabled={isPending}
             className="w-full"
           />
+        </div> */}
+        <div className="col-span-1 md:col-span-2">
+          <Label htmlFor="benefit">สวัสดิการบริษัท</Label>
+          <Textarea
+            id="benefit"
+            {...register("benefit")}
+            placeholder="สวัสดิการบริษัท"
+            disabled={isPending}
+            className={`w-full ${errors.benefit ? "border-red-500" : ""}`}
+            aria-invalid={errors.benefit ? "true" : "false"}
+            onChange={(e) => {
+              // แยกข้อความเป็นบรรทัด
+              let lines = e.target.value.split("\n");
+
+              // ลบบรรทัดที่เป็นแค่ "-" ออก
+              lines = lines.filter((line) => line.trim() !== "-");
+
+              // ตรวจสอบและเติม "-" ถ้าบรรทัดไหนไม่มี
+              lines = lines.map((line) =>
+                line.startsWith("- ") ? line : `- ${line.trim()}`
+              );
+
+              // อัปเดตค่าข้อความใหม่
+              e.target.value = lines.join("\n");
+            }}
+          />
+          {errors.benefit && (
+            <p className="text-red-500 text-sm mt-1">
+              {errors.benefit.message}
+            </p>
+          )}
         </div>
 
         <div className="col-span-1 md:col-span-2">
@@ -866,7 +901,7 @@ export function InsertForm({ optionData }: { optionData: Option }) {
             onClick={onSubmit}
             className="p-2 bg-red-400 md:w-[200px] rounded-md border-2 border-gray-400 hover:bg-red-600 transition"
           >
-            <div className="text-center text-white">เพื่มสถานประกอบการ</div>
+            <div className="text-center text-white">เพิ่มสถานประกอบการ</div>
           </button>
         </div>
       </div>

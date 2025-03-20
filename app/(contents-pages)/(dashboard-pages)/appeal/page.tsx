@@ -39,7 +39,23 @@ const MyAppealsPage = () => {
     <div className="p-5">
       <h1 className="text-xl font-bold mb-4">คำร้องขอ</h1>
       {appeals.length === 0 ? (
-        <p>No appeals found</p>
+        <table className="w-full border border-gray-300 rounded-lg shadow-md overflow-hidden">
+          <thead className="bg-gray-200 text-gray-700">
+            <tr className="text-left">
+              <th className="px-6 py-3 border-b">ชื่อบริษัท</th>
+              <th className="px-6 py-3 border-b text-center">คำขอ</th>
+              <th className="px-6 py-3 border-b text-center">สถานะ</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-200 bg-white">
+            {/* แถวนี้จะขยายให้กินทั้ง 3 ช่อง */}
+            <tr className="hover:bg-gray-100 transition">
+              <td colSpan={3} className="text-center p-4">
+                ไม่มีคำร้องขอ
+              </td>
+            </tr>
+          </tbody>
+        </table>
       ) : (
         <>
           <table className="w-full border border-gray-300 rounded-lg shadow-md overflow-hidden">
