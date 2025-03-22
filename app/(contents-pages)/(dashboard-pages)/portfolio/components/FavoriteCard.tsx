@@ -122,7 +122,7 @@ const FavoriteCard = ({
   };
 
   return (
-    <Card className="my-1">
+    <Card className="my-1 hover:shadow-lg transition-shadow duration-300">
       <CardContent className="p-4">
         <CardTitle
           className="text-lg font-semibold truncate hover:cursor-pointer hover:text-blue-500"

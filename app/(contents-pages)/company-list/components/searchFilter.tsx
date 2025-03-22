@@ -138,7 +138,7 @@ const SearchFilter = ({ companies }: CompanyCardProps) => {
   const totalPages = Math.ceil(filteredCompanies.length / itemsPerPage);
 
   return (
-    <div className="">
+    <div className="font-Prompt">
       <div className="bg-white shadow-md rounded-lg p-6">
         <h2 className="text-2xl font-semibold text-gray-700 mb-6">
           ค้นหาบริษัท
@@ -198,11 +198,13 @@ const SearchFilter = ({ companies }: CompanyCardProps) => {
               className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
             >
               <option value="">ทั้งหมด</option>
-              {uniqueEstablished.map((info) => (
-                <option key={info} value={info || ""}>
-                  {info}
-                </option>
-              ))}
+              {uniqueEstablished
+                .filter((info) => info && info.trim() !== "") // 🔥 กรองค่าที่ว่างออก
+                .map((info) => (
+                  <option key={info} value={info || ""}>
+                    {info}
+                  </option>
+                ))}
             </select>
           </div>
 
@@ -241,11 +243,14 @@ const SearchFilter = ({ companies }: CompanyCardProps) => {
               className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
             >
               <option value="">ทั้งหมด</option>
-              {uniquePositions.map((position) => (
-                <option key={position} value={position}>
-                  {position}
-                </option>
-              ))}
+              {uniquePositions
+                .filter((position) => position && position.trim() !== "") // 🔥 กรองค่าที่ว่างออก
+                .map((position) => (
+                  <option key={position} value={position}>
+                    {position === "Unknown" ? "ไม่มีข้อมูล" : position}{" "}
+                    {/* 🔥 แสดงเป็น ไม่มีข้อมูล */}
+                  </option>
+                ))}
             </select>
           </div>
           {/* Filter by Position Description */}
@@ -265,8 +270,9 @@ const SearchFilter = ({ companies }: CompanyCardProps) => {
               <option value="">ทั้งหมด</option>
               {uniquePositionDescriptions.map((desc) => (
                 <option key={desc} value={desc}>
-                  {desc}
+                  {desc === "Unknown" ? "ไม่มีข้อมูล" : desc}
                 </option>
+
               ))}
             </select>
           </div>
@@ -286,11 +292,13 @@ const SearchFilter = ({ companies }: CompanyCardProps) => {
               className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
             >
               <option value="">ทั้งหมด</option>
-              {uniqueSkills.map((skill) => (
-                <option key={skill} value={skill}>
-                  {skill}
-                </option>
-              ))}
+              {uniqueSkills
+                .filter((skill) => skill && skill.trim() !== "") // กรองค่าว่าง
+                .map((skill) => (
+                  <option key={skill} value={skill}>
+                    {skill === "Unknown" ? "ไม่มีข้อมูล" : skill}
+                  </option>
+                ))}
             </select>
           </div>
 
@@ -309,11 +317,13 @@ const SearchFilter = ({ companies }: CompanyCardProps) => {
               className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
             >
               <option value="">ทั้งหมด</option>
-              {uniqueProvinces.map((province) => (
-                <option key={province} value={province || ""}>
-                  {province}
-                </option>
-              ))}
+              {uniqueProvinces
+                .filter((province) => province && province.trim() !== "") // 🔥 กรองค่าที่ว่างออก
+                .map((province) => (
+                  <option key={province} value={province || ""}>
+                    {province}
+                  </option>
+                ))}
             </select>
           </div>
         </div>

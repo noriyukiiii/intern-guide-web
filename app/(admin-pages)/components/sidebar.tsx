@@ -3,13 +3,15 @@
 import {
   Table,
   LayoutDashboard,
-  Bookmark,
   Home,
-  List,
-  Mail,
-  MoreHorizontal,
-  User,
   Users,
+  Building2,
+  PanelTop,
+  Megaphone,
+  HousePlus,
+  FilePen,
+  FileX,
+  ChartPie,
 } from 'lucide-react';
 import { SidebarDesktop } from './sidebar-desktop';
 import { SidebarItems } from '@/lib/types';
@@ -20,14 +22,14 @@ import { SidebarMobile } from './sidebar-mobile';
 const sidebarItems: SidebarItems = {
   links: [
     { label: 'หน้าหลัก', href: '/', icon: Home },
-    { label: 'แดชบอร์ด', href: '/admin/dashboard', icon: LayoutDashboard },
-    { label: 'บริษัท', href: '/admin/company-list', icon: Table },
-    { label: 'ผู้ใช้', href: '/admin/user-list', icon: Table },
-    { label: 'แบนเนอร์', href: '/admin/banner', icon: Table },
-    { label: 'ประกาศ', href: '/admin/newsbanner', icon: Table },
-    { label: 'คำขอสร้างบริษัท', href: '/admin/approvecompany', icon: Table },
-    { label: 'คำขอแก้ไขบริษัท', href: '/admin/appeal-edit-company', icon: Table },
-    { label: 'คำขอยกเลิกบริษัท', href: '/admin/appeal-cancel-company', icon: Table },
+    { label: 'แดชบอร์ด', href: '/admin/dashboard', icon: ChartPie },
+    { label: 'บริษัท', href: '/admin/company-list', icon: Building2 },
+    { label: 'ผู้ใช้', href: '/admin/user-list', icon: Users },
+    { label: 'แบนเนอร์', href: '/admin/banner', icon: PanelTop },
+    { label: 'ประกาศ', href: '/admin/newsbanner', icon: Megaphone },
+    { label: 'คำขอสร้างบริษัท', href: '/admin/approvecompany', icon: HousePlus },
+    { label: 'คำขอแก้ไขบริษัท', href: '/admin/appeal-edit-company', icon: FilePen },
+    { label: 'คำขอยกเลิกการเลือกบริษัท', href: '/admin/appeal-cancel-company', icon: FileX },
   ],
   extras: (
     <div className='flex flex-col gap-2'>

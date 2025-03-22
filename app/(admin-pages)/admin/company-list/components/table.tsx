@@ -107,8 +107,8 @@ export default function Page({ companies }: CompanyTableProps) {
       {/* ตัวเลือกจำนวนรายการ */}
 
       {/*  Table Chadcn */}
-      <div className="overflow-x-auto border-gray-300 h-[500px] max-h-[800px] min-h-[800px] border-1 rounded-3xl flex-1">
-        <Table className="min-w-[3000px] h-[800px] font-Sarabun border">
+      <div className="overflow-x-auto border-gray-300 h-[500px] max-h-[800px] min-h-[800px] border-1 rounded flex-1">
+        <Table className="min-w-[3000px] h-[800px] font-Prompt border">
           <TableHeader className="">
             <TableRow className="">
               <TableHead className="w-[100px] text-center border-r border-gray-300">

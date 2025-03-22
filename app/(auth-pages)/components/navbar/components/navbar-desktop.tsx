@@ -49,7 +49,7 @@ const NavbarDesktop = () => {
       <ul className="flex gap-[10px] lg:gap-[20px] items-center">
         <li>
           <Link href="/" className="text-[#002379] hover:text-[#FFDE59]">
-            หน้าหลัก
+            หน้าหลัก 
           </Link>
         </li>
         <li>

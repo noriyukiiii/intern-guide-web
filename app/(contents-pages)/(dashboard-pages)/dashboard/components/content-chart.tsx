@@ -43,15 +43,17 @@ function ContentChart() {
   }, [searchParams]); // ✅ URL เปลี่ยน ค่าจะอัปเดตอัตโนมัติ
 
   const updateSearchParams = (key: string, value: string | null) => {
-    const params = new URLSearchParams(searchParams.toString());
-
+    const params = new URLSearchParams(window.location.search);
+  
+    // Set or delete the parameter based on the value
     if (value) {
       params.set(key, value);
     } else {
       params.delete(key);
     }
-
-    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+  
+    // Use replace to update the URL without causing a page reload
+    window.history.pushState(null, '', `${pathname}?${params.toString()}`);
   };
 
   // Fetch data

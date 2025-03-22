@@ -204,7 +204,7 @@ const OccupationChart = React.memo(
                       opacity={
                         selectedIndex === null || selectedIndex === index
                           ? 1
-                          : 0.6
+                          : 1
                       }
                     />
                   ))}

@@ -66,48 +66,59 @@ export default function CancelTable() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {companyData.map((item, index) => (
-                <TableRow key={index}>
-                  <TableCell className="py-3 px-4">
-                    {item.user?.firstName ?? "ไม่ระบุ"}{" "}
-                    {item.user?.lastName ?? ""} <br />
-                    <span className="text-gray-500 text-sm">
-                      {item.user?.studentId ?? "-"}
-                    </span>
-                  </TableCell>
-                  <TableCell className="py-2 px-4">
-                    {item?.company?.companyNameTh || "ไม่ระบุ"}
-                  </TableCell>
-                  <TableCell className="py-2 px-4 text-center">
-                    คำขอแก้ไขข้อมูลบริษัท
-                  </TableCell>
-                  <TableCell className="py-3 px-4 text-center">
-                    <span
-                      className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                        item.status === "approved"
-                          ? "bg-green-100 text-green-600"
-                          : item.status === "rejected"
-                            ? "bg-red-100 text-red-600"
-                            : "bg-yellow-100 text-yellow-600"
-                      }`}
-                    >
-                      {item.status}
-                    </span>
-                  </TableCell>
-                  <TableCell className="py-2 px-4 text-center">
-                    <DataDialog
-                      company={item.company}
-                      requestData={item.requestData}
-                      requestDataId={item.id}
-                      user={item.user}
-                      open={open}
-                      handleClose={handleClose}
-  
-                    />
-                  
+              {companyData.length > 0 ? (
+                <>
+                  {companyData.map((item, index) => (
+                    <TableRow key={index}>
+                      <TableCell className="py-3 px-4">
+                        {item.user?.firstName ?? "ไม่ระบุ"}{" "}
+                        {item.user?.lastName ?? ""} <br />
+                        <span className="text-gray-500 text-sm">
+                          {item.user?.studentId ?? "-"}
+                        </span>
+                      </TableCell>
+                      <TableCell className="py-2 px-4">
+                        {item?.company?.companyNameTh || "ไม่ระบุ"}
+                      </TableCell>
+                      <TableCell className="py-2 px-4 text-center">
+                        คำขอแก้ไขข้อมูลบริษัท
+                      </TableCell>
+                      <TableCell className="py-3 px-4 text-center">
+                        <span
+                          className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                            item.status === "approved"
+                              ? "bg-green-100 text-green-600"
+                              : item.status === "rejected"
+                                ? "bg-red-100 text-red-600"
+                                : "bg-yellow-100 text-yellow-600"
+                          }`}
+                        >
+                          {item.status}
+                        </span>
+                      </TableCell>
+                      <TableCell className="py-2 px-4 text-center">
+                        <DataDialog
+                          company={item.company}
+                          requestData={item.requestData}
+                          requestDataId={item.id}
+                          user={item.user}
+                          open={open}
+                          handleClose={handleClose}
+                        />
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </>
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={5}
+                    className="text-center text-gray-600 py-4"
+                  >
+                    ไม่มีคำร้องขอ
                   </TableCell>
                 </TableRow>
-              ))}
+              )}
             </TableBody>
           </Table>
         </div>

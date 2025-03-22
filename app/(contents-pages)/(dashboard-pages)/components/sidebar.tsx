@@ -10,6 +10,8 @@ import {
   MoreHorizontal,
   User,
   Users,
+  ChartPie,
+  BellDot,
 } from "lucide-react";
 import { SidebarDesktop } from "./sidebar-desktop";
 import { SidebarItems } from "@/lib/types";
@@ -22,9 +24,9 @@ const sidebarItems: SidebarItems = {
     {
       label: "วิเคราะห์สถานประกอบการ",
       href: "/dashboard",
-      icon: LayoutDashboard,
+      icon: ChartPie,
     },
-    {
+    { 
       label: "ข้อมูลผู้ใช้",
       href: "/portfolio",
       icon: User,
@@ -32,7 +34,7 @@ const sidebarItems: SidebarItems = {
     {
       label: "คำร้องขอ",
       href: "/appeal",
-      icon: User,
+      icon: BellDot,
     },
   ],
 };
