@@ -148,7 +148,7 @@ const ProvinceChart = React.memo(
 
     // ฟังก์ชั่นสำหรับโหลดสีจาก sessionStorage หรือ localStorage
     const loadColorsFromStorage = () => {
-      const savedColors = localStorage.getItem('provinceColors');
+      const savedColors = localStorage.getItem("provinceColors");
       if (savedColors) {
         return new Map(JSON.parse(savedColors));
       }
@@ -157,27 +157,43 @@ const ProvinceChart = React.memo(
 
     // ฟังก์ชั่นสำหรับเก็บสีลงใน sessionStorage หรือ localStorage
     const saveColorsToStorage = (colors: Map<string, string>) => {
-      localStorage.setItem('provinceColors', JSON.stringify(Array.from(colors.entries())));
+      localStorage.setItem(
+        "provinceColors",
+        JSON.stringify(Array.from(colors.entries()))
+      );
     };
 
     // กำหนดสีเริ่มต้นสำหรับแต่ละชื่อของ province
     useEffect(() => {
       const defaultColors = [
-        "#0088FE",
-        "#00C49F",
-        "#FFBB28",
-        "#FF8042",
-        "#A28BFF",
-        "#FF6384",
-        "#36A2EB",
-        "#FFCE56",
-        "#4BC0C0",
-        "#9966FF",
+        "#0088FE", // Blue
+        "#00C49F", // Green
+        "#FFBB28", // Yellow
+        "#FF8042", // Orange
+        // "#A28BFF", // Purple
+        "#C70039", // Dark Red
+        "#B57170", // Dark Purple
+        "#20b912", // Chartreuse Green
+        "#FF1493", // Deep Pink
+        "#8A2BE2", // Blue Violet
+        // "#32CD32", // Lime Green
+        // "#FF6384", // Pink
+        // "#36A2EB", // Light Blue
+        // "#FFCE56", // Light Yellow
+        "#4BC0C0", // Teal
+        // "#9966FF", // Violet
+        "#FF5733", // Red-Orange
+        "#900C3F", // Dark Maroon
+        // "#DAF7A6", // Light Green
+        // "#FFC300", // Bright Yellow
+        "#FF69B4", // Hot Pink
       ];
 
+      // localStorage.removeItem("provinceColors");
+      // console.log(localStorage.getItem("provinceColors"));
       // โหลดสีที่เก็บใน localStorage (ถ้ามี)
       const storedColors = loadColorsFromStorage();
-      
+
       // ตั้งค่าสีเริ่มต้นหากยังไม่เคยมีสีเก็บ
       Object.keys(allData.province ?? {}).forEach((key, index) => {
         if (!storedColors.has(key)) {

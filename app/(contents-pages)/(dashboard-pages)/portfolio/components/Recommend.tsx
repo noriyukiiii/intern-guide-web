@@ -116,19 +116,16 @@ const RecommendContent = () => {
                       <span className="px-4 py-2 bg-blue-500 text-white rounded-full text-sm font-medium text-center">
                         {session.user?.occupation}
                       </span>
-                    ) : (
-                      <span className="px-4 py-2 bg-gray-400 text-white rounded-full text-sm font-medium text-center">
-                        ไม่มีสวัสดิการ
-                      </span>
-                    )}
+                    ) : null}
 
-                    {company.positions && company.positions.length > 0 ? (
+                    {session?.user?.position &&
+                    session?.user?.position.length > 0 &&
+                    session?.user?.position !== "" ? (
                       <span className="px-4 py-2 bg-green-600 text-white rounded-full text-sm font-medium text-center">
                         {session?.user?.position}
                       </span>
-                    ) : (
-                      <></>
-                    )}
+                    ) : null}
+
                     {company.province && company.province.length > 0 ? (
                       <span className="px-4 py-2 bg-yellow-500 text-white rounded-full text-sm font-medium text-center">
                         {company.province}

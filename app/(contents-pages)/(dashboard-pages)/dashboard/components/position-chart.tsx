@@ -163,21 +163,33 @@ const PositionChart = React.memo(
     // กำหนดสีเริ่มต้นสำหรับแต่ละชื่อของ position
     useEffect(() => {
       const defaultColors = [
-        "#0088FE",
-        "#00C49F",
-        "#FFBB28",
-        "#FF8042",
-        "#A28BFF",
-        "#FF6384",
-        "#36A2EB",
-        "#FFCE56",
-        "#4BC0C0",
-        "#9966FF",
+        "#0088FE", // Blue
+        "#00C49F", // Green
+        "#FFBB28", // Yellow
+        "#FF8042", // Orange
+        "#A28BFF", // Purple
+        "#C70039", // Dark Red
+        // "#FF6384", // Pink
+        // "#36A2EB", // Light Blue
+        // "#FFCE56", // Light Yellow
+        // "#4BC0C0", // Teal
+        // "#9966FF", // Violet
+        // "#FF5733", // Red-Orange
+        // "#900C3F", // Dark Maroon
+        "#B57170", // Dark Purple
+        // "#DAF7A6", // Light Green
+        // "#FFC300", // Bright Yellow
+        "#20b912", // Chartreuse Green
+        "#FF1493", // Deep Pink
+        "#8A2BE2", // Blue Violet
+        // "#FF69B4", // Hot Pink
+        "#32CD32", // Lime Green
       ];
 
       // โหลดสีที่เก็บใน localStorage (ถ้ามี)
+      // localStorage.removeItem('positionColors');
+      // console.log(localStorage.getItem('positionColors'));
       const storedColors = loadColorsFromStorage();
-      
       // ตั้งค่าสีเริ่มต้นหากยังไม่เคยมีสีเก็บ
       Object.keys(allData.position ?? {}).forEach((key, index) => {
         if (!storedColors.has(key)) {

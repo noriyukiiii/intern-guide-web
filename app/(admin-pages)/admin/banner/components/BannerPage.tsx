@@ -22,7 +22,7 @@ const BannerPage = ({ banners }: { banners: any }) => {
       <div className="flex justify-start w-full">
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
-            <Button variant="outline" className="">สร้างแบนเนอร์</Button>
+            <Button variant="default" className="">สร้างแบนเนอร์</Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>

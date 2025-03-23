@@ -71,7 +71,7 @@ const AddAdminDialog = () => {
     <div className="flex justify-end mr-4">
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button>เพิ่ม User Admin</Button>
+          <Button>เพิ่ม Admin</Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>

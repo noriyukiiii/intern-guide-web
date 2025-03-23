@@ -58,7 +58,7 @@ const VerifyEmailPage = () => {
 
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-[#FFFAE6]">
-      <div className="bg-white p-16 rounded-lg shadow-md text-center max-w-md">
+      <div className="bg-white p-16 rounded-lg shadow-md text-center max-w-md mb-[500px]">
         <h1 className="text-2xl font-bold mb-2">📩 ยืนยันอีเมลของคุณ</h1>
         <p className="text-gray-700">{loading ? "กำลังยืนยัน..." : message}</p>
         {/* เพิ่มปุ่มให้ผู้ใช้กดยืนยันเอง */}

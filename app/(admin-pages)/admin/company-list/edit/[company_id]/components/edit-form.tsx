@@ -9,6 +9,8 @@ import { useRouter } from "next/navigation";
 import { Button } from "@nextui-org/react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { UploadButton } from "@/utils/uploadthing";
+import { Textarea } from "@/components/ui/textarea";
 
 interface Company {
   id: string;
@@ -74,9 +76,29 @@ const EditForm = ({
   optionData: Option;
 }) => {
   const [isClient, setIsClient] = useState(false);
-  const [formData, setFormData] = useState<Company | null>(null);
+  const [formData, setFormData] = useState<Company>({
+    id: "",
+    companyNameTh: "",
+    companyNameEn: "",
+    description: null,
+    location: null,
+    province: null,
+    contractName: null,
+    contractTel: null,
+    contractEmail: null,
+    contractSocial: null,
+    contractSocial_line: null,
+    establishment: null,
+    imgLink: null,
+    isMou: false,
+    occupation: null,
+    benefit: null,
+    website: null,
+    positions: [],
+  });
   const [positions, setPositions] = useState<Position[]>([]);
   const router = useRouter();
+  const [uploadedImageUrl, setUploadedImageUrl] = useState<string>("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -149,13 +171,16 @@ const EditForm = ({
     console.log("Updated Data:", updatedData);
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_RES_API}/company/update_company`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updatedData), // แปลงข้อมูลเป็น JSON
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_RES_API}/company/update_company`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updatedData), // แปลงข้อมูลเป็น JSON
+        }
+      );
 
       if (response.ok) {
         const result = await response.json();
@@ -493,7 +518,7 @@ const EditForm = ({
   const handleNavigation = () => {
     router.push("/admin/company-list"); // นำไปยังหน้าที่ต้องการ
   };
-  
+
   const handleChangePosition = (newValue: any, positionId: string) => {
     if (newValue && newValue.value) {
       const updatedPositions = [...positions];
@@ -622,6 +647,29 @@ const EditForm = ({
     }
   };
 
+  const deleteOldImage = async (oldImageUrl: string) => {
+    try {
+      // เอาแค่ชื่อไฟล์จาก URL ที่ส่งมา (ตัด https://utfs.io/ ออก)
+      const fileName = oldImageUrl.split("/").pop(); // ใช้ .split() เพื่อดึงแค่ชื่อไฟล์จาก URL
+
+      if (fileName) {
+        const deleteUrl = `${process.env.NEXT_PUBLIC_BASE_RES_API}/uploadthing/delete/${fileName}`;
+        await fetch(deleteUrl, { method: "DELETE" });
+        toast.success("ลบรูปภาพเก่าเรียบร้อยแล้ว", {
+          position: "top-center",
+          autoClose: 1000,
+        });
+      } else {
+        throw new Error("ไม่พบชื่อไฟล์ที่ต้องการลบ");
+      }
+    } catch (error) {
+      toast.error("ไม่สามารถลบรูปภาพเก่าได้", {
+        position: "top-center",
+        autoClose: 1000,
+      });
+    }
+  };
+
   return (
     <div className="mx-auto">
       <ToastContainer />
@@ -678,12 +726,16 @@ const EditForm = ({
         </div>
         <div className="col-span-8">
           <label htmlFor="location">ที่อยู่บริษัท:</label>
-          <Input
-            type="text"
+          <Textarea
             id="location"
-            placeholder="location"
+            placeholder="ที่อยู่บริษัท"
             value={formData?.location || ""}
-            onChange={(e) => handleChange(e, "location")} // เรียกฟังก์ชัน handleChange
+            onChange={(e) => {
+              setFormData((prevData) => ({
+                ...prevData,
+                location: e.target.value, // อัปเดตค่า location
+              }));
+            }}
             className="border p-2 w-full"
           />
         </div>
@@ -779,28 +831,6 @@ const EditForm = ({
           />
         </div>
         <div className="col-span-4">
-          <label htmlFor="benefit">สวัสดิการบริษัท:</label>
-          <Input
-            type="text"
-            id="benefit"
-            placeholder="สวัสดิการบริษัท"
-            value={formData?.benefit || ""}
-            onChange={(e) => handleChange(e, "benefit")} // เรียกฟังก์ชัน handleChange
-            className="border p-2 w-full"
-          />
-        </div>
-        <div className="col-span-4">
-          <label htmlFor="benefit">ลิ้งภาพบริษัท :</label>
-          <Input
-            type="text"
-            id="imgLink"
-            placeholder="Link ภาพของ บริษัท"
-            value={formData?.imgLink || ""}
-            onChange={(e) => handleChange(e, "imgLink")} // เรียกฟังก์ชัน handleChange
-            className="border p-2 w-full"
-          />
-        </div>
-        <div className="col-span-4">
           <label htmlFor="benefit">อยู่ใน Mou :</label>
           <select
             id="isMou"
@@ -817,6 +847,82 @@ const EditForm = ({
             <option value="true">อยู่</option>
             <option value="false">ไม่อยู่</option>
           </select>
+        </div>
+        <div className="col-span-8">
+          <label htmlFor="benefit">สวัสดิการบริษัท:</label>
+          <Textarea
+            id="benefit"
+            placeholder="สวัสดิการบริษัท"
+            value={formData?.benefit || ""}
+            onChange={(e) => {
+              // แยกข้อความเป็นบรรทัด
+              let lines = e.target.value.split("\n");
+
+              // ลบบรรทัดที่เป็นแค่ "-" ออก
+              lines = lines.filter((line) => line.trim() !== "-");
+
+              // ตรวจสอบและเติม "-" ถ้าบรรทัดไหนไม่มี
+              lines = lines.map((line) =>
+                line.startsWith("- ") ? line : `- ${line.trim()}`
+              );
+
+              // อัปเดตค่าของ benefit ใน formData
+              setFormData((prevData) => ({
+                ...prevData,
+                benefit: lines.join("\n"), // อัปเดตค่า benefit
+              }));
+            }}
+            className="border p-2 w-full"
+          />
+        </div>
+
+        <div className="col-span-8 ">
+          <div className="w-full justify-center">
+            <div className="text-center">อัพโหลดโลโก้บริษัท</div>
+          </div>
+
+          {/* แสดงโลโก้ที่อัพโหลด ถ้ามี */}
+          {(uploadedImageUrl || formData?.imgLink) && (
+            <div className="mt-4 flex justify-center items-center">
+              <img
+                src={uploadedImageUrl || formData?.imgLink || ""}
+                alt="Uploaded"
+                className="max-w-[200px] h-auto rounded-md shadow-lg"
+              />
+            </div>
+          )}
+        </div>
+
+        {/* ปุ่มอัพโหลดภาพ */}
+        <div className="col-span-8">
+          <UploadButton
+            endpoint="imageUploader"
+            onClientUploadComplete={(res) => {
+              // ลบภาพเก่า (ถ้ามี)
+              if (uploadedImageUrl) {
+                deleteOldImage(uploadedImageUrl); // ลบภาพเก่าก่อน
+              }
+
+              // เก็บ URL ของภาพใหม่
+              const imageUrl = res[0].url;
+              setUploadedImageUrl(imageUrl); // เก็บ URL ของภาพใหม่
+              setFormData((prevData) => ({
+                ...prevData,
+                imgLink: imageUrl,
+                id: prevData?.id ?? "", // ใช้ nullish coalescing เพื่อตรวจสอบค่าที่เป็น null หรือ undefined
+              }));
+              toast.success("อัพโหลดรูปสำเร็จ", {
+                position: "top-center",
+                autoClose: 1000,
+              });
+            }}
+            onUploadError={(error) => {
+              toast.error("อัพโหลดรูปภาพไม่สำเร็จ", {
+                position: "top-center",
+                autoClose: 1000,
+              });
+            }}
+          />
         </div>
 
         {/* Render Positions */}

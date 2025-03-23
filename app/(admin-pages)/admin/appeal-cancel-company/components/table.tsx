@@ -43,9 +43,9 @@ export default function CancelTable() {
     appealId: string
   ) => {
     try {
-    console.log("CompanyID ", companyId);
-    console.log("UserID ", UserId);
-    console.log("AppealID ", appealId);
+      console.log("CompanyID ", companyId);
+      console.log("UserID ", UserId);
+      console.log("AppealID ", appealId);
       // เริ่มต้นการส่งคำขอ API
       const response = await axios.delete(
         `${process.env.NEXT_PUBLIC_BASE_RES_API}/compCreater/approve`,
@@ -94,12 +94,12 @@ export default function CancelTable() {
       const response = await axios.patch(
         `${process.env.NEXT_PUBLIC_BASE_RES_API}/compCreater/reject`,
         {
-          id: appealId,   // ไอดีของ company_Student_Interned ที่จะลบ
-          compId: companyId,  // ไอดีของบริษัท
-          userId: UserId,  // ไอดีของผู้ใช้
+          id: appealId, // ไอดีของ company_Student_Interned ที่จะลบ
+          compId: companyId, // ไอดีของบริษัท
+          userId: UserId, // ไอดีของผู้ใช้
         }
       );
-  
+
       // ตรวจสอบว่าการตอบกลับสำเร็จ
       if (response.status === 200) {
         toast.success("ปฏิเสธคำขอเรียบร้อย!", {
@@ -153,9 +153,10 @@ export default function CancelTable() {
               companyData.map((comp) => (
                 <TableRow key={comp.id} className="border-b hover:bg-gray-50">
                   <TableCell className="py-3 px-4">
-                  {comp.user?.firstName ?? "ไม่ระบุ"} {comp.user?.lastName ?? ""}
-                  <span className="text-gray-500 text-sm">
-                    {comp.user?.studentId ?? "-"}
+                    {comp.user?.firstName ?? "ไม่ระบุ"}{" "}
+                    {comp.user?.lastName ?? ""} <br />
+                    <span className="text-gray-500 text-sm">
+                      {comp.user?.studentId ?? "-"}
                     </span>
                   </TableCell>
                   <TableCell className="py-3 px-4">

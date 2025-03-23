@@ -19,6 +19,8 @@ export function NavbarMain() {
       { label: "หน้าหลัก", href: "/", icon: Home },
       { label: "ADMIN", href: "/admin/dashboard", icon: Home },
       { label: "รายชื่อสถานประกอบการ", href: "/company-list", icon: Home },
+      { label: "วิเคราะห์ข้อมูลสถานประกอบการ", href: "/dashboard", icon: Home },
+      { label: "คำร้องขอ", href: "/appeal", icon: Home },
       { label: "เข้าสู่ระบบ", href: "/sign-in", icon: Table },
     ]
       .filter((item) => {

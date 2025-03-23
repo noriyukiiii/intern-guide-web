@@ -157,12 +157,15 @@ const DataDialog = ({
             <div className="mt-6">
               {company.positions && company.positions.length > 0 ? (
                 <div className="space-y-4 mt-2">
-                  {company.positions.map((position) => (
+                  {company.positions.map((position, idx) => (
                     <div
                       key={position.id}
                       className="border rounded p-4 bg-gray-50 shadow-sm"
                     >
-                      <h3 className="text-xl font-semibold">ตำแหน่ง :</h3>
+                      <h3 className="text-xl font-semibold">
+                     
+                        ตำแหน่ง {1 + idx} :
+                      </h3>
 
                       {position.position_description &&
                       position.position_description.length > 0 ? (
@@ -271,9 +274,11 @@ const DataDialog = ({
                   </p>
                   <p>Line : {requestData.contractSocial_line}</p>
                 </div>
-                <div className="flex flex-row gap-2 col-span-2">
+                <div className="flex flex-col gap-2 col-span-2">
                   <p>คำอธิบาย : </p>
-                  <div className="flex-1">{requestData.description}</div>
+                  <div className="w-full break-words">
+                    {requestData.description}
+                  </div>
                 </div>
               </div>
 

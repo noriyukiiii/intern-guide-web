@@ -9,15 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+
 import { useState } from "react";
 import Modal from "./modal";
 import Link from "next/link";
@@ -47,25 +39,10 @@ export default function Page({ companies }: CompanyTableProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedImage, setSelectedImage] = useState<string | null>(null); // state สำหรับเก็บ URL ของรูปที่คลิก
 
-  const [openDelete, setOpenDelete] = useState(false);
-  const [companyToDelete, setCompanyToDelete] = useState<string | null>(null);
-
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentCompanies = companies.slice(startIndex, endIndex);
   const totalPages = Math.ceil(companies.length / itemsPerPage);
-
-  const confirmDelete = (companyId: string) => {
-    setCompanyToDelete(companyId);
-    setOpenDelete(true);
-  };
-
-  const handleDeleteCompany = () => {
-    if (companyToDelete) {
-      deleteCompany(companyToDelete);
-      setOpenDelete(false);
-    }
-  };
 
   const softdeleteCompany = async (companyId: string) => {
     try {
@@ -134,16 +111,16 @@ export default function Page({ companies }: CompanyTableProps) {
         <Table className="min-w-[3000px] h-[800px] font-Prompt border">
           <TableHeader className="">
             <TableRow className="">
-              <TableHead className="w-[100px] text-center border-r border-gray-300">
+              {/* <TableHead className="w-[100px] text-center border-r border-gray-300">
                 ลำดับ
-              </TableHead>
-              <TableHead className="w-[300px] text-center border-r border-gray-300">
+              </TableHead> */}
+              <TableHead className="w-[400px] text-center border-r border-gray-300">
                 ชื่อบริษัท{"(ไทย)"}
               </TableHead>
-              <TableHead className="w-[300px] text-center border-r border-gray-300">
+              <TableHead className="w-[400px] text-center border-r border-gray-300">
                 ชื่อบริษัท{"(อังกฤษ)"}
               </TableHead>
-              <TableHead className="w-[1000px] text-center border-r border-gray-300">
+              <TableHead className="w-[900px] text-center border-r border-gray-300">
                 คำอธิบาย
               </TableHead>
               <TableHead className="w-[800px] text-center border-r border-gray-300">
@@ -188,9 +165,9 @@ export default function Page({ companies }: CompanyTableProps) {
           <TableBody>
             {currentCompanies.map((company, idx) => (
               <TableRow key={company.company_id}>
-                <TableCell className="border border-gray-300 px-4 py-2 text-center">
+                {/* <TableCell className="border border-gray-300 px-4 py-2 text-center">
                   {startIndex + idx + 1}
-                </TableCell>
+                </TableCell> */}
                 <TableCell className="border border-gray-300 px-4 py-2">
                   {company.company_name_th}
                 </TableCell>
@@ -331,37 +308,12 @@ export default function Page({ companies }: CompanyTableProps) {
                       </button>
                     </Link>
 
-                    <Dialog open={openDelete} onOpenChange={setOpenDelete}>
-                      <DialogTrigger asChild>
-                        <button
-                          className="px-4 py-2 bg-red-500 text-white rounded"
-                          onClick={() => confirmDelete(company.company_id)}
-                        >
-                          ลบ
-                        </button>
-                      </DialogTrigger>
-                      <DialogContent>
-                        <DialogTitle>ยืนยันการลบ</DialogTitle>
-                        <DialogDescription>
-                          ท่านแน่ใจหรือไม่ว่าต้องการลบบริษัทนี้? <br />
-                          การกระทำนี้ไม่สามารถย้อนกลับได้
-                        </DialogDescription>
-                        <DialogFooter>
-                          <Button
-                            variant="outline"
-                            onClick={() => setOpenDelete(false)}
-                          >
-                            ยกเลิก
-                          </Button>
-                          <Button
-                            className="bg-red-500 hover:bg-red-600"
-                            onClick={handleDeleteCompany}
-                          >
-                            ยืนยันการลบ
-                          </Button>
-                        </DialogFooter>
-                      </DialogContent>
-                    </Dialog>
+                    <button
+                      className="px-4 py-2 bg-red-500 text-white rounded"
+                      onClick={() => deleteCompany(company.company_id)} // Pass the company id here
+                    >
+                      ลบ
+                    </button>
                     {/* <button
                       className="px-4 py-2 bg-red-500 text-white rounded"
                       onClick={() => softdeleteCompany(company.company_id)} // Pass the company id here

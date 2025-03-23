@@ -175,7 +175,7 @@ export default function TableComponent({ data }: { data: Banner[] }) {
     <div className="w-full overflow-x-auto relative font-Prompt">
       <div className="h-[600px] flex flex-col">
         {/* ✅ หัวตาราง (ไม่เลื่อน) */}
-        <Table className="w-full flex-1">
+        <Table className="w-full flex-1 border">
           <TableHeader className="sticky top-0 bg-white z-10">
             <TableRow>
               {/* <TableHead>ลำดับ</TableHead> */}

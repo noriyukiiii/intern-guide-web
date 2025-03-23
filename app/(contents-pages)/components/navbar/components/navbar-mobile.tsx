@@ -94,12 +94,17 @@ export function NavbarMobile({ sidebarItems, sessionInfo }: NavbarMobileProps) {
                     <div className="flex gap-2">
                       <div className="flex items-center">
                         <Avatar className="h-10 w-10 border mr-4">
-                          <Image
+                          {/* <Image
                             src={`${sessionInfo.image || "/userimage/boy.png"}`}
                             alt="user image"
                             height={50}
                             width={50}
                             className="object-cover"
+                          /> */}
+                          <img
+                            src={`https://ui-avatars.com/api/?name=${sessionInfo?.firstName}+${sessionInfo.lastName}&background=random&color=fff&length=1&bold=true&font-size=0.40&font=Roboto&format=svg`}
+                            alt="user image"
+                            className="w-full h-full object-cover"
                           />
                         </Avatar>
                       </div>
@@ -108,16 +113,11 @@ export function NavbarMobile({ sidebarItems, sessionInfo }: NavbarMobileProps) {
                           {sessionInfo.firstName} {sessionInfo.lastName}
                         </span>
                         <span>{sessionInfo.stuId}</span>
-                        {sessionInfo.role === "ADMIN" && (
-                          <span className="text-rose-500">
-                            Role : {sessionInfo.role}
-                          </span>
-                        )}
                       </div>
                     </div>
                   </div>
                 </div>
-                <Link href="/user-profile">
+                <Link href="/portfolio">
                   <SidebarButton
                     size="sm"
                     icon={User}

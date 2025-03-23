@@ -116,12 +116,12 @@ const SearchFilter = ({ companies }: CompanyTableProps) => {
     );
   });
 
-  const paginatedCompanies = filteredCompanies.slice(startIndex, endIndex); // ตัดรายการตามจำนวนที่เลือก
+  const paginatedCompanies = filteredCompanies.slice(startIndex, endIndex); // การตัดข้อมูลที่ต้องแสดงให้สอดคล้องกับหน้าและจำนวนที่แสดงต่อหน้า
 
   const totalPages = Math.ceil(filteredCompanies.length / itemsPerPage);
 
   useEffect(() => {
-    setCurrentPage(1);
+    setCurrentPage(1); // รีเซ็ตหน้าเมื่อมีการเปลี่ยนแปลงการค้นหาหรือการกรอง
   }, [
     searchTerm,
     selectedPosition,
@@ -131,7 +131,9 @@ const SearchFilter = ({ companies }: CompanyTableProps) => {
     selectedOccuption,
     selectedEstablished,
     selectedIsMou,
+    itemsPerPage, // เพิ่ม itemsPerPage ใน dependancy ของ useEffect
   ]);
+  
   return (
     <div className="">
       <div className="bg-white shadow-md rounded-lg p-6">
@@ -193,11 +195,13 @@ const SearchFilter = ({ companies }: CompanyTableProps) => {
               className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
             >
               <option value="">ทั้งหมด</option>
-              {uniqueEstablished.map((info) => (
-                <option key={info} value={info || ""}>
-                  {info}
-                </option>
-              ))}
+              {uniqueEstablished
+                .filter((info) => info && info.trim() !== "") // 🔥 กรองค่าที่ว่างออก
+                .map((info) => (
+                  <option key={info} value={info || ""}>
+                    {info}
+                  </option>
+                ))}
             </select>
           </div>
 
@@ -236,11 +240,14 @@ const SearchFilter = ({ companies }: CompanyTableProps) => {
               className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
             >
               <option value="">ทั้งหมด</option>
-              {uniquePositions.map((position) => (
-                <option key={position} value={position}>
-                  {position}
-                </option>
-              ))}
+              {uniquePositions
+                .filter((position) => position && position.trim() !== "") // 🔥 กรองค่าที่ว่างออก
+                .map((position) => (
+                  <option key={position} value={position}>
+                    {position === "Unknown" ? "ไม่มีข้อมูล" : position}{" "}
+                    {/* 🔥 แสดงเป็น ไม่มีข้อมูล */}
+                  </option>
+                ))}
             </select>
           </div>
           {/* Filter by Position Description */}
@@ -260,8 +267,9 @@ const SearchFilter = ({ companies }: CompanyTableProps) => {
               <option value="">ทั้งหมด</option>
               {uniquePositionDescriptions.map((desc) => (
                 <option key={desc} value={desc}>
-                  {desc}
+                  {desc === "Unknown" ? "ไม่มีข้อมูล" : desc}
                 </option>
+
               ))}
             </select>
           </div>
@@ -281,11 +289,13 @@ const SearchFilter = ({ companies }: CompanyTableProps) => {
               className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
             >
               <option value="">ทั้งหมด</option>
-              {uniqueSkills.map((skill) => (
-                <option key={skill} value={skill}>
-                  {skill}
-                </option>
-              ))}
+              {uniqueSkills
+                .filter((skill) => skill && skill.trim() !== "") // กรองค่าว่าง
+                .map((skill) => (
+                  <option key={skill} value={skill}>
+                    {skill === "Unknown" ? "ไม่มีข้อมูล" : skill}
+                  </option>
+                ))}
             </select>
           </div>
 
@@ -304,11 +314,13 @@ const SearchFilter = ({ companies }: CompanyTableProps) => {
               className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
             >
               <option value="">ทั้งหมด</option>
-              {uniqueProvinces.map((province) => (
-                <option key={province} value={province || ""}>
-                  {province}
-                </option>
-              ))}
+              {uniqueProvinces
+                .filter((province) => province && province.trim() !== "") // 🔥 กรองค่าที่ว่างออก
+                .map((province) => (
+                  <option key={province} value={province || ""}>
+                    {province}
+                  </option>
+                ))}
             </select>
           </div>
         </div>
@@ -321,10 +333,10 @@ const SearchFilter = ({ companies }: CompanyTableProps) => {
       <div className="">
         <Table companies={paginatedCompanies} />
       </div>
-      <div className="flex flex-row gap-2 justify-between">
+      <div className="flex flex-row gap-2 justify-center items-center mb-4">
         {/* Select Items Per Page */}
 
-        <div className="m-4 w-24 flex flex-col ">
+        {/* <div className="m-4 w-24 flex flex-col ">
           <label
             htmlFor="itemsPerPage"
             className="block text-sm font-medium text-gray-700"
@@ -341,7 +353,7 @@ const SearchFilter = ({ companies }: CompanyTableProps) => {
             <option value={25}>25</option>
             <option value={100}>100</option>
           </select>
-        </div>
+        </div> */}
         {/* Pagination Controls */}
         <div className="mt-6 flex justify-center items-center space-x-4">
           <button

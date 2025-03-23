@@ -27,6 +27,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation"; // Import useRouter
 import { updateUserApi } from "@/actions/updateUser";
 import axios from "axios";
+import Loading from "@/components/ui/progress";
 
 const FormSchema = z.object({
   email: z.string().email({ message: "Invalid email address." }),
@@ -36,9 +37,7 @@ const FormSchema = z.object({
   lastname: z
     .string()
     .min(2, { message: "นามสกุลต้องมีอย่างน้อย 2 ตัวอักษร." }),
-  phone: z
-    .string()
-    .min(10, { message: "เบอร์โทรศัพท์ต้องมีอย่างน้อย 10 ตัว" }),
+  phone: z.string().min(10, { message: "เบอร์โทรศัพท์ต้องมีอย่างน้อย 10 ตัว" }),
   studentId: z
     .string()
     .min(13, { message: "รหัสนักศึกษาต้องมีอย่างน้อย 13 ตัว" })
@@ -67,6 +66,7 @@ export default function Page() {
   const { session } = useSession();
   const [position, setPosition] = useState([]);
   const [province, setProvice] = useState([]);
+  const [loading, setLoading] = useState(false);
   // โหลดข้อมูล Province และ Position จาก API
   console.log(session.user);
   useEffect(() => {
@@ -78,12 +78,13 @@ export default function Page() {
         console.log("Options:", res.data);
         setPosition(res.data.position);
         setProvice(res.data.province);
+        setLoading(true);
       } catch (error) {
         console.error("Error fetching options:", error);
       }
     }
     fetchOptions();
-  }, []);
+  }, [session]);
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -138,6 +139,9 @@ export default function Page() {
       toast.error("An error occurred while updating the user.");
     }
   }
+  if (!loading) {
+    return <Loading />;
+  }
 
   return (
     <div className="flex flex-col min-h-screen bg-[#FFFAE6] overflow-hidden font-Prompt">
@@ -177,8 +181,7 @@ export default function Page() {
               render={({ field }) => (
                 <FormItem>
                   <div className="grid grid-cols-5 items-center ">
-                  <FormLabel className="col-span-2">
-                  ชื่อจริง</FormLabel>
+                    <FormLabel className="col-span-2">ชื่อจริง</FormLabel>
                     <FormControl>
                       <Input
                         className="col-span-3 w-full focus:bg-gray-100"
@@ -236,9 +239,7 @@ export default function Page() {
               render={({ field }) => (
                 <FormItem>
                   <div className="grid grid-cols-5 items-center">
-                    <FormLabel className="col-span-2 ">
-                      รหัสนักศึกษา
-                    </FormLabel>
+                    <FormLabel className="col-span-2 ">รหัสนักศึกษา</FormLabel>
                     <FormControl>
                       <Input
                         className="col-span-3 w-full focus:ring-2 focus:ring-green-500 p-3 rounded-lg"
