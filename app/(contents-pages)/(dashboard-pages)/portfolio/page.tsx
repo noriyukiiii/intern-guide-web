@@ -7,6 +7,7 @@ import UserProfile from "./components/userprofile";
 import SelectCompany from "./components/SelectCompany";
 import "./style.css";
 import { ToastContainer } from "react-toastify";
+import RecommendContent from "./components/Recommend";
 type Position = {
   companyId: string;
   createdAt: string;
@@ -141,6 +142,7 @@ const Page = () => {
           userid={session.user?.id || ""}
           selectedComp={selectedComp || null}
         />
+        <RecommendContent />
       </div>
     </div>
   );

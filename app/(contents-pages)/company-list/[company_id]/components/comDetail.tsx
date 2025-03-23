@@ -119,12 +119,11 @@ const CompDetail = ({ company }: CompanyDetailProps) => {
         {/* ปุ่มย้อนกลับที่ฝั่งซ้าย */}
         <Button
           onClick={handleback}
-          className="absolute left-0 bg-transparent text-blue-800 text-[20px] hover:bg-gray-200"
+          className="absolute left-0 bg-transparent text-blue-800 text-[20px] hover:bg-gray-200 lg:left-0 lg:ml-0 lg:w-auto lg:h-auto"
         >
-          <div className="flex flex-row items-center gap-2 ">
-            <ChevronLeftIcon className="w-64 h-64 !important" />{" "}
-            {/* ปรับขนาดไอคอน */}
-            <p>ย้อนกลับ</p>
+          <div className="flex flex-row items-center gap-2">
+            <ChevronLeftIcon className="w-6 h-6" />
+            <p className="hidden lgg-block">ย้อนกลับ</p> {/* ซ่อนบนมือถือ */}
           </div>
         </Button>
 

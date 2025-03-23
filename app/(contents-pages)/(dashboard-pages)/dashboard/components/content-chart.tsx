@@ -1,7 +1,5 @@
 "use client";
-import { Suspense } from "react";
-import { useEffect, useState } from "react";
-import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import { Suspense, useState, useEffect } from "react";
 import OccupationChart from "./occupation-chart";
 import PositionChart from "./position-chart";
 import BenefitChart from "./benefit-chart";
@@ -22,11 +20,8 @@ export default function ContentChartPage() {
 
 function ContentChart() {
   const { session } = useSession();
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const pathname = usePathname();
 
-  // ค่าที่เลือก (อัปเดตตาม URL params)
+  // ใช้ state เพื่อเก็บค่าที่เลือก
   const [selectedOccupation, setSelectedOccupation] = useState<string | null>(null);
   const [selectedPosition, setSelectedPosition] = useState<string | null>(null);
   const [selectedProvince, setSelectedProvince] = useState<string | null>(null);
@@ -34,29 +29,7 @@ function ContentChart() {
   const [allData, setAllData] = useState<ChartData | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  // ดึงค่าจาก URL params ทุกครั้งที่เปลี่ยน
-  useEffect(() => {
-    setSelectedOccupation(searchParams.get("occupation"));
-    setSelectedPosition(searchParams.get("position"));
-    setSelectedProvince(searchParams.get("province"));
-    setSelectedBenefit(searchParams.get("benefit"));
-  }, [searchParams]); // ✅ URL เปลี่ยน ค่าจะอัปเดตอัตโนมัติ
-
-  const updateSearchParams = (key: string, value: string | null) => {
-    const params = new URLSearchParams(window.location.search);
-  
-    // Set or delete the parameter based on the value
-    if (value) {
-      params.set(key, value);
-    } else {
-      params.delete(key);
-    }
-  
-    // Use replace to update the URL without causing a page reload
-    window.history.pushState(null, '', `${pathname}?${params.toString()}`);
-  };
-
-  // Fetch data
+  // Fetch data based on selected values
   useEffect(() => {
     if (!session.user?.id) return;
 
@@ -123,28 +96,28 @@ function ContentChart() {
       <div className="mt-6 w-full flex justify-end">
         <OccupationChart
           allData={safeAllData}
-          onSelect={(value) => updateSearchParams("occupation", value)}
+          onSelect={(value) => setSelectedOccupation(value)}
           selected={selectedOccupation}
         />
       </div>
       <div className="mt-6 w-full flex justify-end">
         <PositionChart
           allData={safeAllData}
-          onSelect={(value) => updateSearchParams("position", value)}
+          onSelect={(value) => setSelectedPosition(value)}
           selected={selectedPosition}
         />
       </div>
       <div className="mt-6 w-full flex justify-end">
         <ProvinceChart
           allData={safeAllData}
-          onSelect={(value) => updateSearchParams("province", value)}
+          onSelect={(value) => setSelectedProvince(value)}
           selected={selectedProvince}
         />
       </div>
       <div className="mt-6 w-full flex justify-end">
         <BenefitChart
           allData={safeAllData}
-          onSelect={(value) => updateSearchParams("benefit", value)}
+          onSelect={(value) => setSelectedBenefit(value)}
           selected={selectedBenefit}
         />
       </div>

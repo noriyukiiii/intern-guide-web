@@ -12,6 +12,10 @@ const updateUserSchema = z.object({
   phone: z.string().min(10),
   studentId: z.string().min(13),
   avatar: z.string(),
+  occupation: z.string().optional(),
+  benefit: z.string().optional(),
+  province: z.string().optional(),
+  position: z.string().optional(),
 });
 
 export type UpdateUserInput = z.infer<typeof updateUserSchema>;
@@ -31,8 +35,28 @@ export async function updateUserApi(values: UpdateUserInput): Promise<{
       };
     }
 
-    const { email, firstname, lastname, phone, studentId, avatar } =
-      validation.data;
+    const {
+      email,
+      firstname,
+      lastname,
+      phone,
+      studentId,
+      avatar,
+      occupation,
+      province,
+      position,
+      benefit,
+    } = validation.data;
+
+    let BenefitReal: boolean | null = null; // กำหนดค่าเริ่มต้นเป็น null
+
+    if (benefit === "มีสวัสดิการ") {
+      BenefitReal = true; // ถ้า benefit เป็น "มีสวัสดิการ" ให้ค่าเป็น true
+    } else if (benefit === "") {
+      BenefitReal = null; // ถ้า benefit เป็นค่าว่าง (""), ให้เป็น null
+    } else {
+      BenefitReal = false; // ถ้าไม่ใช่ทั้งสองกรณีก่อนหน้า ให้ค่าเป็น false
+    }
 
     // ตรวจสอบว่าผู้ใช้มีอยู่จริงหรือไม่
     const existingUser = await db.user.findUnique({ where: { email } });
@@ -52,6 +76,10 @@ export async function updateUserApi(values: UpdateUserInput): Promise<{
         phone,
         studentId,
         image: avatar,
+        occupation,
+        province,
+        position,
+        benefit: BenefitReal,
       },
     });
 
@@ -67,7 +95,6 @@ export async function updateUserApi(values: UpdateUserInput): Promise<{
     };
   }
 }
-
 
 export async function toggleRoleAction(userId: string) {
   try {

@@ -27,7 +27,7 @@ const sidebarItems: SidebarItems = {
     { label: 'ผู้ใช้', href: '/admin/user-list', icon: Users },
     { label: 'แบนเนอร์', href: '/admin/banner', icon: PanelTop },
     { label: 'ประกาศ', href: '/admin/newsbanner', icon: Megaphone },
-    { label: 'คำขอสร้างบริษัท', href: '/admin/approvecompany', icon: HousePlus },
+    { label: 'คำขอเพิ่มบริษัท', href: '/admin/approvecompany', icon: HousePlus },
     { label: 'คำขอแก้ไขบริษัท', href: '/admin/appeal-edit-company', icon: FilePen },
     { label: 'คำขอยกเลิกการเลือกบริษัท', href: '/admin/appeal-cancel-company', icon: FileX },
   ],

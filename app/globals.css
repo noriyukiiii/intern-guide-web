@@ -102,6 +102,13 @@
     @apply flex-row !important;
   }
 }
+
+@screen md {
+  .lgg-block {
+    display: block !important;
+}
+}
+
 .recharts-layer {
   outline: none !important;
 }

@@ -147,8 +147,8 @@ const Comment = ({ companyId }: { companyId: string }) => {
   return (
     <div className="max-w-4xl w-full mx-auto p-8 bg-gray-100 rounded-xl border border-gray-300 font-Prompt">
       <div className="flex w-full justify-between items-center gap-2">
-        <h1 className="text-[24px] font-bold">ความคิดเห็น
-          ({filteredComments.length})
+        <h1 className="text-[24px] font-bold">
+          ความคิดเห็น ({filteredComments.length})
         </h1>
         {/* Dropdown เลือกปี */}
         <select
@@ -199,7 +199,7 @@ const Comment = ({ companyId }: { companyId: string }) => {
               ไม่มีความคิดเห็น
             </p>
           ) : (
-            filteredComments.map((comment) => {
+            filteredComments.map((comment, idx) => {
               const formattedDate = new Date(comment.createdAt);
               const date = formattedDate.toLocaleDateString("th-TH");
               return (
@@ -217,10 +217,17 @@ const Comment = ({ companyId }: { companyId: string }) => {
                   </div>
 
                   {/* คอนเทนต์ของ Comment */}
+                  {/* คอนเทนต์ของ Comment */}
                   <div className="flex flex-col gap-1 w-full ml-12">
                     <div className="flex flex-row justify-between">
                       <h3 className="font-bold text-blue-600 text-md">
-                        {comment.user.firstName} {comment.user.lastName}
+                        {/* ถ้าเป็นความคิดเห็นของผู้ใช้ปัจจุบัน ให้แสดงชื่อจริง */}
+                        {session?.user?.id === comment.user.id
+                          ? (<>
+                          {comment.user.firstName} {comment.user.lastName} (ความคิดเห็นของคุณ)
+                          </>)
+                          : `ความคิดเห็นที่ ${idx + 1}`}{" "}
+                        {/* ใช้ commentIndex สำหรับลำดับ */}
                       </h3>
                       <div className="flex gap-2">
                         <h3 className="text-gray-500">{date}</h3>

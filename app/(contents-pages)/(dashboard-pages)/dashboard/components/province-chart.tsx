@@ -37,6 +37,24 @@ const renderActiveShape = (props: any) => {
   const ey = my;
   const textAnchor = cos >= 0 ? "start" : "end";
 
+  // 👉 กำหนดความยาวสูงสุดของแต่ละบรรทัด
+  const maxLineLength = 11;
+
+  // 🔹 แบ่งข้อความตามคำ (เว้นวรรค) และจัดกลุ่มให้เหมาะสม
+  const words = payload.name.split(" ");
+  const lines: string[] = [];
+  let currentLine = "";
+
+  words.forEach((word: any) => {
+    if ((currentLine + " " + word).trim().length <= maxLineLength) {
+      currentLine += (currentLine ? " " : "") + word;
+    } else {
+      lines.push(currentLine);
+      currentLine = word;
+    }
+  });
+  if (currentLine) lines.push(currentLine);
+
   return (
     <g>
       <text x={cx} y={cy} dy={8} textAnchor="middle">
@@ -66,22 +84,33 @@ const renderActiveShape = (props: any) => {
         fill="none"
       />
       <circle cx={ex} cy={ey} r={2} fill={fill} stroke="none" />
+
+      {/* 🔹 ใช้ <tspan> เพื่อให้ขึ้นบรรทัดใหม่ตามการตัดคำ */}
       <text
         x={ex + (cos >= 0 ? 1 : -1) * 12}
         y={ey}
         textAnchor={textAnchor}
         fill="#333"
       >
-        {`${payload.name}`}
+        {lines.map((line, index) => (
+          <tspan
+            key={index}
+            x={ex + (cos >= 0 ? 1 : -1) * 12}
+            dy={index === 0 ? 0 : 18}
+          >
+            {line}
+          </tspan>
+        ))}
       </text>
+
       <text
         x={ex + (cos >= 0 ? 1 : -1) * 12}
         y={ey}
-        dy={18}
+        dy={lines.length * 18 + 6} // ปรับให้ % อยู่ถัดจากข้อความสุดท้าย
         textAnchor={textAnchor}
         fill="#999"
       >
-        {` ${(percent * 100).toFixed(2)}%`}
+        {`${(percent * 100).toFixed(2)}%`}
       </text>
     </g>
   );
@@ -117,35 +146,51 @@ const ProvinceChart = React.memo(
     // ใช้ useRef เก็บสี เพื่อไม่ให้ข้อมูลหายเมื่อ allData เปลี่ยนแปลง
     const colorsRef = useRef<Map<string, string>>(new Map());
 
-    // กำหนดสีเริ่มต้นสำหรับแต่ละชื่อของ position
-    useEffect(() => {
-      // กำหนดสีเริ่มต้นสำหรับแต่ละ position หาก colorsRef ยังไม่มีการตั้งค่า
-      if (colorsRef.current.size === 0) {
-        const defaultColors = [
-          "#0088FE",
-          "#00C49F",
-          "#FFBB28",
-          "#FF8042",
-          "#A28BFF",
-          "#FF6384",
-          "#36A2EB",
-          "#FFCE56",
-          "#4BC0C0",
-          "#9966FF",
-          "#FF9F40",
-          "#0088FE",
-        ];
-
-        Object.keys(allData.province ?? {}).forEach((key, index) => {
-          colorsRef.current.set(
-            key,
-            defaultColors[index % defaultColors.length]
-          );
-        });
+    // ฟังก์ชั่นสำหรับโหลดสีจาก sessionStorage หรือ localStorage
+    const loadColorsFromStorage = () => {
+      const savedColors = localStorage.getItem('provinceColors');
+      if (savedColors) {
+        return new Map(JSON.parse(savedColors));
       }
-    }, [allData]);
+      return new Map();
+    };
 
-    // กำหนด positionData โดยใช้สีที่เก็บไว้ใน colorsRef
+    // ฟังก์ชั่นสำหรับเก็บสีลงใน sessionStorage หรือ localStorage
+    const saveColorsToStorage = (colors: Map<string, string>) => {
+      localStorage.setItem('provinceColors', JSON.stringify(Array.from(colors.entries())));
+    };
+
+    // กำหนดสีเริ่มต้นสำหรับแต่ละชื่อของ province
+    useEffect(() => {
+      const defaultColors = [
+        "#0088FE",
+        "#00C49F",
+        "#FFBB28",
+        "#FF8042",
+        "#A28BFF",
+        "#FF6384",
+        "#36A2EB",
+        "#FFCE56",
+        "#4BC0C0",
+        "#9966FF",
+      ];
+
+      // โหลดสีที่เก็บใน localStorage (ถ้ามี)
+      const storedColors = loadColorsFromStorage();
+      
+      // ตั้งค่าสีเริ่มต้นหากยังไม่เคยมีสีเก็บ
+      Object.keys(allData.province ?? {}).forEach((key, index) => {
+        if (!storedColors.has(key)) {
+          storedColors.set(key, defaultColors[index % defaultColors.length]);
+        }
+      });
+
+      // เก็บสีลงใน localStorage
+      saveColorsToStorage(storedColors);
+      colorsRef.current = storedColors;
+    }, [allData.province]); // 🔹 ใช้ allData.province เท่านั้นเป็น dependency
+
+    // กำหนด province โดยใช้สีที่เก็บไว้ใน colorsRef
     const provinceData = Object.keys(allData.province ?? {}).map((key) => ({
       name: key,
       value: allData.province[key] ?? 0,
@@ -182,7 +227,7 @@ const ProvinceChart = React.memo(
           <CardContent>
             <CardHeader>
               <div className="w-full flex justify-center font-bold text-2xl">
-              จังหวัด
+                ตำแหน่ง
               </div>
             </CardHeader>
             <ResponsiveContainer width="100%" height={400}>
@@ -192,7 +237,7 @@ const ProvinceChart = React.memo(
                   layout="horizontal"
                   align="center"
                   verticalAlign="bottom"
-                  wrapperStyle={{ fontSize: "12px", paddingTop: "10px" }}
+                  wrapperStyle={{ fontSize: "12px", paddingTop: "0px" }}
                 />
                 <Pie
                   activeIndex={activeIndex}
@@ -212,7 +257,7 @@ const ProvinceChart = React.memo(
                   {provinceData.map((entry, index) => (
                     <Cell
                       key={`cell-${index}`}
-                      fill={entry.color}
+                      fill={entry.color} // ใช้สีที่เก็บไว้ใน ref
                       opacity={
                         selectedIndex === null ||
                         selectedIndex === index ||

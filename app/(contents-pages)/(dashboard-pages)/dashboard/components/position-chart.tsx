@@ -146,6 +146,20 @@ const PositionChart = React.memo(
     // ใช้ useRef เก็บสี เพื่อไม่ให้ข้อมูลหายเมื่อ allData เปลี่ยนแปลง
     const colorsRef = useRef<Map<string, string>>(new Map());
 
+    // ฟังก์ชั่นสำหรับโหลดสีจาก sessionStorage หรือ localStorage
+    const loadColorsFromStorage = () => {
+      const savedColors = localStorage.getItem('positionColors');
+      if (savedColors) {
+        return new Map(JSON.parse(savedColors));
+      }
+      return new Map();
+    };
+
+    // ฟังก์ชั่นสำหรับเก็บสีลงใน sessionStorage หรือ localStorage
+    const saveColorsToStorage = (colors: Map<string, string>) => {
+      localStorage.setItem('positionColors', JSON.stringify(Array.from(colors.entries())));
+    };
+
     // กำหนดสีเริ่มต้นสำหรับแต่ละชื่อของ position
     useEffect(() => {
       const defaultColors = [
@@ -160,14 +174,22 @@ const PositionChart = React.memo(
         "#4BC0C0",
         "#9966FF",
       ];
-    
+
+      // โหลดสีที่เก็บใน localStorage (ถ้ามี)
+      const storedColors = loadColorsFromStorage();
+      
+      // ตั้งค่าสีเริ่มต้นหากยังไม่เคยมีสีเก็บ
       Object.keys(allData.position ?? {}).forEach((key, index) => {
-        // ✅ อย่าทับค่าถ้ามีอยู่แล้ว (รักษาค่าสีเดิม)
-        if (!colorsRef.current.has(key)) {
-          colorsRef.current.set(key, defaultColors[index % defaultColors.length]);
+        if (!storedColors.has(key)) {
+          storedColors.set(key, defaultColors[index % defaultColors.length]);
         }
       });
+
+      // เก็บสีลงใน localStorage
+      saveColorsToStorage(storedColors);
+      colorsRef.current = storedColors;
     }, [allData.position]); // 🔹 ใช้ allData.position เท่านั้นเป็น dependency
+
     // กำหนด positionData โดยใช้สีที่เก็บไว้ใน colorsRef
     const positionData = Object.keys(allData.position ?? {}).map((key) => ({
       name: key,
@@ -235,7 +257,7 @@ const PositionChart = React.memo(
                   {positionData.map((entry, index) => (
                     <Cell
                       key={`cell-${index}`}
-                      fill={entry.color}
+                      fill={entry.color} // ใช้สีที่เก็บไว้ใน ref
                       opacity={
                         selectedIndex === null ||
                         selectedIndex === index ||

@@ -1,7 +1,7 @@
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
-  // url =   "postgresql://database_owner:postgres@localhost:5432/intern_guide_database"
+  // url      = env("DATABASE_URL")
+  url =   "postgresql://database_owner:postgres@localhost:5432/intern_guide_database"
 }
 
 generator client {
@@ -32,6 +32,10 @@ model User {
   lastName             String
   phone                String
   studentId            String
+  occupation           String?
+  benefit              Boolean?
+  province             String?
+  position             String?
   emailVerified        Boolean   @default(false)
   verificationToken    String?   @unique
   resetPasswordToken   String? // เพิ่มฟิลด์นี้

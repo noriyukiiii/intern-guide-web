@@ -4,8 +4,8 @@ import { AuthService } from "./lib/auth";
 
 export async function middleware(request: NextRequest) {
   const { auth, isAdmin } = await AuthService.verifySession();
-  const authPaths: string[] = ["/sign-in", "/sign-up", "/verify-email", "/forgot-password", "/reset-password", "/verification",];
-  const publicPaths: string[] = ["/", "/api/uploadthing", "/privacy-policy"];
+  const authPaths: string[] = ["/sign-in", "/sign-up", "/verify-email", "/forgot-password", "/reset-password", "/verification", "/verify"];
+  const publicPaths: string[] = ["/", "/api/uploadthing", "/privacy-policy", "/verify"];
   // const homePaths: string[] = ["/"];
   const adminPaths: string[] = ["/admin", "/admin/company-list", "/admin/user-list"];
   const pathname: string = request.nextUrl.pathname;

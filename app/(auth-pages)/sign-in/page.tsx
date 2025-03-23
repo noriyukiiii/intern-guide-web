@@ -50,7 +50,7 @@ const Page = () => {
   };
 
   return (
-    <div className="flex flex-row h-screen">
+    <div className="flex flex-row h-screen font-Prompt">
       <ToastContainer />
       <div className="relative lg:w-1/2 bg-[#FFFAE6]">
         <Image src="/authpage/testbg.svg" alt="Sign in Background" fill />

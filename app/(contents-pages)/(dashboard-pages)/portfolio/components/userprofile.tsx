@@ -32,13 +32,13 @@ const UserProfile = ({ data }: UserProfileProps) => {
   return (
     <div>
       {data.session ? (
-        <Card className="mx-auto ">
+        <Card className="mx-auto max-w-2xl">
           <CardContent>
             <CardHeader>
               <CardTitle className="text-center">ข้อมูลผู้ใช้</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex flex-col force-row items-center justify-center gap-12">
+              <div className="flex flex-col items-center justify-center gap-12">
                 <div className="border h-24 w-24 rounded-full overflow-hidden flex items-center justify-center bg-gray-300">
                   <img
                     src={`https://ui-avatars.com/api/?name=${data.session.user?.firstName}+${data.session.user?.lastName}&background=random&color=fff&length=1&bold=true&font-size=0.40&font=Roboto&format=svg`}
@@ -64,6 +64,37 @@ const UserProfile = ({ data }: UserProfileProps) => {
                     <p>{data.session.user?.phone || "loading"}</p>
                   </div>
                 </div>
+              </div>
+              <div className="grid grid-cols-2  lg:grid-cols-4 gap-4 flex-wrap w-fit mx-auto mt-4">
+                {/* แสดงอาชีพ (Occupation) */}
+                {data.session.user.occupation && (
+                  <span className="px-4 py-2 bg-blue-500 text-white rounded-full text-sm font-medium text-center">
+                    {data.session.user.occupation}
+                  </span>
+                )}
+
+                {/* แสดงตำแหน่ง (Position) */}
+                {data.session.user.position && (
+                  <span className="px-4 py-2 bg-green-500 text-white rounded-full text-sm font-medium text-center">
+                    {data.session.user.position}
+                  </span>
+                )}
+
+                {/* แสดงจังหวัด (Province) */}
+                {data.session.user.province && (
+                  <span className="px-4 py-2 bg-yellow-500 text-white rounded-full text-sm font-medium text-center">
+                    {data.session.user.province}
+                  </span>
+                )}
+
+                {/* แสดงสวัสดิการ (Benefit) */}
+                {data.session.user.benefit !== null && (
+                  <span className="px-4 py-2 bg-red-500 text-white rounded-full text-sm font-medium text-center">
+                    {data.session.user.benefit
+                      ? "มีสวัสดิการ"
+                      : "ไม่มีสวัสดิการ"}
+                  </span>
+                )}
               </div>
             </CardContent>
           </CardContent>
