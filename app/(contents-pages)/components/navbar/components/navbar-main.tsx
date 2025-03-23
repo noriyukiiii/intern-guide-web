@@ -1,6 +1,6 @@
 "use client";
 
-import { Table, Home, BriefcaseBusiness } from "lucide-react";
+import { Table, Home, BriefcaseBusiness, Building2, ChartSplineIcon, Send } from "lucide-react";
 import NavbarDesktop from "./navbar-desktop";
 import { SidebarItems } from "@/lib/types";
 
@@ -18,9 +18,9 @@ export function NavbarMain() {
     links: [
       { label: "หน้าหลัก", href: "/", icon: Home },
       { label: "ADMIN", href: "/admin/dashboard", icon: Home },
-      { label: "รายชื่อสถานประกอบการ", href: "/company-list", icon: Home },
-      { label: "วิเคราะห์ข้อมูลสถานประกอบการ", href: "/dashboard", icon: Home },
-      { label: "คำร้องขอ", href: "/appeal", icon: Home },
+      { label: "รายชื่อสถานประกอบการ", href: "/company-list", icon: Building2 },
+      { label: "วิเคราะห์ข้อมูลสถานประกอบการ", href: "/dashboard", icon: ChartSplineIcon },
+      { label: "คำร้องขอ", href: "/appeal", icon: Send },
       { label: "เข้าสู่ระบบ", href: "/sign-in", icon: Table },
     ]
       .filter((item) => {

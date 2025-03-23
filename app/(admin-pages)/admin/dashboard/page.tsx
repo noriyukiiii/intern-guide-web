@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import CompanyBarChart from "./components/CompanyBarChart";
 import CompanyPieChart from "./components/CompanyPieChart";
+import Link from "next/link";
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState<AdminDashboardType | null>(null);
@@ -24,7 +25,9 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_RES_API}/admin/dashboard`);
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_RES_API}/admin/dashboard`
+        );
         const data: AdminDashboardType = await res.json();
         setStats(data);
       } catch (error) {
@@ -51,44 +54,56 @@ const AdminDashboard = () => {
   return (
     <div className="min-h-screen bg-gray-100 p-8">
       <h1 className="text-4xl font-bold text-center mb-6 text-blue-600 p-6 border w-fit mx-auto rounded-xl bg-white shadow-sm">
-         Admin Dashboard
+        Admin Dashboard
       </h1>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* สถิติหลัก */}
         <StatCard
-          title="ผู้ใช้ทั้งหมด"
-          value={stats.totalUsers}
-          icon={<Users size={28} className="text-blue-500" />}
-        />
-        <StatCard
-          title="บริษัททั้งหมด"
-          value={totalCompanies}
-          icon={<Building size={28} className="text-green-500" />}
-        />
-        <StatCard
-          title="บริษัทที่รออนุมัติ"
-          value={stats.pendingCompanies}
-          icon={<CheckCircle size={28} className="text-yellow-500" />}
-        />
-        <StatCard
-          title="ตำแหน่งงานทั้งหมด"
-          value={stats.totalPositions}
-          icon={<Briefcase size={28} className="text-purple-500" />}
-        />
-        <StatCard
-          title="นักศึกษาที่สนใจบริษัท"
-          value={stats.interning}
-          icon={<Briefcase size={28} className="text-orange-500" />}
-        />
-        <StatCard
-          title="นักศึกษาฝึกงานสำเร็จ"
+          title="นักศึกษาเข้าเลือกบริษัทฝึกงานในปีนี้"
           value={stats.successfulInterns}
           icon={<CheckCircle size={28} className="text-green-500" />}
         />
+        <Link href="/admin/user-list">
+          <StatCard
+            title="ผู้ใช้ทั้งหมด"
+            value={stats.totalUsers}
+            icon={<Users size={28} className="text-blue-500" />}
+          />
+        </Link>
+
+        <Link href="/admin/company-list">
+          <StatCard
+            title="บริษัททั้งหมด"
+            value={totalCompanies}
+            icon={<Building size={28} className="text-green-500" />}
+          />
+        </Link>
+
+        <Link href="/admin/approvecompany">
+          <StatCard
+            title="บริษัทที่รออนุมัติ"
+            value={stats.pendingCompanies}
+            icon={<CheckCircle size={28} className="text-yellow-500" />}
+          />
+        </Link>
+        <Link href="/admin/appeal-edit-company">
+          <StatCard
+            title="คำขอแก้ไขบริษัท"
+            value={stats.interning}
+            icon={<Briefcase size={28} className="text-orange-500" />}
+          />
+        </Link>
+        <Link href="/admin/appeal-cancel-company">
+          <StatCard
+            title="คำขอยกเลิกการเลือกบริษัท"
+            value={stats.totalPositions}
+            icon={<Briefcase size={28} className="text-purple-500" />}
+          />
+        </Link>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-        <CompanyPieChart companyData={companyData} />
+        {/* <CompanyPieChart companyData={companyData} /> */}
         <CompanyBarChart companyData={companyData} />
       </div>
 
