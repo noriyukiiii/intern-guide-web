@@ -320,11 +320,6 @@ export default function page() {
                     error={errors.lastname?.message}
                     disabled={isPending}
                     className="w-full"
-                    onKeyDown={(e) => {
-                      if (e.key === " ") {
-                        e.preventDefault(); // ป้องกันการกด spacebar
-                      }
-                    }}
                   />
                 </div>
                 <div className="w-full">
@@ -335,18 +330,6 @@ export default function page() {
                     error={errors.telephone?.message}
                     disabled={isPending}
                     className="w-full"
-                    onKeyDown={(e) => {
-                      // ตรวจสอบว่ากดปุ่มที่เป็นตัวเลข (0-9) หรือปุ่มที่ไม่ใช่ตัวอักษร
-                      if (
-                        !/[0-9]/.test(e.key) &&
-                        e.key !== "Backspace" &&
-                        e.key !== "Delete" &&
-                        e.key !== "ArrowLeft" &&
-                        e.key !== "ArrowRight"
-                      ) {
-                        e.preventDefault(); // ถ้าไม่ใช่ตัวเลข หรือปุ่มที่อนุญาต (Backspace, Delete, Arrow keys) ป้องกันไม่ให้พิมพ์
-                      }
-                    }}
                   />
                 </div>
                 <div className="w-full">
@@ -357,18 +340,6 @@ export default function page() {
                     error={errors.student_id?.message}
                     disabled={isPending}
                     className="w-full"
-                    onKeyDown={(e) => {
-                      // ตรวจสอบว่ากดปุ่มที่เป็นตัวเลข (0-9) หรือปุ่มที่ไม่ใช่ตัวอักษร
-                      if (
-                        !/[0-9]/.test(e.key) &&
-                        e.key !== "Backspace" &&
-                        e.key !== "Delete" &&
-                        e.key !== "ArrowLeft" &&
-                        e.key !== "ArrowRight"
-                      ) {
-                        e.preventDefault(); // ถ้าไม่ใช่ตัวเลข หรือปุ่มที่อนุญาต (Backspace, Delete, Arrow keys) ป้องกันไม่ให้พิมพ์
-                      }
-                    }}
                   />
                 </div>
                 <div className="grid grid-cols-2 w-full gap-4">
