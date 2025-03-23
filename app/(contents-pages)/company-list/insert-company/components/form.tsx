@@ -899,7 +899,7 @@ export function InsertForm({ optionData }: { optionData: Option }) {
         <div className="flex justify-start">
           <button
             onClick={onSubmit}
-            className="p-2 bg-red-400 md:w-[200px] rounded-md border-2 border-gray-400 hover:bg-red-600 transition"
+            className="p-2 bg-green-500 md:w-[200px] rounded-md border-2 border-gray-400 hover:bg-green-600 transition"
           >
             <div className="text-center text-white">เพิ่มสถานประกอบการ</div>
           </button>
