@@ -50,6 +50,7 @@ function VerifyEmail() {
           <span className="font-semibold">{email}</span>
         </p>
         <p className="text-gray-600">กรุณาตรวจสอบอีเมลของคุณเพื่อยืนยันบัญชี</p>
+        <p className="text-gray-600">ใช้เวลา 5 - 15 นาที </p>
 
         {message && <p className="mt-3 text-sm text-gray-700">{message}</p>}
       </div>
