@@ -30,11 +30,8 @@ const VerifyEmailPage = () => {
     setMessage("");
 
     try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BASE_RES_API}/user/verify`,
-        {
-          token, // ส่ง token ใน body แทน
-        }
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_RES_API}/user/verify?token=${token}`
       );
       if (response.data.success) {
         setMessage("ยืนยันอีเมลสำเร็จ! กำลังเปลี่ยนหน้า...");
