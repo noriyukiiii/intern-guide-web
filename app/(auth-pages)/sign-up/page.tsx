@@ -52,9 +52,7 @@ export default function page() {
       }
 
       const response = await signUpActions(result.data);
-      router.push(
-        `/verify-email?email=${encodeURIComponent(result.data.email)}`
-      );
+      router.push(`/verify-email?email=${encodeURIComponent(result.data.email)}`);
 
       if (!response.success) {
         // เช็คก่อนว่ามี property `message` หรือไม่
@@ -305,11 +303,6 @@ export default function page() {
                     error={errors.firstname?.message}
                     disabled={isPending}
                     className="w-full"
-                    onKeyDown={(e) => {
-                      if (e.key === " ") {
-                        e.preventDefault(); // ป้องกันการกด spacebar
-                      }
-                    }}
                   />
                 </div>
                 <div className="w-full">
