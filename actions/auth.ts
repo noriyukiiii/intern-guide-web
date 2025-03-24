@@ -52,10 +52,10 @@ export async function signUpActions(values: SignUpSchema): Promise<{
         verificationToken, // บันทึก token
       },
     });
-
-    // ส่งอีเมลยืนยัน
-    await sendVerificationEmail(email, verificationToken, firstname, lastname);
-
+    // 🚀 เรียกส่งอีเมลใน background ไม่ต้องรอ
+    setTimeout(() => {
+      sendVerificationEmail(email, verificationToken, firstname, lastname);
+    }, 0);
     revalidatePath("/");
 
     return {
