@@ -30,9 +30,9 @@ const VerifyEmailPage = () => {
     setMessage("");
 
     try {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_RES_API}/user/verify?token=${token}`
-      );
+      const response = await axios.patch(`${process.env.NEXT_PUBLIC_BASE_RES_API}/user/verify`, {
+        token: token, // ✅ ส่ง token ผ่าน body
+      });
       if (response.data.success) {
         setMessage("ยืนยันอีเมลสำเร็จ! กำลังเปลี่ยนหน้า...");
         setTimeout(() => {
@@ -50,11 +50,11 @@ const VerifyEmailPage = () => {
   };
 
   // ลบ useEffect ที่จะเรียก verifyEmail ทันที
-  // useEffect(() => {
-  //   if (token) {
-  //     verifyEmail();
-  //   }
-  // }, [token]);
+  useEffect(() => {
+    if (token) {
+      verifyEmail();
+    }
+  }, [token]);
 
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-[#FFFAE6]">
@@ -62,12 +62,12 @@ const VerifyEmailPage = () => {
         <h1 className="text-2xl font-bold mb-2">📩 ยืนยันอีเมลของคุณ</h1>
         <p className="text-gray-700">{loading ? "กำลังยืนยัน..." : message}</p>
         {/* เพิ่มปุ่มให้ผู้ใช้กดยืนยันเอง */}
-        <button
+        {/* <button
           onClick={verifyEmail}
           className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg"
         >
           ยืนยันอีเมล
-        </button>
+        </button> */}
       </div>
     </div>
   );

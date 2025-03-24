@@ -168,9 +168,7 @@ export default function page() {
                   <div className="w-full">
                     <Label htmlFor="email">Email</Label>
                     <div className="flex w-full border border-gray-300 rounded-lg overflow-hidden">
-                      {/* ช่องให้พิมพ์ตัวเลข */}
                       <Input
-                        // {...register("email")}
                         placeholder="กรอกรหัสนักศึกษา"
                         disabled={isPending}
                         className="w-full p-2 border border-gray-300 rounded-lg outline-none"
@@ -185,13 +183,11 @@ export default function page() {
                           setValue("email", `${cleanValue}@mail.rmutt.ac.th`); // อัปเดต email ที่จะส่ง
                         }}
                       />
-                      {/* ส่วนที่เป็น @mail.rmutt.ac.th (แก้ไขไม่ได้) */}
                       <span className="bg-gray-200 px-3 flex items-center text-gray-600">
                         @mail.rmutt.ac.th
                       </span>
                     </div>
 
-                    {/* เช็ค error */}
                     {emailError && (
                       <p className="text-red-500 text-sm mt-1">{emailError}</p>
                     )}
