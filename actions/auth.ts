@@ -52,12 +52,20 @@ export async function signUpActions(values: SignUpSchema): Promise<{
         verificationToken, // บันทึก token
       },
     });
-    // 🚀 เรียกส่งอีเมลใน background ไม่ต้องรอ
-    setTimeout(() => {
-      sendVerificationEmail(email, verificationToken, firstname, lastname);
-    }, 0);
-    revalidatePath("/");
 
+    // 🚀 เรียก API ส่งอีเมลแบบไม่ต้องรอ
+    fetch("/api/send-email", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email,
+        verificationToken,
+        firstname,
+        lastname,
+      }),
+    });
     return {
       success: true,
       message:
