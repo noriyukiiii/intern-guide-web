@@ -53,19 +53,11 @@ export async function signUpActions(values: SignUpSchema): Promise<{
       },
     });
 
-    // 🚀 เรียก API ส่งอีเมลแบบไม่ต้องรอ
-    fetch("/api/send-email", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email,
-        verificationToken,
-        firstname,
-        lastname,
-      }),
-    });
+    // ส่งอีเมลยืนยัน
+    await sendVerificationEmail(email, verificationToken, firstname, lastname);
+
+    revalidatePath("/");
+
     return {
       success: true,
       message:
