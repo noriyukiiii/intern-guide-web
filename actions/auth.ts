@@ -8,6 +8,7 @@ import { compareSync, hashSync } from "bcryptjs";
 import { randomBytes } from "crypto";
 import { revalidatePath } from "next/cache";
 import { sendVerificationEmail } from "@/lib/mailer";
+import axios from "axios";
 
 export async function signUpActions(values: SignUpSchema): Promise<{
   success: boolean;
@@ -38,7 +39,7 @@ export async function signUpActions(values: SignUpSchema): Promise<{
     // สร้าง verificationToken
     const verificationToken = randomBytes(16).toString("hex");
 
-    const hashedPassword = hashSync(password, 10);
+    const hashedPassword = await hashSync(password, 10);
     const user = await db.user.create({
       data: {
         email,
@@ -54,7 +55,19 @@ export async function signUpActions(values: SignUpSchema): Promise<{
     });
 
     // ส่งอีเมลยืนยัน
-    await sendVerificationEmail(email, verificationToken, firstname, lastname);
+    try {
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_BASE_RES_API}/user/send-verify-email`,
+        {
+          token: verificationToken,
+          email,
+          firstname,
+          lastname,
+        }
+      );
+    } catch (error) {
+      console.error("Failed to send verification email:", error);
+    }
 
     revalidatePath("/");
 
