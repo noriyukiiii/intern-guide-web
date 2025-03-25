@@ -243,7 +243,7 @@ const ProvinceChart = React.memo(
           <CardContent>
             <CardHeader>
               <div className="w-full flex justify-center font-bold text-2xl">
-                ตำแหน่ง
+                จังหวัด
               </div>
             </CardHeader>
             <ResponsiveContainer width="100%" height={400}>

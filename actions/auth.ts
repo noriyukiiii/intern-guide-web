@@ -20,7 +20,8 @@ export async function signUpActions(values: SignUpSchema): Promise<{
       return { success: false, message: "Bad Request" };
     }
 
-    const { email, password, firstname, lastname, telephone, student_id } = validation.data;
+    const { email, password, firstname, lastname, telephone, student_id } =
+      validation.data;
 
     const existingUser = await db.user.findUnique({ where: { email } });
     if (existingUser) {
@@ -31,48 +32,66 @@ export async function signUpActions(values: SignUpSchema): Promise<{
     const hashedPassword = await hashSync(password, 10);
 
     // ทำให้การสร้างบัญชีและส่งอีเมลทำงานพร้อมกัน
-    const [userResult, emailResult] = await Promise.allSettled([
-      db.user.create({
-        data: {
-          email,
-          password: hashedPassword,
-          firstName: firstname,
-          lastName: lastname,
-          phone: telephone,
-          studentId: student_id,
-          image: "/userimage/boy.png",
-          role: "MEMBER",
-          verificationToken,
-        },
-      }),
-      axios.post(`${process.env.NEXT_PUBLIC_BASE_RES_API}/user/send-verify-email`, {
+    const newUser = await db.user.create({
+      data: {
+        email,
+        password: hashedPassword,
+        firstName: firstname,
+        lastName: lastname,
+        phone: telephone,
+        studentId: student_id,
+        image: "/userimage/boy.png",
+        role: "MEMBER",
+        verificationToken,
+      },
+    });
+
+    // ส่งอีเมลแบบ async แต่ไม่ต้องรอให้เสร็จก่อน return
+    fetch(`${process.env.NEXT_PUBLIC_BASE_RES_API}/user/send-verify-email`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
         token: verificationToken,
         email,
         firstname,
         lastname,
       }),
-    ]);
-
-    if (userResult.status === "rejected") {
-      console.error("Failed to create user:", userResult.reason);
-      return { success: false, message: "Failed to create user" };
-    }
-
-    if (emailResult.status === "rejected") {
-      console.error("Failed to send verification email:", emailResult.reason);
-    }
+    }).catch((err) => console.error("Failed to send email:", err));
 
     revalidatePath("/");
 
     return {
       success: true,
-      message: "Register successfully. Please check your email to verify your account.",
+      message:
+        "Register successfully. Please check your email to verify your account.",
     };
   } catch (error) {
     console.error("Sign-up error:", error);
     return { success: false, message: "Internal Server Error" };
   }
 }
+
+export const sendVerifyEmail = async (
+  token: string,
+  firstname: string,
+  lastname: string,
+  email: string
+) => {
+  try {
+    const res = await axios.post(
+      `${process.env.NEXT_PUBLIC_BASE_RES_API}/user/send-verify-email`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token, firstname, lastname, email }),
+      }
+    );
+    const data = await res.data;
+    return data;
+  } catch (error) {
+    return { success: false, message: "เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง" };
+  }
+};
 
 export async function signInActions(values: SignInSchema): Promise<{
   success: boolean;
