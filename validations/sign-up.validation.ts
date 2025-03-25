@@ -2,15 +2,7 @@ import { z } from "zod";
 
 // Schema สำหรับ email, password และ confirmPassword รวมกัน
 const emailPasswordConfirmSchema = z.object({
-  email: z
-  .string()
-  .email({ message: "Please enter a valid email." })
-  .trim()
-  .refine(
-    (email) => email.endsWith("@mail.rmutt.ac.th"),
-    { message: "Email must be a university email (@mail.rmutt.ac.th)." }
-  ),
-
+  email: z.string().email({ message: "Please enter a valid email." }).trim(),
   password: z
     .string()
     .min(1, { message: "Not be empty" })
