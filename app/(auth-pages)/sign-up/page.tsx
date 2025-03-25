@@ -133,7 +133,7 @@ export default function page() {
             {currentStep === 1 && (
               <>
                 <div className="w-full">
-                  {/* <Label htmlFor="email">Email</Label>
+                  <Label htmlFor="email">Email</Label>
                   <Input
                     {...register("email")}
                     placeholder="Email Address"
@@ -164,8 +164,8 @@ export default function page() {
                         setEmailError(emailErrorMessage);
                       }
                     }}
-                  /> */}
-                  <div className="w-full">
+                  />
+                  {/* <div className="w-full">
                     <Label htmlFor="email">Email</Label>
                     <div className="flex w-full border border-gray-300 rounded-lg overflow-hidden">
                       <Input
@@ -191,7 +191,7 @@ export default function page() {
                     {emailError && (
                       <p className="text-red-500 text-sm mt-1">{emailError}</p>
                     )}
-                  </div>
+                  </div> */}
                 </div>
 
                 <div className="w-full">

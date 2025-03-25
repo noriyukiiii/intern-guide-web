@@ -59,7 +59,6 @@ export async function signUpActions(values: SignUpSchema): Promise<{
     }).catch((err) => console.error("Failed to send email:", err));
 
     revalidatePath("/");
-
     return {
       success: true,
       message:
