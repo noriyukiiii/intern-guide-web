@@ -78,7 +78,7 @@ const CreateBannerForm = ({ onSuccess }: { onSuccess: () => void }) => {
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <Input
         name="title"
-        placeholder="ชื่อแบนเนอร์"
+        placeholder="ชื่อประกาศ"
         value={formData.title}
         onChange={handleChange}
         required

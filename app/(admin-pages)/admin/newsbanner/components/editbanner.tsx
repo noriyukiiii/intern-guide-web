@@ -93,7 +93,7 @@ export default function EditBannerDialog({
       console.log("API response:", response); // ดูข้อมูลที่ API ตอบกลับ
 
       // แสดง toast ก่อนรีเฟรช
-      toast.success("แก้ไข Banner สำเร็จ", {
+      toast.success("แก้ไข ประกาศ สำเร็จ", {
         position: "top-center",
         autoClose: 1000,
       });
@@ -145,7 +145,7 @@ export default function EditBannerDialog({
         <DialogContent aria-describedby="edit-banner-form-description">
           <DialogDescription></DialogDescription>
           <DialogHeader>
-            <DialogTitle>แก้ไขแบนเนอร์</DialogTitle>
+            <DialogTitle>แก้ไขประกาศ</DialogTitle>
           </DialogHeader>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
