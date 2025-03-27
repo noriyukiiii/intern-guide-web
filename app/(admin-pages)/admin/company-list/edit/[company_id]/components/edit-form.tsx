@@ -1165,7 +1165,7 @@ const EditForm = ({
         </div>
         <div className="col-span-4 flex justify-start">
           <button
-            className="p-2 bg-red-400 w-[120px] rounded-md border-2 border-gray-400 hover:bg-red-600 transition"
+            className="p-2 bg-green-500 w-[120px] rounded-md border-2 border-gray-400 hover:bg-green-600 transition"
             onClick={handleSubmit}
           >
             <div className="text-center text-white">ยืนยันการแก้ไข</div>
